@@ -1,2 +1,65 @@
 
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 50px; 
+    background-color: #fff; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+}
+
+.logo-container img {
+    height: 100px; 
+}
+
+.search-bar {
+    max-width: 500px; 
+    width: 100%; 
+}
+
+.input-group .form-control {
+    border-right: 0; 
+}
+
+.input-group-append .btn {
+    border-left: 0; 
+    background-color: white; 
+}
+
+.input-group-append {
+    margin-left: -1px; 
+}
+
+
+.input-group-text {
+    background-color: white;
+    border: 1px solid #ced4da; 
+}
+
+
+.auth-buttons {
+    display: flex;
+    gap: 10px; 
+}
+
+.auth-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px; /* Rounded borders */
+    cursor: pointer;
+}
+
+.auth-buttons .login {
+    background-color: transparent;
+    color: #50123c;
+    font-weight: bold;
+}
+
+.auth-buttons .sign-up {
+    background-color: rgb(159, 126, 172);
+    color: white;
+    border: none;
+    font-weight: bold;
+}
+
 

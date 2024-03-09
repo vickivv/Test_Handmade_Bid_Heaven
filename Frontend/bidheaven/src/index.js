@@ -7,6 +7,10 @@ import Nav from './Components/Homepage/Nav'
 import Header from './Components/Homepage/Homepage'
 import Footer from './Components/Homepage/Footer'
 import Homepage from './Components/Homepage/Homepage';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
