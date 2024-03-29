@@ -80,7 +80,6 @@ pymysql.version_info = (1, 4, 6, 'final', 0)  # change mysqlclient version
 pymysql.install_as_MySQLdb()
 # [START db_setup]
 if os.getenv('GAE_APPLICATION', None):
-
     DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.mysql',
