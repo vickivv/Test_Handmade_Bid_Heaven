@@ -1,0 +1,21 @@
+.imgcontainer {
+    height: 500px;
+    width: 500px;
+    text-align: center;
+}
+
+.publish {
+    position: relative;
+    .ql-container {
+      height: 400px !important;
+    }
+}
+  
+.ant-upload-list {
+    .ant-upload-list-picture-card-container,
+    .ant-upload-select {
+      width: 146px;
+      height: 146px;
+    }
+  }
+  
