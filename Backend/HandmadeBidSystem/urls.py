@@ -16,10 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from handmadeBid import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-   path('api/', include('handmadeBid.urls')),
+    path('api/', include('handmadeBid.urls')),
+    path('api/get_overview_order', views.GetOverviewOrderAPIView.as_view(), name='get_overview_order'),
+    path('api/get_overview_bid', views.GetOverviewBidAPIView.as_view(), name='get_overview_bid'),
+    path('api/get_all_orders', views.GetAllOrdersAPIView.as_view(), name='get_all_orders'),
+    path('api/get_all_orders/<int:orderId>', views.GetOrderDetailAPIView.as_view(), name='get_order_detail'),
+    path('api/get_all_bids', views.GetAllBidsAPIView.as_view(), name='get_all_bids'),
+    path('api/get_all_bids/<int:BiddingID>', views.GetBidDetailAPIView.as_view(), name='get_bid_detail'),
 ]
 

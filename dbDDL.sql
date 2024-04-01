@@ -146,10 +146,11 @@ create table REVIEWS (
 -- average selling price view: ProductID, Category, AvgPrice, SellerID
 -- best selling view: ProductID, TotalQuantity, TotalProfit, Category, SellerID
 create view ORDERSVIEW as
-select o.OrderID, b.BiddingID, p.ProductID, p.Name as ProductName, c.CName as Category, p.SellerID, b.BidderID as BuyerID, b.BidPrice as SellingPrice, b.Quantity, b.BidPrice * b.Quantity as TotalAmount, o.OrderDate, o.OrderStatus, b.ManageID
+select o.OrderID, b.BiddingID, p.ProductID, p.Name as ProductName, c.CName as Category, p.SellerID, b.BidderID as BuyerID, b.BidPrice as SellingPrice, b.Quantity, b.BidPrice * b.Quantity as TotalAmount, o.OrderDate, o.OrderStatus, b.ManageID, pic.Picture
 from ORDERS o join BIDDING b on o.BiddingID = b.BiddingID
 	 join PRODUCTS p on b.ProductID = p.ProductID
      join CATEGORY c on c.CategoryID = p.CategoryID
+     join PICTURES pic on p.PictureID = pic.PictureID
 ;
 create view AVGSELLPRICE as
 select ProductID, Category, avg(SellingPrice), SellerID

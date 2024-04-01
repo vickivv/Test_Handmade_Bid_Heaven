@@ -20,6 +20,9 @@ from rest_framework import status
 import json
 import logging
 
+from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
+    get_bid_details, get_overview_order, get_overview_bid
+
 logger = logging.getLogger(__name__)
 
 
@@ -87,4 +90,46 @@ class AdminLoginView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-       
+
+class GetOverviewOrderAPIView(APIView):
+    def get(self, request):
+        data = get_overview_order()
+        return Response(data)
+
+class GetOverviewBidAPIView(APIView):
+    def get(self, request):
+        data = get_overview_bid()
+        return Response(data)
+
+class GetAllOrdersAPIView(APIView):
+    def get(self, request):
+        data_str = request.query_params.get('status', None)
+        if data_str and data_str != 'All Orders':
+            data = get_orders_by_status(data_str)
+            return Response(data)
+        data = get_all_orders()
+        return Response(data)
+
+
+class GetOrderDetailAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        order_id = self.kwargs.get('orderId')
+        data = get_order_details(order_id)
+        return Response(data)
+
+
+class GetAllBidsAPIView(APIView):
+    def get(self, request):
+        data_str = request.query_params.get('status', None)
+        if data_str and data_str != 'All Bids':
+            data = get_bids_by_status(data_str)
+            return Response(data)
+        data = get_all_bids()
+        return Response(data)
+
+
+class GetBidDetailAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        bid_id = self.kwargs.get('BiddingID')
+        data = get_bid_details(bid_id)
+        return Response(data)
