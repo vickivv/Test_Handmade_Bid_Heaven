@@ -1,4 +1,6 @@
 -- create tables
+--Adminuser and normal user tables have already created, if migrate before
+
 create table ADMINUSER (
 	UserID int not null primary key,
     Fname varchar(25),

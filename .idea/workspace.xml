@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f69a8f4d-6e40-4d62-aa7b-d1160da8eaaf" name="Changes" comment="">
+    <list default="true" id="f69a8f4d-6e40-4d62-aa7b-d1160da8eaaf" name="Changes" comment="again">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/HandmadeBidSystem/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/HandmadeBidSystem/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/HandmadeBidSystem/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/HandmadeBidSystem/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/queries.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/queries.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Homepage/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Homepage/Header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Bids.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Bids.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Orders.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Orders.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dbDDL.sql" beforeDir="false" afterPath="$PROJECT_DIR$/dbDDL.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbDML.sql" beforeDir="false" afterPath="$PROJECT_DIR$/dbDML.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,13 +37,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/Users/tqi/Documents/Vicki/5200/project/phase4/Handmade_Bid_Heaven"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/tqi/Documents/Vicki/5200/project/phase4/Handmade_Bid_Heaven&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/handmadeBid" />

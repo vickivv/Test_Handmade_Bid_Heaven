@@ -14,14 +14,12 @@ const Bids = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-
   const [selectedStatus, setSelectedStatus] = useState('All Bids');
   const [bids, setBids] = useState([]);
 
   useEffect(() => {
-  const userId = localStorage.getItem('userId');
-  const statusQuery = selectedStatus !== 'All Bids' ? `&status=${encodeURIComponent(selectedStatus)}` : '';
-  fetch(`http://127.0.0.1:8000/api/get_all_bids?userId=${userId}${statusQuery}`) // Use backticks here
+  const statusQuery = selectedStatus !== 'All Bids' ? `?status=${encodeURIComponent(selectedStatus)}` : '';
+  fetch(`http://127.0.0.1:8000/api/get_all_bids${statusQuery}`) // Use backticks here
     .then((response) => response.json())
     .then((data) => setBids(data))
     .catch((error) => console.error('Error fetching data:', error));

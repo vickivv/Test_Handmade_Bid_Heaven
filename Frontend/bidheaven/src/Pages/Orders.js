@@ -10,6 +10,7 @@ import { Breadcrumb, Layout, Menu, theme } from 'antd';
 const { Content, Sider } = Layout;
 
 const Orders = () => {
+  const userId = localStorage.getItem('userId');
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -18,16 +19,17 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-  const statusQuery = selectedStatus !== 'All Orders' ? `?status=${encodeURIComponent(selectedStatus)}` : '';
-  fetch(`http://127.0.0.1:8000/api/get_all_orders${statusQuery}`) // Use backticks here
+  const statusQuery = selectedStatus !== 'All Orders' ? `&status=${encodeURIComponent(selectedStatus)}` : '';
+  fetch(`http://127.0.0.1:8000/api/get_all_orders?userId=${userId}${statusQuery}`)
     .then((response) => response.json())
-    .then((data) => setOrders(data))
+    .then((data) => {console.log(data); setOrders(data)})
     .catch((error) => console.error('Error fetching data:', error));
 }, [selectedStatus]);
 
 
 
   return (
+
   <div>
             <Filter selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus}/>
           <Content

@@ -102,12 +102,23 @@ class GetOverviewBidAPIView(APIView):
         return Response(data)
 
 class GetAllOrdersAPIView(APIView):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
+        user_id = request.query_params.get('userId')
         data_str = request.query_params.get('status', None)
+
+        if not user_id:
+            return JsonResponse({'error': 'userId parameter is required'}, status=400)
+        try:
+            # 尝试将 userId 转换为整数
+            user_id = int(user_id)
+        except ValueError:
+            # 如果转换失败，返回错误响应
+            return JsonResponse({'error': 'Invalid userId'}, status=400)
+
         if data_str and data_str != 'All Orders':
-            data = get_orders_by_status(data_str)
+            data = get_orders_by_status(user_id, data_str)
             return Response(data)
-        data = get_all_orders()
+        data = get_all_orders(userID=user_id)
         return Response(data)
 
 
@@ -120,11 +131,22 @@ class GetOrderDetailAPIView(APIView):
 
 class GetAllBidsAPIView(APIView):
     def get(self, request):
+        user_id = request.query_params.get('userId')
         data_str = request.query_params.get('status', None)
+
+        if not user_id:
+            return JsonResponse({'error': 'userId parameter is required'}, status=400)
+        try:
+            # 尝试将 userId 转换为整数
+            user_id = int(user_id)
+        except ValueError:
+            # 如果转换失败，返回错误响应
+            return JsonResponse({'error': 'Invalid userId'}, status=400)
+
         if data_str and data_str != 'All Bids':
-            data = get_bids_by_status(data_str)
+            data = get_bids_by_status(user_id, data_str)
             return Response(data)
-        data = get_all_bids()
+        data = get_all_bids(user_id)
         return Response(data)
 
 

@@ -1,14 +1,15 @@
 from django.db import connection
 
-def get_all_orders():
+def get_all_orders(userID):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ordersview")
+        cursor.execute("SELECT ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ordersview WHERE BuyerID = %s", [userID])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-def get_orders_by_status(status):
+
+def get_orders_by_status(userID, status):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ordersview WHERE OrderStatus = %s", [status])
+        cursor.execute("SELECT ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ordersview WHERE BuyerID = %s AND OrderStatus = %s", [userID, status])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -22,19 +23,19 @@ def get_order_details(order_id):
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
-def get_all_bids():
+def get_all_bids(userID):
     with connection.cursor() as cursor:
         cursor.execute("SELECT p.Name, b.Status, b.BidPrice, p.SellerID, b.BiddingID, pic.Picture "
                        "FROM BIDDING b JOIN PRODUCTS p ON b.ProductID = p.ProductID "
-                       "JOIN PICTURES pic ON p.PictureID = pic.PictureID")
+                       "JOIN PICTURES pic ON p.PictureID = pic.PictureID WHERE b.BidderId = %s", [userID])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
-def get_bids_by_status(status):
+def get_bids_by_status(userID, status):
     with connection.cursor() as cursor:
         cursor.execute("SELECT p.Name, b.Status, b.BidPrice, p.SellerID, b.BiddingID, pic.Picture "
-                       "FROM BIDDING b JOIN PRODUCTS p ON b.ProductID = p.ProductID JOIN PICTURES pic ON p.PictureID = pic.PictureID WHERE b.Status = %s", [status])
+                       "FROM BIDDING b JOIN PRODUCTS p ON b.ProductID = p.ProductID JOIN PICTURES pic ON p.PictureID = pic.PictureID WHERE b.BidderId = %s AND b.Status = %s", [userID, status])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 

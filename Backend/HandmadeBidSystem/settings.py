@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # 'handmadeBid.apps.HandmadebidConfig',
     'django.contrib.admin',
     'django.contrib.auth',
-     'corsheaders',
+    'corsheaders',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -177,4 +177,11 @@ USE_TZ = True
 
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
+
+CORS_ALLOW_HEADERS = ['userid']
+
 
