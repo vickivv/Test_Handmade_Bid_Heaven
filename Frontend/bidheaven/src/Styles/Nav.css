@@ -1,0 +1,13 @@
+.navbar .nav-item a {
+    text-decoration: none; 
+    color: rgb(80, 79, 79);
+    font-weight: bold;
+    padding:0 50px;
+}
+.navbar nav-item{
+    margin-right:10px;
+}
+.navbar {
+    border-bottom: 1px solid #cccccc;
+  
+}
