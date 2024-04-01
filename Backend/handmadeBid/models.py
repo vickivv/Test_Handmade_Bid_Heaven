@@ -72,10 +72,10 @@ class Generates(models.Model):
 
 class Messages(models.Model):
     messageid = models.IntegerField(db_column='MessageID', primary_key=True)  # Field name made lowercase.
-    adminsenderid = models.ForeignKey(Adminuser, models.DO_NOTHING, db_column='AdminSenderID', blank=True, null=True)  # Field name made lowercase.
-    senderid = models.ForeignKey('Normaluser', models.DO_NOTHING, db_column='SenderID', blank=True, null=True)  # Field name made lowercase.
-    adminreceiverid = models.ForeignKey(Adminuser, models.DO_NOTHING, db_column='AdminReceiverID', blank=True, null=True)  # Field name made lowercase.
-    receiverid = models.ForeignKey('Normaluser', models.DO_NOTHING, db_column='ReceiverID', blank=True, null=True)  # Field name made lowercase.
+    adminsenderid = models.ForeignKey(Adminuser, models.DO_NOTHING, db_column='AdminSenderID', blank=True, null=True,related_name='sent_message')  # Field name made lowercase.
+    senderid = models.ForeignKey('Normaluser', models.DO_NOTHING, db_column='SenderID', blank=True, null=True,related_name='sent_message')  # Field name made lowercase.
+    adminreceiverid = models.ForeignKey(Adminuser, models.DO_NOTHING, db_column='AdminReceiverID', blank=True, null=True, related_name='received_message')  # Field name made lowercase.
+    receiverid = models.ForeignKey('Normaluser', models.DO_NOTHING, db_column='ReceiverID', blank=True, null=True, related_name='received_message')  # Field name made lowercase.
     content = models.CharField(db_column='Content', max_length=1000, blank=True, null=True)  # Field name made lowercase.
     createdate = models.DateField(db_column='CreateDate', blank=True, null=True)  # Field name made lowercase.
     productid = models.ForeignKey('Products', models.DO_NOTHING, db_column='ProductID', blank=True, null=True)  # Field name made lowercase.
@@ -125,17 +125,18 @@ class Payment(models.Model):
 
 
 class Pictures(models.Model):
-    pictureid = models.IntegerField(db_column='PictureID', primary_key=True)  # Field name made lowercase.
-    productid = models.ForeignKey('Products', models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
-    picture = models.CharField(db_column='Picture', max_length=2083, blank=True, null=True)  # Field name made lowercase.
+    pictureid = models.AutoField(primary_key=True)  # Field name made lowercase.
+    productid = models.IntegerField(db_column='ProductID', null=True)  # Field name made lowercase.
+    picture = models.ImageField(upload_to='photos')  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'PICTURES'
+        
 
 
 class Products(models.Model):
-    productid = models.IntegerField(db_column='ProductID', primary_key=True)  # Field name made lowercase.
+    productid = models.AutoField(primary_key=True)  # Field name made lowercase.
     sellerid = models.ForeignKey(Normaluser, models.DO_NOTHING, db_column='SellerID')  # Field name made lowercase.
     name = models.CharField(db_column='Name', max_length=100, blank=True, null=True)  # Field name made lowercase.
     categoryid = models.ForeignKey(Category, models.DO_NOTHING, db_column='CategoryID')  # Field name made lowercase.
@@ -164,9 +165,9 @@ class Report(models.Model):
 
 class Reviews(models.Model):
     reviewid = models.IntegerField(db_column='ReviewID', primary_key=True)  # Field name made lowercase.
-    reviewerid = models.ForeignKey(Normaluser, models.DO_NOTHING, db_column='ReviewerID')  # Field name made lowercase.
+    reviewerid = models.ForeignKey(Normaluser, models.DO_NOTHING, db_column='ReviewerID', related_name='sent_review')  # Field name made lowercase.
     reviewertype = models.CharField(db_column='ReviewerType', max_length=6)  # Field name made lowercase.
-    revieweeid = models.ForeignKey(Normaluser, models.DO_NOTHING, db_column='RevieweeID')  # Field name made lowercase.
+    revieweeid = models.ForeignKey(Normaluser, models.DO_NOTHING, db_column='RevieweeID',related_name='get_review')  # Field name made lowercase.
     content = models.CharField(db_column='Content', max_length=1000, blank=True, null=True)  # Field name made lowercase.
     reviewdate = models.DateField(db_column='ReviewDate', blank=True, null=True)  # Field name made lowercase.
     productid = models.ForeignKey(Products, models.DO_NOTHING, db_column='ProductID', blank=True, null=True)  # Field name made lowercase.

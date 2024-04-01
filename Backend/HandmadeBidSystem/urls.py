@@ -17,8 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from handmadeBid import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('',views.index,name ='index'),
-]
+    path('addproducts',views.add_product,name ='addproducts'),
+    path('category', views.get_category, name='category'),
+    path('uploadpicture', views.upload_picture),
+    path('getproducts', views.get_products),
+]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
