@@ -3,19 +3,19 @@ import {
     Breadcrumb,
     Form,
     Button,
-    Radio,
     Input,
     Upload,
     Space,
     Select,
     message
 } from 'antd';
-import { Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './products.css';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
+import {http} from '../../Seller/utils/http'
 
 const { Option } = Select
 
@@ -23,62 +23,80 @@ export const AddNewProduct = () => {
 
     //to save the uploaded pictures of the product
     const [fileList, setFileList] = useState([]);
+    const [pictures, setPictures] = useState([]);
+    //define a cache repo
     const cacheImgList = useRef([])
+
+    //when uploading pictures, save one to fileList and one to the cache repo
+
     const onUploadChange = ({ fileList }) => {
       const formatList = fileList.map(file => {
-        if (file.response) {
-          return {
-            url: file.response.data.url
-        }
-      }
-      return file
+        return file
       })
+      const pictureKeys=fileList.map(file => {
+        if(file.response){
+          return file.response;
+      }})
       setFileList(formatList)
       cacheImgList.current = formatList
+      setPictures(pictureKeys)
     }
 
+    //fetch category data from database
+    const [categoryList, setCategoryList] = useState([]);
+    const fetchCategory = async () => {
+      await http.get("/category").then((res) => {
+        setCategoryList(res.data); 
+      });
+    }
+    useEffect(() => {
+      fetchCategory();
+    }, []);
+
+    // push data to database after submit the Form
     const navigate = useNavigate();
-
-    //to add fetch data process
-    // const onFinish = async (values) => {
-    //   const { name, categoryId, description, startPrice, type, inventory } = values
-    //   const params = {
-    //     
-    //     name, 
-    //     categoryId, 
-    //     description, 
-    //     startPrice, 
-    //     inventory,
-    //     picture: {
-    //       type: type,
-    //       images: fileList.map(item => item.url)
-    //   }
-    // }
-
+    const onFinish = async (values) => {
+      const { name, category, description, startPrice, inventory } = values
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("category", categoryList[category].name)
+      formData.append("description", description)
+      formData.append("startPrice", parseInt(startPrice))
+      formData.append("inventory", parseInt(inventory))
+      formData.append("pictures", pictures)
     // if (id) {
-    //  await http.put(``, params)
+    //   await http.put(`/addproduct/${id}`, params)
     // } else {
-    //   await http.post('', params)
-    // }
+      await http.post(`/addproducts`, formData)
+  //  }
 
-    // navigate('/products')
-    // message.success(`${id ? '更新成功' : '发布成功'}`)
-  
 
-  //待加入数据回填功能
-  const [form] = Form.useForm()
+    navigate('/activeproducts')
+    message.success('List Completed')
+  }
 
-      //to change to fetch from database
-    const categoryList = [
-        {id:1, name:'Ceramics and Glass'},
-        {id:2, name:'Paper Crafts'},
-        {id:3, name: 'Yarn and Fiber Crafts'},
-        {id:4, name: 'Upcycling Crafts'},
-        {id:5, name: 'Decorative Crafts'},
-        {id:6, name: 'Fashion Crafts'},
-        {id:7, name:'Miscellaneous Crafts'}
-    ];
+  //Edit mode, fetch data before edit
+  // const [params] = useSearchParams()
+  // const id = params.get('id')
+  // const [form] = Form.useForm()
+  // useEffect(() => {
+  //   const loadDetail = async () => {
+  //     const res = await http.get(`/getproduct/${id}`)
+  //     const data = res.data
+  //     form.setFieldsValue({ ...data, type: data.pictures.type })
+  //     const formatImgList = data.pictures.images.map(url => ({ url }))
+  //     setFileList(formatImgList)
+  //     cacheImgList.current = formatImgList
+  //     setImageCount(data.cover.type)
+  //   }
+  //   if (id) {
+  //     loadDetail()
+  //   }
+  // }, [id, form])
 
+
+
+   
  return (
   <div className="publish">
   <Card
@@ -90,16 +108,17 @@ export const AddNewProduct = () => {
         <Breadcrumb.Item>
             <Link to="/products">My Products</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>List a Product</Breadcrumb.Item>
+        <Breadcrumb.Item>{'List Product'}</Breadcrumb.Item>
       </Breadcrumb>
     }
   >
-    {/* 待加入onFinish={onFinish} */}
+
     <Form
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 16 }}
       initialValues={{ type: 1, content: '' }}
-      form={form}
+      onFinish={onFinish}
+      // form={form}
     >
       <Form.Item
         label="Product Name"
@@ -110,14 +129,13 @@ export const AddNewProduct = () => {
       </Form.Item>
       <Form.Item
         label="Category"
-        name="categoryId"
+        name="category"
         rules={[{ required: true, message: 'Please select category.' }]}
       >
-        <Select placeholder="Category..." style={{ width: 400 }}>
+        <Select placeholder="Select Category" style={{ width: 400 }}>
           {categoryList.map(item => (
             <Option key={item.id} value={item.id}>{item.name}</Option>
           ))}
-
         </Select>
       </Form.Item>
       <Form.Item
@@ -136,28 +154,25 @@ export const AddNewProduct = () => {
         <Input placeholder="Inventory..." style={{ width: 400 }} />
       </Form.Item>
 
-      <Form.Item label="Pictures">
+      <Form.Item label="Pictures"> 
         <Form.Item name="type">
         </Form.Item>
-        {/* 待加入action="upload link" */}
-        { (
           <Upload
             name="image"
             listType="picture-card"
             className="avatar-uploader"
             showUploadList
+            action="http://127.0.0.1:8000/uploadpicture"
             fileList={fileList}
             onChange={onUploadChange}
+            maxCount={3}
           >
             <div style={{ marginTop: 8 }}>
               <PlusOutlined />
             </div>
           </Upload>
-        )}
+       </Form.Item> 
 
-      </Form.Item>
-      {/* 这里的富文本组件 已经被Form.Item控制 */}
-      {/* 它的输入内容 会在onFinished回调中收集起来 */}
       <Form.Item
         label="Description"
         name="description"
@@ -169,7 +184,7 @@ export const AddNewProduct = () => {
       <Form.Item wrapperCol={{ offset: 4 }}>
         <Space>
           <Button size="large" type="primary" htmlType="submit">
-            Submit
+            {'Submit'}
           </Button>
         </Space>
       </Form.Item>

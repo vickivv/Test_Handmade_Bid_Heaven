@@ -2,8 +2,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Table, Space, Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined, CommentOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import {http} from '../utils/http';
 
-
+const ip = 'http://localhost:8000/media/';
 const { Option } = Select
 const { RangePicker } = DatePicker
 
@@ -15,13 +16,24 @@ export const ActiveLists = () => {
         count: 0 // active product counts
     });
 
+
     const [params, setParams] = useState({
         page: 1,
         per_page: 10
     });
 
     // to add data fetch function
-
+    useEffect(() => {
+      const loadList = async () => {
+        const res = await http.get('/getproducts', { params })
+        const { result, total_count } = res.data
+        setProductData({
+          list: result,
+          count: total_count
+        })
+      }
+      loadList()
+    }, [params])
 
     //modify product info
     const navigate = useNavigate();
@@ -47,15 +59,15 @@ export const ActiveLists = () => {
     }
 
     //to change to fetch from database
-    const categoryList = [
-        {id:1, name:'Ceramics and Glass'},
-        {id:2, name:'Paper Crafts'},
-        {id:3, name: 'Yarn and Fiber Crafts'},
-        {id:4, name: 'Upcycling Crafts'},
-        {id:5, name: 'Decorative Crafts'},
-        {id:6, name: 'Fashion Crafts'},
-        {id:7, name:'Miscellaneous Crafts'}
-    ];
+    const [categoryList, setCategoryList] = useState([]);
+    const fetchCategory = async () => {
+      await http.get("/category").then((res) => {
+        setCategoryList(res.data); 
+      });
+    }
+    useEffect(() => {
+      fetchCategory();
+    }, []);
 
     const onFinish = (values) => {
         const { categoryId, date, status } = values
@@ -85,10 +97,13 @@ export const ActiveLists = () => {
     const columns = [
         {
           title: 'Product Picture',
-          dataIndex: 'pictures',
+          dataIndex: 'picture', 
           width: 120,
-          render: pictures => {
-            return <img src={pictures[0]} width={80} height={60} alt="" />
+          render:  (picture) => {
+            const picture_path = picture.replace(/\"/g,"")
+            const path = `${ip}${picture_path}`
+            console.log(path)
+            return <img src={`${path}`} width={80} height={60} />
           }
         },
         {
@@ -114,11 +129,11 @@ export const ActiveLists = () => {
         },
         {
           title: 'Bidding number',
-          dataIndex: 'bidNum'
+          dataIndex: 'bidnum'
         },
         {
             title: 'Post Date',
-            dataIndex: 'postDate'
+            dataIndex: 'postdate'
           },
         {
           title: 'Operations',
@@ -165,9 +180,7 @@ export const ActiveLists = () => {
             startPrice: 20.0,
             inventory: 1,
             bidnum: 2,
-            pictures: [
-                "",
-            ],
+            picture: "",
             managerID: 1,
             postDate: '2024-03-01'
         }
@@ -220,16 +233,15 @@ export const ActiveLists = () => {
             </Form.Item>
           </Form>
         </Card>
-        <Card title={`One Product Found:`}> {/*待前文fetch逻辑加入后将One修改为count*/}
-        {/*待前文fetch逻辑加入后将dataSource修改为productData; total改为productData.count*/}
+        <Card title={productData.count == 1 ? ` One Product Found:`: `${productData.count} Products Found:`}> 
           <Table
             rowKey="id"
             columns={columns}
-            dataSource={data} 
+            dataSource={productData.list} 
             pagination={
               {
                 pageSize: params.per_page,
-                total: 1,
+                total: productData.count,
                 onChange: pageChange,
                 current: params.page
               }

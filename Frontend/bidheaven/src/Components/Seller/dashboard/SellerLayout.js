@@ -2,6 +2,7 @@ import { Layout, Menu, theme } from 'antd';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { SellerHeader } from './SellerHeader';
 import "./layout.css";
+import { ContainerOutlined, PieChartOutlined, ShopOutlined, SyncOutlined } from '@ant-design/icons';
 
 const { Header, Sider } = Layout
 
@@ -19,10 +20,11 @@ export const SellerLayout = () => {
             selectedKeys={pathname}
             style={{ height: '100%', borderRight: 0 }}
           >
-            <Menu.Item key="/overview">
+            <Menu.Item icon={<PieChartOutlined />} key="/overview">
               <Link to='/overview' style={{textDecoration: 'none'}}>Overview</Link>
             </Menu.Item>
             <Menu.SubMenu
+              icon={<ShopOutlined />}
               key="/products"
               title={<Link to="/products" style={{textDecoration: 'none'}}>My Products</Link>}
             >
@@ -33,10 +35,10 @@ export const SellerLayout = () => {
                 <Link to="/soldout" style={{textDecoration: 'none'}}>Sold-out Products</Link>
               </Menu.Item>
               </Menu.SubMenu>
-            <Menu.Item key="/biddings" >
+            <Menu.Item icon={<SyncOutlined/>} key="/biddings" >
               <Link to='/biddings' style={{textDecoration: 'none'}}> My Biddings</Link>
             </Menu.Item>
-            <Menu.Item key="/orders" >
+            <Menu.Item icon={<ContainerOutlined />} key="/orders" >
               <Link to='/orders' style={{textDecoration: 'none'}}> My Orders</Link>
             </Menu.Item>
           </Menu>

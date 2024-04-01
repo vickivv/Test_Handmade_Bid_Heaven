@@ -10,19 +10,19 @@ import { Bidding } from "./biddings/Bidding";
 
 export const SellerApp = () => {
     return (
-
+      // 确认二级路由的写法
     <Router>
         <div>
           <Routes>
             <Route path='/' element={<SellerLayout />} > 
-              <Route path='overview' element={<Overview />} />
-              <Route path="products" exact element={<Products />} />
-              <Route path="activeproducts" element={<ActiveLists />} />
-              <Route path="soldout" element={<SoldOutLists />} />
-              <Route path="biddings" element={<Bidding />} /> 
-              <Route path="pendingbids" element={<Bidding />} /> 
-              <Route path="orders" element={<Orders />} />
-              <Route path='sell' element={<AddNewProduct />} />
+              <Route path='/overview' element={<Overview />} />
+              <Route path="/products" exact element={<Products />} />
+              <Route path="/activeproducts" element={<ActiveLists />} />
+              <Route path="/soldout" element={<SoldOutLists />} />
+              <Route path="/biddings" element={<Bidding />} /> 
+              <Route path="/pendingbids" element={<Bidding />} /> 
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/sell" element={<AddNewProduct />} />
             </Route>
         </Routes>
       </div>
