@@ -3,19 +3,21 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Nav from './Components/Homepage/Nav'
+import Header from './Components/Homepage/Homepage'
+import Footer from './Components/Homepage/Footer'
+import Homepage from './Components/Homepage/Homepage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import { BrowserRouter as Router } from 'react-router-dom';
-// import { createStore } from 'redux';
-// import rootReducer from './reducers'; 
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
 root.render(
   <React.StrictMode>
- 
-      <App />
-   
+    <Homepage/>
+    
+
   </React.StrictMode>
 );
 
@@ -23,4 +25,3 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-

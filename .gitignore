@@ -1,5 +1,3 @@
 /Frontend/bidheaven/node_modules
 /Frontend/bidheaven/venv
 /venv
-*.pyc
-/Backend/handmadeBid/__pycache__

@@ -1,8 +1,6 @@
 import React from "react"
 import Header from "./Header"
 import Nav from "./Nav"
-import Footer from "./Footer"
-import Product_list from "./Product_list";
 
 function Homepage(){
 
@@ -10,8 +8,7 @@ function Homepage(){
         <div className ="Homepage">
         <Header/>
         <Nav/>
-        <Product_list/>
-        <Footer/>
+
         </div>
        
 
