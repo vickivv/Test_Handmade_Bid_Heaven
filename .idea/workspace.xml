@@ -7,12 +7,18 @@
     <list default="true" id="f69a8f4d-6e40-4d62-aa7b-d1160da8eaaf" name="Changes" comment="again">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/HandmadeBidSystem/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/HandmadeBidSystem/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/HandmadeBidSystem/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/HandmadeBidSystem/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/queries.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/queries.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Homepage/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Homepage/Header.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Bids.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Bids.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Orders.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Orders.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/orderitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/orderitem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/overview.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/overview.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/review.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/review.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Homepage/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Homepage/Footer.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Buyer_dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/Buyer_dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Styles/Footer.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Styles/Footer.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dbDDL.sql" beforeDir="false" afterPath="$PROJECT_DIR$/dbDDL.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbDML.sql" beforeDir="false" afterPath="$PROJECT_DIR$/dbDML.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

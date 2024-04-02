@@ -45,16 +45,16 @@ INSERT INTO NORMALUSER (UserID, Fname, Lname, Username, Password, DefaultAddress
 (27, 'Ginny', 'Weasley', 'gweasley', 'magic901', 7, 'ginny@hogwarts.com', '7890123456', 0.0, 17);
 
 -- insert values into address table 
-INSERT INTO ADDRESS (AddressID, UserID, Street, StreeOptional, City, State, Zipcode) VALUES
-(1, 21, '4 Privet Drive', null, 'Little Whinging', 'Surrey', '12345'),
-(2, 22, 'The Burrow', null, 'Ottery St Catchpole', 'Devon', '23456'),
-(3, 23, 'Hogwarts Castle', 'Room 11', 'Hogsmeade', 'Highlands', '34567'),
-(4, 24, 'Malfoy Manor', null, 'Wiltshire', null, '45678'),
-(5, 25, 'Lovegood House', null, 'Near Ottery St Catchpole', 'Devon', '56789'),
-(6, 26, 'Longbottom House', null, 'London', null, '67890'),
-(7, 27, 'Weasley’s Wizard Wheezes', null, 'Diagon Alley', 'London', '78901'),
-(8, 27, '7224 Ohio St.', null, 'Deer Park', 'NY', '11729'),
-(9, 27, '243 James Court', null, 'Oak Park', 'MI', '48237');
+INSERT INTO ADDRESS (AddressID, Fname, Lname, UserID, Street, StreetOptional, City, State, Zipcode) VALUES
+(1, 'Harry', 'Potter', 21, '4 Privet Drive', null, 'Little Whinging', 'Surrey', '12345'),
+(2, 'Ron', 'Weasley', 22, 'The Burrow', null, 'Ottery St Catchpole', 'Devon', '23456'),
+(3, 'Hermione', 'Granger', 23, 'Hogwarts Castle', 'Room 11', 'Hogsmeade', 'Highlands', '34567'),
+(4, 'Draco', 'Malfoy', 24, 'Malfoy Manor', null, 'Wiltshire', null, '45678'),
+(5, 'Luna', 'Lovegood', 25, 'Lovegood House', null, 'Near Ottery St Catchpole', 'Devon', '56789'),
+(6, 'Neville', 'Longbottom', 26, 'Longbottom House', null, 'London', null, '67890'),
+(7, 'Ginny', 'Weasley', 27, 'Weasley’s Wizard Wheezes', null, 'Diagon Alley', 'London', '78901'),
+(8, 'Ginny', 'Weasley', 27, '7224 Ohio St.', null, 'Deer Park', 'NY', '11729'),
+(9, 'Ron', 'Weasley', 27, '243 James Court', null, 'Oak Park', 'MI', '48237');
 
 -- insert values into category table 
 INSERT INTO CATEGORY (CategoryID, CName, Description) VALUES

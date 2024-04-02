@@ -4,6 +4,7 @@ import OrderItem from '../Components/Dashboard/orderitem';
 import CustomSidebar from '../Components/Dashboard/sidebar';
 import Filter from '../Components/Dashboard/filter'
 import Header from '../Components/Homepage/Header';
+import Footer from '../Components/Homepage/Footer'
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 
@@ -61,6 +62,7 @@ const BuyerDashboard = () => {
           </Content>
         </Layout>
       </Layout>
+      <Footer />
     </Layout>
   );
 };

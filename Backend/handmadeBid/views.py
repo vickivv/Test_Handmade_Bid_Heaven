@@ -20,8 +20,10 @@ from rest_framework import status
 import json
 import logging
 
+
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
-    get_bid_details, get_overview_order, get_overview_bid
+    get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
+    get_default_delivery
 
 logger = logging.getLogger(__name__)
 
@@ -91,14 +93,47 @@ class AdminLoginView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class GetOverviewPayAPIView(APIView):
+    def get(self, request):
+        user_id = request.query_params.get('userId')
+
+        if not user_id:
+            return JsonResponse({'error': 'userId parameter is required'}, status=400)
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid userId'}, status=400)
+
+        data = get_overview_pay(user_id)
+        return Response(data)
+
+
 class GetOverviewOrderAPIView(APIView):
     def get(self, request):
-        data = get_overview_order()
+        user_id = request.query_params.get('userId')
+
+        if not user_id:
+            return JsonResponse({'error': 'userId parameter is required'}, status=400)
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid userId'}, status=400)
+
+        data = get_overview_order(user_id)
         return Response(data)
 
 class GetOverviewBidAPIView(APIView):
     def get(self, request):
-        data = get_overview_bid()
+        user_id = request.query_params.get('userId')
+
+        if not user_id:
+            return JsonResponse({'error': 'userId parameter is required'}, status=400)
+        try:
+            user_id = int(user_id)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid userId'}, status=400)
+
+        data = get_overview_bid(userID=user_id)
         return Response(data)
 
 class GetAllOrdersAPIView(APIView):
@@ -154,4 +189,52 @@ class GetBidDetailAPIView(APIView):
     def get(self, request, *args, **kwargs):
         bid_id = self.kwargs.get('BiddingID')
         data = get_bid_details(bid_id)
+        return Response(data)
+
+
+class AddReviewAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+
+        userID = data.get('userid')
+        sellerID = data.get('sellerid')
+        content = data.get('data')
+        ProductID = data.get('productid')
+        OrderID = data.get('orderid')
+        Rate = data.get('rate')
+
+        if add_review(userID, sellerID, content, ProductID, OrderID, Rate):
+            return JsonResponse({"success": True})
+        else:
+            return JsonResponse({"error": "Unable to add review"}, status=400)
+
+class AddAddressAPIView(APIView):
+    def post(self, request):
+        data = json.loads(request.body)
+        Fname = data.get('First name')
+        Lname = data.get('Last name')
+        UserID = data.get('userId')
+        Street = data.get('Address line one')
+        StreetOptional = data.get('Address line two')
+        City = data.get('City')
+        State = data.get('State')
+        Zipcode = data.get('Zipcode')
+
+        if add_address(Fname, Lname, UserID, Street, StreetOptional, City, State, Zipcode):
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({"error": "Unable to add review"}, status=400)
+
+
+class GetPaymentItemAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        order_id = self.kwargs.get('orderId')
+        data = get_payment_item(order_id)
+        return Response(data)
+
+
+class GetDefaultDeliveryAPIView(APIView):
+    def get(self, request):
+        user_id = request.query_params.get('userId')
+        data = get_default_delivery(user_id)
         return Response(data)

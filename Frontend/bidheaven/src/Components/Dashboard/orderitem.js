@@ -68,7 +68,7 @@ const OrderItem = ({ products }) => {
               <p>Sold by {product.SellerID}</p>
             </div>
             <div style={col20RightStyle}>
-              <Review />
+              <Review sellerid={product.SellerID} productid={product.ProductID} orderid={product.OrderID} />
               <Link to={`/buyer/order/${product.OrderID}`} style={{ color: '#50123c' }}>View Order Details</Link>
             </div>
           </div>
