@@ -1,18 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Table, Space, Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd';
+import { Table, Space, Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Tooltip } from 'antd';
 import { EditOutlined, DeleteOutlined, CommentOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import {http} from '../utils/http';
 
-
+const ip = 'http://localhost:8000/media/';
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 export const SoldOutLists = () => {
-    
-    //list to save sold out products data fetched from backend
+
     const [productData, setProductData] = useState({
-        list: [],// active product lists
-        count: 0 // active product counts
+        list: [],
+        count: 0 
     });
 
     const [params, setParams] = useState({
@@ -20,40 +20,53 @@ export const SoldOutLists = () => {
         per_page: 10
     });
 
-    // to add data fetch function
+  
+    useEffect(() => {
+      const loadList = async () => {
+        const res = await http.get('/soldoutproducts', { params })
+        const { result, total_count } = res.data
+        setProductData({
+          list: result,
+          count: total_count
+        })
+      }
+      loadList()
+    }, [params])
 
 
+    const relistProduct = (data) => {
+      console.log("relist");
+    };
 
     //contact the admin user of a product
     const contactManager = (data) => {
         //to add contact api
         console.log(data.managerID);
-    }
+    };
 
     //to change to fetch from database
-    const categoryList = [
-        {id:1, name:'Ceramics and Glass'},
-        {id:2, name:'Paper Crafts'},
-        {id:3, name: 'Yarn and Fiber Crafts'},
-        {id:4, name: 'Upcycling Crafts'},
-        {id:5, name: 'Decorative Crafts'},
-        {id:6, name: 'Fashion Crafts'},
-        {id:7, name:'Miscellaneous Crafts'}
-    ];
+    const [categoryList, setCategoryList] = useState([]);
+    const fetchCategory = async () => {
+      await http.get("/category").then((res) => {
+        setCategoryList(res.data); 
+      });
+    }
+    useEffect(() => {
+      fetchCategory();
+    }, []);
 
     const onFinish = (values) => {
-        const { categoryId, date} = values
+        const { categoryId, date, status } = values
         const _params = {}
-        // 初始化频道
+        _params.status = status
+       
         if (categoryId) {
           _params.category = categoryId
         }
-        // 初始化时间
         if (date) {
           _params.begin_pubdate = date[0].format('YYYY-MM-DD')
           _params.end_pubdate = date[1].format('YYYY-MM-DD')
         }
-        // 修改params数据 引起接口的重新发送 对象的合并是一个整体覆盖 改了对象的整体引用
         setParams({
           ...params,
           ..._params
@@ -70,10 +83,13 @@ export const SoldOutLists = () => {
     const columns = [
         {
           title: 'Product Picture',
-          dataIndex: 'pictures',
+          dataIndex: 'picture', 
           width: 120,
-          render: pictures => {
-            return <img src={pictures[0]} width={80} height={60} alt="" />
+          render:  (picture) => {
+            const picture_path = picture.replace(/\"/g,"")
+            const path = `${ip}${picture_path}`
+            console.log(path)
+            return <img src={`${path}`} width={80} height={60} />
           }
         },
         {
@@ -99,17 +115,25 @@ export const SoldOutLists = () => {
         },
         {
           title: 'Bidding number',
-          dataIndex: 'bidNum'
+          dataIndex: 'bidnum'
         },
         {
             title: 'Post Date',
-            dataIndex: 'postDate'
+            dataIndex: 'postdate'
           },
         {
           title: 'Operations',
           render: data => {
             return (
               <Space size="middle">
+                <Tooltip title="Relist Product">
+                <Button
+                  type="primary"
+                  shape="circle"
+                  icon={<EditOutlined />}
+                  onClick={() => relistProduct(data)} />
+                </Tooltip>
+                <Tooltip title="Contact Admin">
                 <Button
                   type="primary"
                   danger
@@ -117,6 +141,7 @@ export const SoldOutLists = () => {
                   icon={<CommentOutlined />}
                   onClick={() => contactManager(data)}
                 />
+                </Tooltip>
               </Space>
             )
           },
@@ -132,9 +157,7 @@ export const SoldOutLists = () => {
             startPrice: 20.0,
             inventory: 1,
             bidnum: 2,
-            pictures: [
-                "",
-            ],
+            picture: "",
             managerID: 1,
             postDate: '2024-03-01'
         }
@@ -151,7 +174,7 @@ export const SoldOutLists = () => {
               <Breadcrumb.Item>
                 <Link to="/products">My Products</Link>
               </Breadcrumb.Item>
-              <Breadcrumb.Item>Sold-out Products</Breadcrumb.Item>
+              <Breadcrumb.Item>Soldout Products</Breadcrumb.Item>
             </Breadcrumb>
           }
           style={{ marginBottom: 20 }}
@@ -159,7 +182,14 @@ export const SoldOutLists = () => {
           <Form
             onFinish={onFinish}
             initialValues={{ status: null }}>
-
+            <Form.Item label="Bidding Status" name="status">
+              <Radio.Group>
+                <Radio value={null}>All</Radio>
+                <Radio value={0}>No Bidding</Radio>
+                <Radio value={1}>Has Bidding</Radio>
+              </Radio.Group>
+            </Form.Item>
+  
             <Form.Item label="Category" name="category">
               <Select
                 placeholder="Please choose category."
@@ -180,16 +210,15 @@ export const SoldOutLists = () => {
             </Form.Item>
           </Form>
         </Card>
-        <Card title={`One Product Found:`}> {/*待前文fetch逻辑加入后将One修改为count*/}
-        {/*待前文fetch逻辑加入后将dataSource修改为productData; total改为productData.count*/}
+        <Card title={productData.count == 1 ? ` One Product Found:`: `${productData.count} Products Found:`}> 
           <Table
             rowKey="id"
             columns={columns}
-            dataSource={data} 
+            dataSource={productData.list} 
             pagination={
               {
                 pageSize: params.per_page,
-                total: 1,
+                total: productData.count,
                 onChange: pageChange,
                 current: params.page
               }

@@ -64,39 +64,34 @@ export const AddNewProduct = () => {
       formData.append("startPrice", parseInt(startPrice))
       formData.append("inventory", parseInt(inventory))
       formData.append("pictures", pictures)
-    // if (id) {
-    //   await http.put(`/addproduct/${id}`, params)
-    // } else {
+      if (id) {
+        await http.put(`/addproduct/${id}`, params)
+      } else {
       await http.post(`/addproducts`, formData)
-  //  }
-
-
+    }
     navigate('/activeproducts')
     message.success('List Completed')
   }
 
   //Edit mode, fetch data before edit
-  // const [params] = useSearchParams()
-  // const id = params.get('id')
-  // const [form] = Form.useForm()
-  // useEffect(() => {
-  //   const loadDetail = async () => {
-  //     const res = await http.get(`/getproduct/${id}`)
-  //     const data = res.data
-  //     form.setFieldsValue({ ...data, type: data.pictures.type })
-  //     const formatImgList = data.pictures.images.map(url => ({ url }))
-  //     setFileList(formatImgList)
-  //     cacheImgList.current = formatImgList
-  //     setImageCount(data.cover.type)
-  //   }
-  //   if (id) {
-  //     loadDetail()
-  //   }
-  // }, [id, form])
+  const [params] = useSearchParams()
+  const id = params.get('id')
+  const [form] = Form.useForm()
+  useEffect(() => {
+    const loadDetail = async () => {
+      const res = await http.get(`/getproducts/${id}`)
+      const data = res.data
+      form.setFieldsValue({ ...data})
+      const formatImgList = data.pictures.map(url => ({ url }))
+      setFileList(formatImgList)
+      cacheImgList.current = formatImgList
+    }
+    if (id) {
+      loadDetail()
+    }
+  }, [id, form])
 
 
-
-   
  return (
   <div className="publish">
   <Card

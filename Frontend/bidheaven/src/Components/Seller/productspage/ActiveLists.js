@@ -25,7 +25,7 @@ export const ActiveLists = () => {
     // to add data fetch function
     useEffect(() => {
       const loadList = async () => {
-        const res = await http.get('/getproducts', { params })
+        const res = await http.get('/activeproducts', { params })
         const { result, total_count } = res.data
         setProductData({
           list: result,
@@ -38,7 +38,7 @@ export const ActiveLists = () => {
     //modify product info
     const navigate = useNavigate();
     const modifyProduct = (data) => {
-      navigate(`/sell`); //待修改索引到产品录入页面
+      navigate(`/sell`); 
     };
 
     //delete product
@@ -192,7 +192,7 @@ export const ActiveLists = () => {
           title={
             <Breadcrumb separator=">">
               <Breadcrumb.Item>
-                <Link to="/">Seller's Page</Link>
+                <Link to="/overview">Seller's Page</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 <Link to="/products">My Products</Link>

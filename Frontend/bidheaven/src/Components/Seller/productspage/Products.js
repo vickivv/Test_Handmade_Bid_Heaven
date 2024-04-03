@@ -1,48 +1,63 @@
 import React from 'react';
-import { Carousel, Button } from 'antd';
+import { Button, Card, List, Divider, Flex  } from 'antd';
+import { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
-import flower1 from '../../../Assests/flower1.jpg';
-import flower2 from '../../../Assests/flower2.jpeg';
-import flower3 from '../../../Assests/flower3.png';
-import nopicture from '../../../Assests/nopicture.png';
 import './products.css';
+import {http} from '../../Seller/utils/http';
+
+const ip = 'http://localhost:8000/media/';
+const { Meta } = Card;
+
+const TopProducts = () => {
+    const [products, setProducts] = useState([]);
+    const fetchProducts = async() => {
+        const response = await http.get('/bestsaleproducts');
+        setProducts(response.data.result);
+    };
+    useEffect(() => {
+        fetchProducts();
+    },[])
+
+    return (
+        <List
+          grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 2,
+            md: 4,
+            lg: 5,
+            xl: 5,
+            xxl: 5,
+          }}
+          dataSource={products}
+          renderItem={(item) => (
+            <List.Item>
+              <Card
+                hoverable
+                style={{ width: 240 }}
+                cover={<img alt={item.productname} src={`${ip}${item.picture}`} />}
+              >
+                <Meta title={item.productname} description={`Category:${item.category} Sales:${item.quantity}`} />
+              </Card>
+            </List.Item>
+          )}
+        />
+      );
+};
 
 export const Products = () => {
 
-    const picStyle = {
-        textAlign: 'center',
-        maxWidth: '100%',
-        maxHeight: '100%',
-        background: '#364d79',
-        overflow: 'hidden',  
-    };
-
     return (
     <div>
-        <div><h1 style={{'font-weight': 'bolder', 'margin':'10px'}}>Top Three Sales</h1></div>
-        <div  className = 'imgcontainer'>
-                <Carousel autoplay effect="fade">
-                    <div >
-                        <Link to='/activeproducts'>
-                            <img style={picStyle} src={flower1 || nopicture} alt="" />
-                        </Link>
-                    </div>
-                    <div>
-                        <Link to='/activeproducts'>
-                        <img style={picStyle} src={flower2 || nopicture} alt="" />
-                        </Link>
-                    </div>
-                    <div>
-                        <Link to='/activeproducts'>
-                        <img style={picStyle} src={flower3 || nopicture} alt="" />
-                        </Link>
-                    </div>
-                </Carousel>
-        </div>
+        <h5>Top Sold Products</h5>
+        <TopProducts />
+        <Divider />
         <div>
+
             <Link to='/sell'>
-                <Button type="primary">List a Product</Button>
+                <Button className="list" type="primary" size='large'>Add a Product</Button>
             </Link>
+
         </div>
     </div>
 )

@@ -1,5 +1,5 @@
 import logo1 from '../../../Assests/logo1.png'
-import '../../../Styles/SellerHeader.css'
+import './SellerHeader.css';
 import { Button } from 'antd';
 import { UserOutlined} from '@ant-design/icons';
 

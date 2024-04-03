@@ -2,17 +2,35 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Table, Space, Card, Form, Button, DatePicker, Select, Tooltip } from 'antd';
 import { CheckOutlined, CloseOutlined, CommentOutlined, FileSearchOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
+import {http} from "../utils/http";
 
 const { Option } = Select
 const { RangePicker } = DatePicker
 
 export const Bidding =() => {
 
+  const [bidData, setBidData] = useState({
+    list: [],
+    count: 0
+});
   const [params, setParams] = useState({
     page: 1,
     per_page: 10
   });
 
+  const fetchBids = async() => {
+    const response = await http.get('/getbids', { params });
+    console.log(response.data)
+    const {result, count} = response.data
+    setBidData({
+      list:result,
+      count: count
+    });
+  };
+
+  useEffect(() => {
+    fetchBids();
+  },[])
 
   const pageChange = (page) => {
     setParams({
@@ -29,7 +47,7 @@ export const Bidding =() => {
     },
     {
       title: 'Product Name',
-      dataIndex: 'name',
+      dataIndex: 'productName',
       width: 220
     },
     {
@@ -99,20 +117,6 @@ export const Bidding =() => {
     }
   ]
 
-  const data = [
-    {
-        productId: 1,
-        name: 'Stained Glass Flowers',
-        bidPrice: 25.0,
-        quantity: 2,
-        bidDate: '2024-03-01',
-        bidnum: 2,
-        bidderName: 'gweasley',
-        bidderRate: 4.5,
-        validDate: '2024-03-07'
-    }
-  ]
-
   const statusList=[
     {id:1, name:'Pending'},
     {id:2, name:'Accepteds'},
@@ -132,7 +136,7 @@ return (
                 placeholder="Please choose status."
                 style={{ width: 120 }}
               >
-                {statusList.map(status => <Option key={status.id} value={status.id}>{status.name}</Option>)}
+                {statusList.map(status => <Option key={status.id} value={status.name}>{status.name}</Option>)}
               </Select>
             </Form.Item>
   
@@ -147,16 +151,15 @@ return (
             </Form.Item>
           </Form>
           </Card>
-      <Card title={`One Bidding Found:`}> {/*待前文fetch逻辑加入后将One修改为count*/}
-      {/*待前文fetch逻辑加入后将dataSource修改为productData; total改为productData.count*/}
+      <Card title={bidData.count == 1 ? ` One Bid Found:`: `${bidData.count} Bids Found:`}> {/*待前文fetch逻辑加入后将One修改为count*/}
      <Table
       rowKey="id"
       columns={columns}
-      dataSource={data} 
+      dataSource={bidData.list} 
       pagination={
         {
           pageSize: params.per_page,
-          total: 1,
+          total: bidData.count,
           onChange: pageChange,
           current: params.page
         }

@@ -20,11 +20,11 @@ export const SellerLayout = () => {
             selectedKeys={pathname}
             style={{ height: '100%', borderRight: 0 }}
           >
-            <Menu.Item icon={<PieChartOutlined />} key="/overview">
+            <Menu.Item icon={<PieChartOutlined style={{color:'#50123c'}}/>} key="/overview">
               <Link to='/overview' style={{textDecoration: 'none'}}>Overview</Link>
             </Menu.Item>
             <Menu.SubMenu
-              icon={<ShopOutlined />}
+              icon={<ShopOutlined style={{color:'#50123c'}}/>}
               key="/products"
               title={<Link to="/products" style={{textDecoration: 'none'}}>My Products</Link>}
             >
@@ -35,10 +35,10 @@ export const SellerLayout = () => {
                 <Link to="/soldout" style={{textDecoration: 'none'}}>Sold-out Products</Link>
               </Menu.Item>
               </Menu.SubMenu>
-            <Menu.Item icon={<SyncOutlined/>} key="/biddings" >
+            <Menu.Item icon={<SyncOutlined style={{color:'#50123c'}}/>} key="/biddings" >
               <Link to='/biddings' style={{textDecoration: 'none'}}> My Biddings</Link>
             </Menu.Item>
-            <Menu.Item icon={<ContainerOutlined />} key="/orders" >
+            <Menu.Item icon={<ContainerOutlined style={{color:'#50123c'}}/>} key="/orders" >
               <Link to='/orders' style={{textDecoration: 'none'}}> My Orders</Link>
             </Menu.Item>
           </Menu>
