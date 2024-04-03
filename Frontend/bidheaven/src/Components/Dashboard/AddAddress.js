@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import {
   Button,
   Cascader,
@@ -10,7 +11,6 @@ import {
   Select,
   TreeSelect,
 } from 'antd';
-import Header from '../Homepage/Header'
 
 const { Option } = Select;
 const states = [
@@ -46,7 +46,7 @@ const formItemLayout = {
 };
 
 const AddAddress = () => {
-
+    const navigate = useNavigate();
     const onFinish = async (values) => {
     const userId = localStorage.getItem('userId');
     const dataToSend = {
@@ -65,6 +65,7 @@ const AddAddress = () => {
       if (response.ok) {
         // 请求成功后的操作
         console.log('Address saved!');
+        navigate(-1);
       } else {
         // 请求失败后的操作
         console.error('Failed to save address:', response.statusText);
@@ -77,7 +78,6 @@ const AddAddress = () => {
 
   return (
   <div>
-  <Header />
   <Form
     {...formItemLayout}
     variant="filled"
@@ -88,7 +88,6 @@ const AddAddress = () => {
       paddingTop: '50px'
     }}
   >
-  <h3>Shipping Details</h3>
     <Form.Item
       label="First name"
       name="First name"
@@ -181,7 +180,7 @@ const AddAddress = () => {
       <Input/>
     </Form.Item>
 
-    <Button htmlType="submit" style={{ backgroundColor: '#9F7EAC', borderColor: '#9F7EAC', color: '#fff' }} >Save Address</Button>
+    <Button htmlType="submit" style={{ margin: '50px', backgroundColor: '#9F7EAC', borderColor: '#9F7EAC', color: '#fff' }} >Save Address</Button>
     </Form>
   </div>
   );

@@ -97,6 +97,13 @@ def add_address(Fname, Lname, UserID, Street, StreetOptional, City, State, Zipco
                 INSERT INTO ADDRESS (Fname, Lname, UserID, Street, StreetOptional, City, State, Zipcode) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 """, [Fname, Lname, UserID, Street, StreetOptional, City, State, Zipcode])
+            new_id = cursor.lastrowid
+            cursor.execute("""
+                           UPDATE NORMALUSER
+                           SET DefaultAddressID = %s
+                           WHERE UserID = %s
+                           """, [new_id, UserID])
+            connection.commit()
             return True
         except Exception as e:
             print(e)
@@ -115,6 +122,24 @@ def get_default_delivery(userID):
         cursor.execute("SELECT a.Fname, a.Lname, a.Street, a.StreetOptional, a.City, a.State, a.Zipcode "
                        "FROM ADDRESS a JOIN NORMALUSER n ON n.DefaultAddressID = a.AddressID "
                        "WHERE n.UserID = %s", [userID])
+        columns = [col[0] for col in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+def set_default_delivery(userID, AddressID):
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("UPDATE NORMALUSER SET DefaultAddressID = %s WHERE UserID = %s", [AddressID, userID])
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+
+def get_all_addresses(userID):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT a.AddressID, a.Fname, a.Lname, a.Street, a.StreetOptional, a.City, a.State, a.Zipcode "
+                       "FROM ADDRESS a "
+                       "WHERE a.UserID = %s", [userID])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 

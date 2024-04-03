@@ -4,7 +4,7 @@ import './filter.css'
 
 const Filter = ({ selectedStatus, setSelectedStatus }) => (
   <Segmented
-    options={['All Orders', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Refunded', 'Failed']}
+    options={['All Orders', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Canceled', 'Refunded', 'Failed']}
     value={selectedStatus}
     onChange={(value) => setSelectedStatus(value)}
     className="large-segment"

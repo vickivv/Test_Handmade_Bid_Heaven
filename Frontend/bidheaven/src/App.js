@@ -18,7 +18,8 @@ import BidDetail from './Pages/BidDetail';
 import Overview from './Components/Dashboard/overview'
 import Review from './Components/Dashboard/review'
 import Payment from './Pages/payment'
-import AddAddress from './Components/Dashboard/Address'
+import AddAddressPage from './Pages/AddAddressPage'
+import AddressBook from './Components/Users/AddressBook'
 
 
 function App() {
@@ -38,7 +39,8 @@ function App() {
             <Route path="/admin-login" element={<AdminLogin/>} />
 
             <Route path="/review" element={<Review />} />
-            <Route path="/add_address" element={<AddAddress />} />
+            <Route path="/addressbook" element={<AddressBook />} />
+            <Route path="/add_address" element={<AddAddressPage />} />
             <Route path="/payment/:orderId" element={<Payment />} />
             <Route path="/buyer/*" element={<BuyerDashboard />}>
               <Route path="overview" element={<Overview />} />

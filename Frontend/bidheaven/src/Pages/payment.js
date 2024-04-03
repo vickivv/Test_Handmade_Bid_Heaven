@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Divider } from 'antd';
-import Address from '../Components/Dashboard/Address';
-import { useParams } from 'react-router-dom';
+import AddAddress from '../Components/Dashboard/AddAddress';
+import { useParams, Link, useNavigate, useRouteMatch, } from 'react-router-dom';
+import AddressBook from '../Components/Users/AddressBook'
+import Header from '../Components/Homepage/Header'
+import Footer from '../Components/Homepage/Footer'
 
 
 const cardStyle = {
@@ -32,12 +35,6 @@ const col20Style = {
 const col80Style = {
   ...colStyleBase,
   flexBasis: '80%', // 60% of the card's width
-  // Additional specific styles for the middle column...
-};
-
-const col60Style = {
-  ...colStyleBase,
-  flexBasis: '60%', // 60% of the card's width
   // Additional specific styles for the middle column...
 };
 
@@ -76,23 +73,19 @@ const Items = () => {
 
   return (
   <>
-
-  <div style={cardStyle}>
-    <div style={col80Style}>
+  <div>
+    <div>
     <div style={{...cardStyle, margin: '0px', padding: '0px'}}>
         <div style={{...col20Style}}>
-        <img style={{maxWidth: '250px', maxHeight: '250px'}} alt={orderDetails.ProductName} src={orderDetails.Picture}/>
+        <img style={{maxWidth: '200px', maxHeight: '200px'}} alt={orderDetails.ProductName} src={orderDetails.Picture}/>
         </div>
-      <div style={{...col60Style, padding: '20px'}}>
+      <div style={{...col80Style, padding: '20px', paddingLeft: '5px'}}>
         <p>{orderDetails.ProductName}</p>
-        <p>ProductID: {orderDetails.ProductID}</p>
         <p>OrderID: {orderDetails.OrderID}</p>
-        <p>Sold by Seller{orderDetails.SellerID}</p>
-        <p>Time Placed: {orderDetails.OrderDate}</p>
-        <p>Total: US${orderDetails.TotalAmount}</p>
-        <a href="#" style={{ display: 'block' }}>View Item</a>
+        <p>Items: ${orderDetails.TotalAmount}</p>
+        <p>Estimated tax to be collected: ${(orderDetails.TotalAmount * 0.1).toFixed(2)}</p>
+        <h5>Total: ${orderDetails.TotalAmount + orderDetails.TotalAmount*0.1}</h5>
       </div>
-      <div style={col20Style}>${orderDetails.SellingPrice}</div>
     </div>
   </div>
   </div>
@@ -102,12 +95,17 @@ const Items = () => {
 };
 
 
-const Delivery = () => {
+const Delivery = ({ onDeliveryUpdate }) => {
     const userId = localStorage.getItem('userId');
 
     const [delivery, setDelivery] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    const handleAddressChangeClick = () => {
+        navigate('/addressbook'); // 确保这个路径与您的路由设置匹配
+    };
 
     useEffect(() => {
     const fetchDelivery = async () => {
@@ -131,21 +129,42 @@ const Delivery = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-  if (!delivery) return <div>No delivery information found</div>;
+  if (!delivery) return (
+  <div>
+  <AddAddress/>
+  </div>
+  );
+
+  return (
+  <>
+  <div>{delivery.Fname} {delivery.Lname}, {delivery.Street} {delivery.StreetOptional}, {delivery.City}, {delivery.State}, {delivery.Zipcode}</div>
+  <div onClick={handleAddressChangeClick} style={{ textDecoration: 'underline', color: '#50123c' }}>
+        Change Delivery Address
+  </div>  </>
+  );
 
 }
 
 
+const Payment = () => {
+  const navigate = useNavigate();
+  const { orderId } = useParams(); // If you need orderId in this component
 
-const Payment = () => (
-  <div style={{padding: '50px'}}>
-    <h4>Items</h4>
-    <Items />
-    <Divider />
-    <h4>Delivery info</h4>
-    <Delivery />
-    <Divider />
-    <h4>Payment info</h4>
-  </div >
-);
+  return (
+  <>
+  <Header />
+    <div style={{ padding: '50px' }}>
+      <h4>Place your order</h4>
+      <Items orderId={orderId} />
+      <Divider />
+      <h4>Delivering to</h4>
+      <Delivery  />
+      <Divider />
+      <h4>Payment info</h4>
+    </div>
+  <Footer />
+  </>
+  );
+};
+
 export default Payment;

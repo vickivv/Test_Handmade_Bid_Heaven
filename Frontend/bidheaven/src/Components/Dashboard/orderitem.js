@@ -68,9 +68,18 @@ const OrderItem = ({ products }) => {
               <p>Sold by {product.SellerID}</p>
             </div>
             <div style={col20RightStyle}>
-              <Review sellerid={product.SellerID} productid={product.ProductID} orderid={product.OrderID} />
-              <Link to={`/buyer/order/${product.OrderID}`} style={{ color: '#50123c' }}>View Order Details</Link>
+            {product.OrderStatus === 'Pending' ? (
+            <Link to={`/payment/${product.OrderID}`} style={{ textDecoration: 'underline', color: '#50123c' }}>
+            Click Here to Pay Now
+            </Link>
+            ) : (
+            <>
+            <Review sellerid={product.SellerID} productid={product.ProductID} orderid={product.OrderID} />
+            <Link to={`/buyer/order/${product.OrderID}`} style={{ color: '#50123c' }}>View Order Details</Link>
+            </>
+            )}
             </div>
+
           </div>
         ))}
       </div>

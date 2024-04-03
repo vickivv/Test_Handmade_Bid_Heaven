@@ -23,7 +23,7 @@ import logging
 
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
-    get_default_delivery
+    get_default_delivery, get_all_addresses, set_default_delivery
 
 logger = logging.getLogger(__name__)
 
@@ -208,6 +208,13 @@ class AddReviewAPIView(APIView):
         else:
             return JsonResponse({"error": "Unable to add review"}, status=400)
 
+
+class GetAllAddressesAPIView(APIView):
+    def get(self, request):
+        user_id = request.query_params.get('userId')
+        data = get_all_addresses(user_id)
+        return Response(data)
+
 class AddAddressAPIView(APIView):
     def post(self, request):
         data = json.loads(request.body)
@@ -225,6 +232,21 @@ class AddAddressAPIView(APIView):
         else:
             return JsonResponse({"error": "Unable to add review"}, status=400)
 
+class GetDefaultDeliveryAPIView(APIView):
+    def get(self, request):
+        user_id = request.query_params.get('userId')
+        data = get_default_delivery(user_id)
+        return Response(data)
+
+
+class SetDefaultDeliveryAPIView(APIView):
+    def put(self, request):
+        user_id = request.query_params.get('userId')
+        address_id = request.query_params.get('addressId')
+        if set_default_delivery(user_id, address_id):
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({"error": "Unable to set"}, status=400)
 
 class GetPaymentItemAPIView(APIView):
     def get(self, request, *args, **kwargs):
@@ -233,8 +255,4 @@ class GetPaymentItemAPIView(APIView):
         return Response(data)
 
 
-class GetDefaultDeliveryAPIView(APIView):
-    def get(self, request):
-        user_id = request.query_params.get('userId')
-        data = get_default_delivery(user_id)
-        return Response(data)
+
