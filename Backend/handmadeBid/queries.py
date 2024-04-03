@@ -18,11 +18,19 @@ def get_orders_by_status(userID, status):
 def get_order_details(order_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT o.OrderID, o.SellerID , o.OrderDate, o.TotalAmount, o.OrderStatus, o.ProductName, "
-                       "o.ProductID, o.SellingPrice, s.TrackingNumber, s.Status, o.Picture FROM ordersview o "
-                       "JOIN shipment s ON s.OrderID = o.OrderID "
+                       "o.ProductID, o.SellingPrice, o.Picture FROM ordersview o "
                        "WHERE o.OrderID = %s", [order_id])
-        columns = [col[0] for col in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+        columns_order = [col[0] for col in cursor.description]
+        order_details = [dict(zip(columns_order, row)) for row in cursor.fetchall()]
+
+        cursor.execute("SELECT s.TrackingNumber, s.Status FROM shipment s WHERE s.OrderID = %s", [order_id])
+        columns_shipment = [col[0] for col in cursor.description]
+        shipment_details = [dict(zip(columns_shipment, row)) for row in cursor.fetchall()]
+
+        return {
+            'order_details': order_details,
+            'shipment_details': shipment_details
+        }
 
 
 def get_all_bids(userID):
@@ -143,3 +151,12 @@ def get_all_addresses(userID):
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+
+def cancel_order(orderID):
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("UPDATE ORDERS SET OrderStatus = %s WHERE OrderID = %s", ['Canceled', orderID])
+            return True
+        except Exception as e:
+            print(e)
+            return False

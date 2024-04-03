@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Divider } from 'antd';
+import { Divider, Button, Modal, Space } from 'antd';
 import AddAddress from '../Components/Dashboard/AddAddress';
 import { useParams, Link, useNavigate, useRouteMatch, } from 'react-router-dom';
 import AddressBook from '../Components/Users/AddressBook'
 import Header from '../Components/Homepage/Header'
 import Footer from '../Components/Homepage/Footer'
+import '../Styles/payment.css'
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
 
 const cardStyle = {
@@ -40,11 +42,12 @@ const col80Style = {
 
 
 const Items = () => {
-  const { orderId } = useParams(); // 从 URL 中获取 orderId
-
+  const { orderId } = useParams();
   const [orderDetails, setOrderDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { confirm } = Modal;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -66,6 +69,45 @@ const Items = () => {
     fetchOrderDetails();
   }, [orderId]); // 依赖项数组中包含 orderId，这样当 orderId 变化时，useEffect 会重新运行
 
+    const showDeleteConfirm = () => {
+        const handleCancel = async (event) => {
+          const dataToSend = {
+              orderid: orderId,
+            };
+            try {
+            const response = await fetch(`http://127.0.0.1:8000/api/cancel_order`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(dataToSend),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              console.log('Success:', result);
+            } else {
+              console.error('Error:', response.statusText);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+            };
+      confirm({
+        title: 'Are you sure cancel this order?',
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk() {
+          handleCancel();
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+};
+
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!orderDetails) return <div>No order details found</div>;
@@ -85,7 +127,18 @@ const Items = () => {
         <p>Items: ${orderDetails.TotalAmount}</p>
         <p>Estimated tax to be collected: ${(orderDetails.TotalAmount * 0.1).toFixed(2)}</p>
         <h5>Total: ${orderDetails.TotalAmount + orderDetails.TotalAmount*0.1}</h5>
+
+        <Space wrap>
+    <Button onClick={showDeleteConfirm} key="submit"
+          type="primary" style={{maxWidth: '200px'}}>
+      Cancel Order
+    </Button>
+  </Space>
+
       </div>
+      </div>
+      <div>
+
     </div>
   </div>
   </div>
@@ -148,7 +201,36 @@ const Delivery = ({ onDeliveryUpdate }) => {
 
 const Payment = () => {
   const navigate = useNavigate();
-  const { orderId } = useParams(); // If you need orderId in this component
+  const userId = localStorage.getItem('userId');
+  const { orderId } = useParams();
+  const [paymentMethod, setPaymentMethod] = useState('');
+
+  const handleSubmit = async (event) => {
+      event.preventDefault(); // 阻止表单默认提交行为
+      const dataToSend = {
+          userid: userId,
+          orderid: orderId,
+          paymentmethod: 'E-Wallet',
+        };
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/set_order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(dataToSend), // 将输入数据作为请求体发送
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('Success:', result);
+        } else {
+          console.error('Error:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+  };
 
   return (
   <>
@@ -161,6 +243,12 @@ const Payment = () => {
       <Delivery  />
       <Divider />
       <h4>Payment info</h4>
+      <Divider />
+      <div  style={{...colStyleBase, flexBasis: '50%'}}>
+      <Button key="submit"
+          type="primary"
+          onClick={handleSubmit}>Confirm</Button>
+      </div>
     </div>
   <Footer />
   </>

@@ -48,6 +48,7 @@ const OrderDetail = () => {
   const location = useLocation(); // 正确的 useLocation 调用位置
 
   const [orderDetails, setOrderDetails] = useState(null);
+  const [shipmentDetails, setShipmentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -60,7 +61,8 @@ const OrderDetail = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setOrderDetails(data[0]);
+        setOrderDetails(data.order_details[0]);
+        setShipmentDetails(data.shipment_details[0])
       } catch (error) {
         setError(error.message);
       } finally {
@@ -91,8 +93,8 @@ const OrderDetail = () => {
   <div style={cardStyle}>
     <div style={col20Style}>Delivery Info</div>
     <div style={col80Style}>
-      <Timeline status={orderDetails.Status} />
-      <p>Tracking Number: {orderDetails.TrackingNumber}</p>
+      <Timeline status={shipmentDetails ? shipmentDetails.Status : 'null'} />
+      <p>Tracking Number: {shipmentDetails ? shipmentDetails.TrackingNumber : 'Not available'}</p>
     </div>
   </div>
   <Divider />

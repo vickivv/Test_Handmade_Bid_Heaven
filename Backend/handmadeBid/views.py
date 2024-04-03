@@ -23,7 +23,7 @@ import logging
 
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
-    get_default_delivery, get_all_addresses, set_default_delivery
+    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order
 
 logger = logging.getLogger(__name__)
 
@@ -255,4 +255,13 @@ class GetPaymentItemAPIView(APIView):
         return Response(data)
 
 
+class CancelOrderAPIView(APIView):
+    def put(self, request):
+        data = json.loads(request.body)
+
+        order_id = data.get('orderid')
+        if cancel_order(order_id):
+            return JsonResponse({'success': True, 'id': order_id})
+        else:
+            return JsonResponse({"error": "Unable to set"}, status=400)
 
