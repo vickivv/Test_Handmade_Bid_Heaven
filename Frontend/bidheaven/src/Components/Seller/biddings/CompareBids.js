@@ -41,14 +41,16 @@ export const CompareBids = () => {
     const { productId } = useParams(); 
     const [bidData, setBidData] = useState([]);
     const [productData, setProductData] = useState([]);
+    
     const loadBid = async () => {
-        const res = await http.get(`/productbids/${productId}/`, {mode:'cors'})
-        setBidData(res.data.result)
+        const res = await http.get(`/productbids/${productId}/`, {mode:'cors'});
+        setBidData(res.data.result);
     };
 
     const loadProduct = async() => {
-        const res = await http.get(`/getproducts/${productId}/`, {mode:'cors'})
-        setProductData(res.data)
+        const res = await http.get(`/getproducts/${productId}/`, {mode:'cors'});
+        setProductData(res.data);
+        console.log(res.data.cover);
     }
     useEffect(() => {
         loadBid();
@@ -109,7 +111,7 @@ export const CompareBids = () => {
           <div style={col80Style}>
           <div style={{...cardStyle, margin: '0px', padding: '0px'}}>
               <div style={{...col20Style}}>
-              <Image src={`${ip}${productData.pictures}`}/>
+              <Image src={`${ip}${productData.cover}`}/>
               </div>
             <div style={{...col60Style, padding: '20px'}}>
               <p>ProductID: {productId}</p>

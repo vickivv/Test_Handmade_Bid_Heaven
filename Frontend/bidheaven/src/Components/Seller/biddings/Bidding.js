@@ -13,7 +13,7 @@ export const Bidding =() => {
   const [bidData, setBidData] = useState({
     list: [],
     count: 0
-});
+  });
   const [params, setParams] = useState({
     page: 1,
     per_page: 10
@@ -30,7 +30,7 @@ export const Bidding =() => {
 
   useEffect(() => {
     fetchBids();
-  },[bidData])
+  },[params])
 
   const pageChange = (page) => {
     setParams({
@@ -70,6 +70,10 @@ export const Bidding =() => {
       biddingid: biddingid,
       status: "Rejected"
     }
+    setParams({
+      ...params,
+      page: 1
+    })
     updateBidStatus(values);
     message.success(`Bidding Rejected`);
   };

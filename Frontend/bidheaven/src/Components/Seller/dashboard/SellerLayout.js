@@ -4,7 +4,7 @@ import { SellerHeader } from './SellerHeader';
 import "./layout.css";
 import { ContainerOutlined, PieChartOutlined, ShopOutlined, SyncOutlined } from '@ant-design/icons';
 
-const { Header, Sider } = Layout
+const { Sider } = Layout
 
 export const SellerLayout = () => {
   const { pathname } = useLocation();

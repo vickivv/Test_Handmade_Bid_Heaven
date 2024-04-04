@@ -70,22 +70,25 @@ export const ActiveLists = () => {
 
     // filter function
     const onFinish = (values) => {
-      console.log(values)
-        const { category, date, biddingstatus } = values
+        const { categoryid, date, biddingstatus } = values
         const _params = {}
-        if (biddingstatus==="no_bids") {
-          _params = {bidnum:0};
-        }else if (biddingstatus==="has_bids") {
-          _params = {bidnum: {$gt:0}};
+        if (biddingstatus===1){
+          _params.bidnum = 0
+        }else if (biddingstatus===2){
+          _params.bidnum = -1
         }
-       
-        if (category) {
-          _params.category = category
+        console.log(_params.bidnum)
+
+        if (categoryid) {
+          const categoryItem = categoryList[categoryid]
+          _params.category = categoryItem.name
+          console.log(_params.category)
         }
         if (date) {
           _params.begin_postdate = date[0].format('YYYY-MM-DD')
           _params.end_postdate = date[1].format('YYYY-MM-DD')
         }
+
         setParams({
           ...params,
           ..._params
@@ -198,13 +201,13 @@ export const ActiveLists = () => {
             initialValues={{ status: null }}>
             <Form.Item label="Bidding Status" name="biddingstatus">
               <Radio.Group>
-                <Radio value="all">All</Radio>
-                <Radio value="no_bids">No Bidding</Radio>
-                <Radio value="jas_bids">Has Bidding</Radio>
+                <Radio value={0}>All</Radio>
+                <Radio value={1}>No Bidding</Radio>
+                <Radio value={2}>Has Bidding</Radio>
               </Radio.Group>
             </Form.Item>
   
-            <Form.Item label="Category" name="category">
+            <Form.Item label="Category" name="categoryid">
               <Select
                 placeholder="Please choose category."
                 style={{ width: 120 }}

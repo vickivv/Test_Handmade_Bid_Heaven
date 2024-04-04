@@ -13,7 +13,6 @@ from django.http import HttpResponseNotFound
 
 @csrf_exempt 
 def add_product(request):
-    print(request.POST)
     if request.method == 'POST':
         name = request.POST['name']
         categoryId = request.POST['category']
@@ -121,6 +120,8 @@ def get_products(request, product_id):
     if request.method=='GET':
         product=Products.objects.get(productid=product_id)
         pictures=Pictures.objects.filter(productid=product.productid)
+        cover=Pictures.objects.get(pictureid=product.pictureid)
+        cover_path=json.dumps(str(cover.picture))
         picture_list=[]
         for p in pictures:
             picture_path=json.dumps(str(p.picture))
@@ -131,6 +132,7 @@ def get_products(request, product_id):
             'startPrice': product.startprice,
             'inventory': product.inventory,
             'pictures': picture_list,
+            "cover": cover_path.replace('"', ''),
             'description': product.description
         }
         return JsonResponse(data, safe=False)
@@ -357,7 +359,13 @@ def get_order_detail(request, order_id):
         product = bidding.productid
         picture = Pictures.objects.filter(pictureid=product.pictureid).first().picture
         picture_path=json.dumps(str(picture)).replace('"', '')
-        payment = Payment.objects.get(orderid=order_id)
+        try:
+            payment = Payment.objects.get(orderid=order_id)
+            payment_method=payment.paymentmethod
+            payment_status=payment.paymentstatus
+        except Payment.DoesNotExist:
+            payment_method='No payment method'
+            payment_status='No payment status'
         category=product.categoryid
         data={
             "orderid": order_id,
@@ -365,15 +373,14 @@ def get_order_detail(request, order_id):
             "buyerid": bidding.bidderid.userid,
             "quantity": bidding.quantity,
             "totalAmount": totalAmount,
-            "paymentMethod": payment.paymentmethod,
-            "paymentStatus": payment.paymentstatus,
+            "paymentMethod": payment_method,
+            "paymentStatus": payment_status,
             "productName": product.name,
             "productid": product.productid,
             "picture":picture_path,
             "startPrice": product.startprice,
             "category": category.cname
         }
-        print(data)
         return JsonResponse(data, safe=False)
 
 @csrf_exempt
@@ -386,12 +393,9 @@ def delete_product(request, product_id):
 
 @csrf_exempt
 def update_bid_status(request, bidding_id):
-    print(bidding_id)
     try:
         bid = Bidding.objects.get(pk=bidding_id)
-        print(bid)
         bid.status=request.POST['status']
-        print(bid.status)
         bid.save()
         return HttpResponse('success')
     except Exception as e:
@@ -399,7 +403,6 @@ def update_bid_status(request, bidding_id):
 
 @csrf_exempt
 def add_order(request, bidding_id):
-    print(bidding_id)
     bidding = Bidding.objects.get(pk=bidding_id)
     today = date.today()
     status = "Pending"
