@@ -12,6 +12,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "cors": "^2.8.5",
     "moment": "^2.24.0",
     "react": "*",
     "react-dom": "*",
@@ -52,5 +53,5 @@
     "react": "*",
     "react-dom": "*"
   },
-  "proxy":"http://127.0.0.1:8000/"
+  "proxy": "http://127.0.0.1:8000/"
 }

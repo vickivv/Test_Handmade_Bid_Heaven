@@ -9,19 +9,19 @@ from django.core.files.base import ContentFile
 from django.db.models import Sum
 import json
 from datetime import timedelta
+from django.http import HttpResponseNotFound
 
 @csrf_exempt 
 def add_product(request):
+    print(request.POST)
     if request.method == 'POST':
-        print(request.POST)
         name = request.POST['name']
-        category_name = request.POST['category']
-        html_description = request.POST['description']
-        soup = BeautifulSoup(html_description, 'html.parser')
-        description = soup.p.text.strip()
+        categoryId = request.POST['category']
+        description = request.POST['description']
         startPrice = request.POST['startPrice']
         inventory = request.POST['inventory']
-        category = Category.objects.filter(cname = category_name).first()
+        category = Category.objects.get(pk=categoryId)
+        
         today = date.today()
         seller = Normaluser.objects.get(userid=21)
         manager = Adminuser.objects.filter(userid = 11).first()
@@ -58,9 +58,40 @@ def add_product(request):
         Pictures.objects.filter(pictureid=x).update(productid=productId)
 
         return HttpResponse('submit success')
+
+@csrf_exempt 
 def update_product(request, product_id):
-    if request.method == 'PUT':
+    seller_id=21
+    if request.method == 'POST':
+        product = Products.objects.get(pk=product_id)
+        product.name=request.POST['name']
+        category_name = request.POST['category']
+        product.description = request.POST['description']
+        product.startPrice = request.POST['startPrice']
+        product.inventory = request.POST['inventory']
+        product.categoryid = Category.objects.get(cname = category_name)
+        product.postdate = date.today()
+        product.manager = Adminuser.objects.filter(userid = 11).first()
+        pictureList = request.POST['pictures']
+
+        firstKey = 0
+        for s in pictureList:
+            if s==',':
+                break
+            firstKey = firstKey * 10 + int(s)
         
+        product.pictureid = firstKey
+        product.save()
+
+        x = 0
+        for key in pictureList:
+            if key==',':
+                Pictures.objects.filter(pictureid=x).update(productid=product_id)
+                x=0
+            else:
+                x = x * 10 + int(key)
+        Pictures.objects.filter(pictureid=x).update(productid=product_id)
+        return HttpResponse('submit success')
 
 def get_category(request):
     if request.method == 'GET':
@@ -90,16 +121,16 @@ def get_products(request, product_id):
     if request.method=='GET':
         product=Products.objects.get(productid=product_id)
         pictures=Pictures.objects.filter(productid=product.productid)
-        pictures=[]
+        picture_list=[]
         for p in pictures:
             picture_path=json.dumps(str(p.picture))
-            pictures.append(picture_path.replace('"', ''))
+            picture_list.append(picture_path.replace('"', ''))
         data={
             'name': product.name,
             'category': product.categoryid.cname,
             'startPrice': product.startprice,
             'inventory': product.inventory,
-            'pictures': pictures,
+            'pictures': picture_list,
             'description': product.description
         }
         return JsonResponse(data, safe=False)
@@ -113,6 +144,7 @@ def get_active_products(request):
             picture = Pictures.objects.filter(pictureid=p.pictureid).first().picture
             picture_path=json.dumps(str(picture))
             p_item = {
+                'productid': p.productid,
                 'picture': picture_path,
                 'name': p.name,
                 'category': p.categoryid.cname,
@@ -271,6 +303,7 @@ def get_bids(request):
             bidder_rate=bidder.rate
             final_date=bid.biddate+timedelta(days=bid.activedays)
             item={
+                'biddingid': bid.biddingid,
                 'productId': product.productid,
                 'productName': product.name,
                 'bidPrice': bid.bidprice,
@@ -278,7 +311,8 @@ def get_bids(request):
                 "bidDate": bid.biddate,
                 "bidderName": bidder_name,
                 "bidderRate": bidder_rate,
-                "validDate": final_date
+                "validDate": final_date,
+                'biddingstatus': bid.status
             }
             data_list.append(item)
         data={
@@ -340,4 +374,59 @@ def get_order_detail(request, order_id):
             "category": category.cname
         }
         print(data)
+        return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def delete_product(request, product_id):
+    try:
+        Products.objects.get(pk=product_id).delete()
+        return HttpResponse('success')
+    except Exception as e:
+        return HttpResponseNotFound('Record not found')
+
+@csrf_exempt
+def update_bid_status(request, bidding_id):
+    print(bidding_id)
+    try:
+        bid = Bidding.objects.get(pk=bidding_id)
+        print(bid)
+        bid.status=request.POST['status']
+        print(bid.status)
+        bid.save()
+        return HttpResponse('success')
+    except Exception as e:
+        return HttpResponseNotFound('Record not found')
+
+@csrf_exempt
+def add_order(request, bidding_id):
+    print(bidding_id)
+    bidding = Bidding.objects.get(pk=bidding_id)
+    today = date.today()
+    status = "Pending"
+    new_order = Orders(
+        biddingid=bidding,
+        orderdate=today,
+        orderstatus=status
+    )
+    new_order.save()
+    return HttpResponse("success")
+
+def get_product_bids(request, product_id):
+    if request.method == 'GET':
+        bidding_list = Bidding.objects.filter(productid=product_id, status='Pending')
+        data_list = []
+        for bid in bidding_list: 
+            bidder = Normaluser.objects.get(userid=bid.bidderid.userid)
+            final_date=bid.biddate+timedelta(days=bid.activedays)
+            item={
+                'biddingid': bid.biddingid,
+                'bidPrice': bid.bidprice,
+                'quantity': bid.quantity,
+                "bidDate": bid.biddate,
+                "bidderName": bidder.username,
+                "bidderRate": bidder.rate,
+                "validDate": final_date,
+            }
+            data_list.append(item)
+        data={"result":data_list}
         return JsonResponse(data, safe=False)

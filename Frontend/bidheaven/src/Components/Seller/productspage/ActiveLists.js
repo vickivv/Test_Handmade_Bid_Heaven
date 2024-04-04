@@ -12,17 +12,17 @@ export const ActiveLists = () => {
 
     //list to save active products data fetched from backend
     const [productData, setProductData] = useState({
-        list: [],// active product lists
-        count: 0 // active product counts
+        list: [],
+        count: 0 
     });
 
-
+    // page settings
     const [params, setParams] = useState({
         page: 1,
         per_page: 10
     });
 
-    // to add data fetch function
+    // data fetch function
     useEffect(() => {
       const loadList = async () => {
         const res = await http.get('/activeproducts', { params })
@@ -35,30 +35,28 @@ export const ActiveLists = () => {
       loadList()
     }, [params])
 
-    //modify product info
+    //modify product
     const navigate = useNavigate();
     const modifyProduct = (data) => {
-      navigate(`/sell`); 
+      navigate(`/sell?id=${data.productid}`); 
     };
 
     //delete product
-    const delProduct = (data) => {
-        //to add delete logic
-        // await http.delete(``)
-        // setParams({
-        //   ...params,
-        //   page: 1
-        // })
-        console.log('product deleted');
+    const delProduct = async (data) => {
+        await http.delete(`deleteproduct/${data.productid}/`)
+        setParams({
+           ...params,
+           page: 1
+        })
     }
 
     //contact the admin user of a product
     const contactManager = (data) => {
         //to add contact api
-        console.log(data.managerID);
+        console.log("contact manager");
     }
 
-    //to change to fetch from database
+    //fetch category from database
     const [categoryList, setCategoryList] = useState([]);
     const fetchCategory = async () => {
       await http.get("/category").then((res) => {
@@ -69,17 +67,24 @@ export const ActiveLists = () => {
       fetchCategory();
     }, []);
 
+
+    // filter function
     const onFinish = (values) => {
-        const { categoryId, date, status } = values
+      console.log(values)
+        const { category, date, biddingstatus } = values
         const _params = {}
-        _params.status = status
+        if (biddingstatus==="no_bids") {
+          _params = {bidnum:0};
+        }else if (biddingstatus==="has_bids") {
+          _params = {bidnum: {$gt:0}};
+        }
        
-        if (categoryId) {
-          _params.category = categoryId
+        if (category) {
+          _params.category = category
         }
         if (date) {
-          _params.begin_pubdate = date[0].format('YYYY-MM-DD')
-          _params.end_pubdate = date[1].format('YYYY-MM-DD')
+          _params.begin_postdate = date[0].format('YYYY-MM-DD')
+          _params.end_postdate = date[1].format('YYYY-MM-DD')
         }
         setParams({
           ...params,
@@ -172,20 +177,6 @@ export const ActiveLists = () => {
         }
     ]
 
-    const data = [
-        {
-            name: 'Stained Glass Flowers',
-            category: 'Ceramics and Glass',
-            description: 'Stained glass flowers inspired by beautiful fall foliage',
-            startPrice: 20.0,
-            inventory: 1,
-            bidnum: 2,
-            picture: "",
-            managerID: 1,
-            postDate: '2024-03-01'
-        }
-    ]
-
     return (
         <div>
         <Card
@@ -205,11 +196,11 @@ export const ActiveLists = () => {
           <Form
             onFinish={onFinish}
             initialValues={{ status: null }}>
-            <Form.Item label="Bidding Status" name="status">
+            <Form.Item label="Bidding Status" name="biddingstatus">
               <Radio.Group>
-                <Radio value={null}>All</Radio>
-                <Radio value={0}>No Bidding</Radio>
-                <Radio value={1}>Has Bidding</Radio>
+                <Radio value="all">All</Radio>
+                <Radio value="no_bids">No Bidding</Radio>
+                <Radio value="jas_bids">Has Bidding</Radio>
               </Radio.Group>
             </Form.Item>
   

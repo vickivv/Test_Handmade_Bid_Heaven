@@ -104,7 +104,7 @@ class Normaluser(models.Model):
 
 
 class Orders(models.Model):
-    orderid = models.IntegerField(db_column='OrderID', primary_key=True)  # Field name made lowercase.
+    orderid = models.AutoField(primary_key=True)  # Field name made lowercase.
     biddingid = models.ForeignKey(Bidding, models.DO_NOTHING, db_column='BiddingID')  # Field name made lowercase.
     orderdate = models.DateField(db_column='OrderDate', blank=True, null=True)  # Field name made lowercase.
     orderstatus = models.CharField(db_column='OrderStatus', max_length=10)  # Field name made lowercase.

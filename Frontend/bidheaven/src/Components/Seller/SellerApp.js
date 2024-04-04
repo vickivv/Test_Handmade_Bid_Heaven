@@ -8,6 +8,7 @@ import {SoldOutLists} from "./productspage/SoldOutLists";
 import { AddNewProduct } from "./productspage/AddNewProduct";
 import { Bidding } from "./biddings/Bidding";
 import {OrderDetail} from "./orders/OrderDetail";
+import { CompareBids } from "./biddings/CompareBids";
 
 export const SellerApp = () => {
     return (
@@ -21,6 +22,7 @@ export const SellerApp = () => {
               <Route path="/activeproducts" element={<ActiveLists />} />
               <Route path="/soldout" element={<SoldOutLists />} />
               <Route path="/biddings" element={<Bidding />} /> 
+              <Route path='/comparebids/:productId' element={<CompareBids />} />
               <Route path="/pendingbids" element={<Bidding />} /> 
               <Route path="/orders" element={<Orders />} />
               <Route path="/orderdetail/:orderId" element={<OrderDetail/>} />

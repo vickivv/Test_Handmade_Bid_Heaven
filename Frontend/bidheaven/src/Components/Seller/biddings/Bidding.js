@@ -1,11 +1,12 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Table, Space, Card, Form, Button, DatePicker, Select, Tooltip } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { Table, Space, Card, Form, Button, DatePicker, Select, Tooltip, message } from 'antd';
 import { CheckOutlined, CloseOutlined, CommentOutlined, FileSearchOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import {http} from "../utils/http";
 
-const { Option } = Select
-const { RangePicker } = DatePicker
+const { Option } = Select;
+const { RangePicker } = DatePicker;
+
 
 export const Bidding =() => {
 
@@ -20,17 +21,16 @@ export const Bidding =() => {
 
   const fetchBids = async() => {
     const response = await http.get('/getbids', { params });
-    console.log(response.data)
     const {result, count} = response.data
     setBidData({
       list:result,
       count: count
-    });
+    })
   };
 
   useEffect(() => {
     fetchBids();
-  },[])
+  },[bidData])
 
   const pageChange = (page) => {
     setParams({
@@ -39,7 +39,51 @@ export const Bidding =() => {
     });
 }
 
+  const updateBidStatus = async (values) => {
+    const {biddingid, status} = values;
+    const formData = new FormData();
+    formData.append("status", status);
+    await http.post(`updatebidstatus/${biddingid}/`, formData);
+  };
+
+  const addOrder = async (values) => {
+    const {biddingid} = values;
+    await http.post(`addorder/${biddingid}/`);
+  };
+
+  const navigate = useNavigate();
+  const acceptBid = (data) => {
+    const { biddingid } = data
+    const values = {
+      biddingid: biddingid,
+      status: "Accepted"
+    }
+    updateBidStatus(values);
+    addOrder(values);
+    navigate('/orders');
+    message.success(`Bidding Accepted`);
+  };
+
+  const rejectBid = (data) => {
+    const { biddingid } = data
+    const values = {
+      biddingid: biddingid,
+      status: "Rejected"
+    }
+    updateBidStatus(values);
+    message.success(`Bidding Rejected`);
+  };
+
+  const goCompare = (data) => {
+    navigate(`/comparebids/${data.productId}`);
+  };
+
   const columns = [
+    {
+      title: 'Bidding Status',
+      dataIndex: 'biddingstatus',
+      width: 220
+    },
     {
       title: 'Product ID',
       dataIndex: 'productId',
@@ -84,6 +128,7 @@ export const Bidding =() => {
               type="primary"
               shape="circle"
               icon={<CheckOutlined />}
+              onClick={() => acceptBid(data)}
              />
             </Tooltip>
             <Tooltip title="Reject Bid">
@@ -92,14 +137,16 @@ export const Bidding =() => {
               danger
               shape="circle"
               icon={<CloseOutlined />}
+              onClick={() => rejectBid(data)}
             />
             </Tooltip>
-            <Tooltip title="Compare All Bids">
+            <Tooltip title="Compare Pending Bids">
             <Button
               type="primary"
               danger
               shape="circle"
               icon={<FileSearchOutlined />}
+              onClick={() => goCompare(data)}
             />
             </Tooltip> 
             <Tooltip title="Contact">
@@ -119,7 +166,7 @@ export const Bidding =() => {
 
   const statusList=[
     {id:1, name:'Pending'},
-    {id:2, name:'Accepteds'},
+    {id:2, name:'Accepted'},
     {id:3, name: 'Rejected'},
     {id:4, name: 'Canceled'},
     {id:5, name: 'Expired'}

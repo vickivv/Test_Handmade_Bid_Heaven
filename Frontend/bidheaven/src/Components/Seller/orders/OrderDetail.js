@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
-import { Button, Divider, Image } from 'antd';
+import { useParams } from 'react-router-dom';
+import { Divider, Image } from 'antd';
 import './OrderDetail.css';
 import {http} from '../utils/http';
-import { AccountBookOutlined, CheckCircleOutlined } from '@ant-design/icons';
 
 const ip = 'http://localhost:8000/media/';
 
@@ -42,7 +41,6 @@ const col60Style = {
 
 export const OrderDetail = () => {
   const { orderId } = useParams(); 
-  const location = useLocation(); 
 
   const [orderDetails, setOrderDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

@@ -126,13 +126,6 @@ export const SoldOutLists = () => {
           render: data => {
             return (
               <Space size="middle">
-                <Tooltip title="Relist Product">
-                <Button
-                  type="primary"
-                  shape="circle"
-                  icon={<EditOutlined />}
-                  onClick={() => relistProduct(data)} />
-                </Tooltip>
                 <Tooltip title="Contact Admin">
                 <Button
                   type="primary"

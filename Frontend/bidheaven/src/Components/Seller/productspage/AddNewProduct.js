@@ -10,7 +10,6 @@ import {
     message
 } from 'antd';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './products.css';
 import { useState, useRef, useEffect } from 'react';
@@ -18,6 +17,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import {http} from '../../Seller/utils/http'
 
 const { Option } = Select
+const ip = 'http://localhost:8000/media/';
 
 export const AddNewProduct = () => {
 
@@ -25,7 +25,7 @@ export const AddNewProduct = () => {
     const [fileList, setFileList] = useState([]);
     const [pictures, setPictures] = useState([]);
     //define a cache repo
-    const cacheImgList = useRef([])
+    // const cacheImgList = useRef([])
 
     //when uploading pictures, save one to fileList and one to the cache repo
 
@@ -38,7 +38,7 @@ export const AddNewProduct = () => {
           return file.response;
       }})
       setFileList(formatList)
-      cacheImgList.current = formatList
+      // cacheImgList.current = formatList
       setPictures(pictureKeys)
     }
 
@@ -59,33 +59,42 @@ export const AddNewProduct = () => {
       const { name, category, description, startPrice, inventory } = values
       const formData = new FormData();
       formData.append("name", name);
-      formData.append("category", categoryList[category].name)
+      formData.append("category", category)
+      console.log("category",category)
       formData.append("description", description)
       formData.append("startPrice", parseInt(startPrice))
       formData.append("inventory", parseInt(inventory))
       formData.append("pictures", pictures)
       if (id) {
-        await http.put(`/addproduct/${id}`, params)
+        console.log(formData)
+        await http.post(`/updateproduct/${id}/`, formData, {mode: 'cors'});
       } else {
-      await http.post(`/addproducts`, formData)
+      await http.post(`/addproducts`, formData);
     }
-    navigate('/activeproducts')
-    message.success('List Completed')
+    navigate('/activeproducts');
+    message.success(`${id ? 'Update Completed' : 'List Completed'}`);
   }
 
   //Edit mode, fetch data before edit
-  const [params] = useSearchParams()
-  const id = params.get('id')
-  const [form] = Form.useForm()
+  const [params] = useSearchParams();
+  const id = params.get('id');
+  const [form] = Form.useForm();
+  const loadDetail = async () => {
+    const res = await http.get(`/getproducts/${id}`)
+    const data = res.data
+    form.setFieldsValue({
+      name: data.name,
+      category: data.category,
+      startPrice: data.startPrice,
+      inventory: data.inventory,
+      description: data.description,
+      type: data.pictures.map(url => (`${ip}${url}`))
+    })
+    const formatImgList = data.pictures.map(url => (`${ip}${url}`))
+    setFileList(formatImgList)
+    // cacheImgList.current = formatImgList
+  } 
   useEffect(() => {
-    const loadDetail = async () => {
-      const res = await http.get(`/getproducts/${id}`)
-      const data = res.data
-      form.setFieldsValue({ ...data})
-      const formatImgList = data.pictures.map(url => ({ url }))
-      setFileList(formatImgList)
-      cacheImgList.current = formatImgList
-    }
     if (id) {
       loadDetail()
     }
@@ -103,7 +112,7 @@ export const AddNewProduct = () => {
         <Breadcrumb.Item>
             <Link to="/products">My Products</Link>
         </Breadcrumb.Item>
-        <Breadcrumb.Item>{'List Product'}</Breadcrumb.Item>
+        <Breadcrumb.Item>{id? 'Edit Product' : 'Add Product'}</Breadcrumb.Item>
       </Breadcrumb>
     }
   >
@@ -111,9 +120,9 @@ export const AddNewProduct = () => {
     <Form
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 16 }}
-      initialValues={{ type: 1, content: '' }}
+      // initialValues={loadData}
       onFinish={onFinish}
-      // form={form}
+      form={form}
     >
       <Form.Item
         label="Product Name"
@@ -150,7 +159,7 @@ export const AddNewProduct = () => {
       </Form.Item>
 
       <Form.Item label="Pictures"> 
-        <Form.Item name="type">
+        <Form.Item name="type" >
         </Form.Item>
           <Upload
             name="image"
@@ -173,13 +182,13 @@ export const AddNewProduct = () => {
         name="description"
         rules={[{ required: true, message: 'Please input description for the product.' }]}
       >
-        <ReactQuill theme="snow" />
+        <Input placeholder="Description..." style={{ width: 400 }} />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 4 }}>
         <Space>
           <Button size="large" type="primary" htmlType="submit">
-            {'Submit'}
+            {id ? 'Update' : 'Submit'}
           </Button>
         </Space>
       </Form.Item>

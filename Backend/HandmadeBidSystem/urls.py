@@ -35,4 +35,9 @@ urlpatterns = [
     path('getorders', views.get_orders),
     path('orderdetail/<int:order_id>/', views.get_order_detail),
     path('getproducts/<int:product_id>/', views.get_products),
+    path('updateproduct/<int:product_id>/', views.update_product),
+    path('deleteproduct/<int:product_id>/', views.delete_product),
+    path('updatebidstatus/<int:bidding_id>/', views.update_bid_status),
+    path('addorder/<int:bidding_id>/', views.add_order),
+    path('productbids/<int:product_id>/', views.get_product_bids),
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
