@@ -23,7 +23,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(Email, password, **extra_fields)
 
 class NormalUser(AbstractBaseUser, PermissionsMixin):
-    UserID = models.BigAutoField(primary_key=True, default=1)
+    UserID = models.AutoField(primary_key=True, default=1)
     Email = models.EmailField(_('email address'), unique=True, db_column='Email')
     Fname = models.CharField(max_length=25, db_column='Fname')
     Lname = models.CharField(max_length=25, db_column='Lname')
@@ -31,7 +31,7 @@ class NormalUser(AbstractBaseUser, PermissionsMixin):
     DefaultAddressID = models.IntegerField(null=True, blank=True, db_column='DefaultAddressID')
     Phone = models.CharField(max_length=30, null=True, blank=True, db_column='Phone')
     Rate = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True, db_column='Rate')
-    ManageID = models.ForeignKey('AdminUser', on_delete=models.CASCADE)
+    ManageID = models.ForeignKey('AdminUser', on_delete=models.CASCADE, null=True, blank=True, db_column='ManageID')
     is_superuser = models.BooleanField(default=False)
     last_login = None
 

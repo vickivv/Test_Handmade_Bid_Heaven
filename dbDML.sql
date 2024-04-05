@@ -1,4 +1,6 @@
 -- insert values into adminuser table (adminuser's id starts with '1')
+ALTER TABLE NORMALUSER MODIFY COLUMN is_superuser BOOLEAN NOT NULL DEFAULT 0;
+
 INSERT INTO ADMINUSER (UserID, Fname, Lname, Password) VALUES
 (11, 'Alice', 'Johnson', 'password123'),
 (12, 'Bob', 'Smith', 'password456'),
@@ -43,16 +45,16 @@ INSERT INTO NORMALUSER (UserID, Fname, Lname, Username, Password, DefaultAddress
 (27, 'Ginny', 'Weasley', 'gweasley', 'magic901', 7, 'ginny@hogwarts.com', '7890123456', 0.0, 17);
 
 -- insert values into address table 
-INSERT INTO ADDRESS (AddressID, UserID, Street, StreeOptional, City, State, Zipcode) VALUES
-(1, 21, '4 Privet Drive', null, 'Little Whinging', 'Surrey', '12345'),
-(2, 22, 'The Burrow', null, 'Ottery St Catchpole', 'Devon', '23456'),
-(3, 23, 'Hogwarts Castle', 'Room 11', 'Hogsmeade', 'Highlands', '34567'),
-(4, 24, 'Malfoy Manor', null, 'Wiltshire', null, '45678'),
-(5, 25, 'Lovegood House', null, 'Near Ottery St Catchpole', 'Devon', '56789'),
-(6, 26, 'Longbottom House', null, 'London', null, '67890'),
-(7, 27, 'Weasley’s Wizard Wheezes', null, 'Diagon Alley', 'London', '78901'),
-(8, 27, '7224 Ohio St.', null, 'Deer Park', 'NY', '11729'),
-(9, 27, '243 James Court', null, 'Oak Park', 'MI', '48237');
+INSERT INTO ADDRESS (AddressID, Fname, Lname, UserID, Street, StreetOptional, City, State, Zipcode) VALUES
+(1, 'Harry', 'Potter', 21, '4 Privet Drive', null, 'Little Whinging', 'Surrey', '12345'),
+(2, 'Ron', 'Weasley', 22, 'The Burrow', null, 'Ottery St Catchpole', 'Devon', '23456'),
+(3, 'Hermione', 'Granger', 23, 'Hogwarts Castle', 'Room 11', 'Hogsmeade', 'Highlands', '34567'),
+(4, 'Draco', 'Malfoy', 24, 'Malfoy Manor', null, 'Wiltshire', null, '45678'),
+(5, 'Luna', 'Lovegood', 25, 'Lovegood House', null, 'Near Ottery St Catchpole', 'Devon', '56789'),
+(6, 'Neville', 'Longbottom', 26, 'Longbottom House', null, 'London', null, '67890'),
+(7, 'Ginny', 'Weasley', 27, 'Weasley’s Wizard Wheezes', null, 'Diagon Alley', 'London', '78901'),
+(8, 'Ginny', 'Weasley', 27, '7224 Ohio St.', null, 'Deer Park', 'NY', '11729'),
+(9, 'Ron', 'Weasley', 27, '243 James Court', null, 'Oak Park', 'MI', '48237');
 
 -- insert values into category table 
 INSERT INTO CATEGORY (CategoryID, CName, Description) VALUES
@@ -77,16 +79,16 @@ INSERT INTO PRODUCTS (ProductID, SellerID, Name, CategoryID, Description, StartP
 
 -- insert values into pictures table
 INSERT INTO PICTURES (PictureID, ProductID, Picture) VALUES
-(1, 1, '/images/flowers.jpg'),
-(2, 2, '/images/butterfly_lady.jpg'),
-(3, 3, '/images/bird_brooch.jpg'),
-(4, 4, '/images/sunflower.jpg'),
-(5, 5, '/images/bunny.jpg'),
-(6, 6, '/images/teddy1.jpg'),
-(7, 6, '/images/teddy2.jpg'),
-(8, 6, '/images/teddy3.jpg'),
+(1, 1, 'https://i.etsystatic.com/25421725/r/il/b8ae25/3863459011/il_1588xN.3863459011_glv8.jpg'),
+(2, 2, 'https://i.etsystatic.com/6706558/r/il/4d71b6/5080059054/il_1588xN.5080059054_4bgk.jpg'),
+(3, 3, 'https://i.etsystatic.com/13026407/r/il/0090ef/3101972265/il_1588xN.3101972265_r8c1.jpg'),
+(4, 4, 'https://i.etsystatic.com/37047015/r/il/c29484/4609730318/il_1588xN.4609730318_5wv9.jpg'),
+(5, 5, 'https://i.etsystatic.com/15528295/r/il/35c9d7/4225269669/il_1588xN.4225269669_9741.jpg'),
+(6, 6, 'https://i.etsystatic.com/17382265/r/il/961ad4/2791862567/il_1588xN.2791862567_o5rk.jpg'),
+(7, 6, 'https://i.etsystatic.com/17382265/r/il/961ad4/2791862567/il_1588xN.2791862567_o5rk.jpg'),
+(8, 6, 'https://i.etsystatic.com/17382265/r/il/961ad4/2791862567/il_1588xN.2791862567_o5rk.jpg'),
 (9, 7, '/images/silk.jpg'),
-(10, 8, '/images/pink_scarf.jpg');
+(10, 8, 'https://i.etsystatic.com/24987188/r/il/54622a/2721384059/il_1588xN.2721384059_e1pd.jpg');
 
 -- insert values into bidding table
 INSERT INTO BIDDING (BiddingID, ProductID, BidderId, BidPrice, Quantity, BidDate, ActiveDays, Status, ManageID) VALUES

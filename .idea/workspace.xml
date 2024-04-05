@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f69a8f4d-6e40-4d62-aa7b-d1160da8eaaf" name="Changes" comment="again">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/HandmadeBidSystem/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/HandmadeBidSystem/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/queries.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/queries.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/OrderDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/OrderDetail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/payment.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/payment.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2eAGg10zL820jVcjxFLCcuWylqg" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/tqi/Documents/Vicki/5200/project/phase4/Handmade_Bid_Heaven&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/handmadeBid" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f69a8f4d-6e40-4d62-aa7b-d1160da8eaaf" name="Changes" comment="" />
+      <created>1711340077508</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1711340077508</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
