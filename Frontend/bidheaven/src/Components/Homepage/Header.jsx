@@ -19,7 +19,9 @@ function Header(){
 const handleSignInClick = () => {
   navigate('/login'); 
 };
-
+const handleNavigateToBuyer = () => {
+  navigate('/buyer/overview');
+};
 const handleNavigateToMessage = () => {
   navigate('/message');
 };
@@ -59,7 +61,7 @@ return (
             <div id="userDropdown" className="dropdown-content">
               <ul>
                 <li>Account</li>
-                <li>Buyer</li>
+                <li onClick={handleNavigateToBuyer}    >Buyer</li>
                 <li  onClick={handleNavigateToMessage}    >Message</li>
                 <li>Selling</li>
                 <li>Profile</li>

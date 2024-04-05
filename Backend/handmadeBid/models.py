@@ -47,7 +47,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.Email
     
-
+   
 class AdminUser(models.Model):
     base_user = models.OneToOneField(BaseUser, on_delete=models.CASCADE, related_name='admin_user')
     UserID= models.BigAutoField(primary_key=True,default=1)
@@ -91,7 +91,7 @@ class NormalUser(models.Model):
 
 
 # manually create a admin user
-#          user_id = 1  # 您需要确定这个ID是唯一的
+#          user_id = 1  
 #          admin_user = AdminUser(
 #          UserID=user_id,
 #          Fname='Admin',

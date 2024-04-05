@@ -4,6 +4,7 @@
 
 -- create tables
 
+
 CREATE TABLE BASEUSER (
     UserID INT NOT NULL AUTO_INCREMENT,
     Email VARCHAR(255) UNIQUE NOT NULL,
@@ -15,9 +16,8 @@ CREATE TABLE BASEUSER (
     is_superuser BOOLEAN NOT NULL DEFAULT FALSE,
     last_login DATETIME NULL,
     PRIMARY KEY (UserID)
-);
 
-
+--Adminuser and normal user tables have already created, if migrate before
 
 
 CREATE TABLE ADMINUSER (
@@ -60,10 +60,12 @@ CREATE TABLE NORMALUSER (
 
 
 create table ADDRESS (
-	AddressID int not null primary key,
+	AddressID int not null primary key AUTO_INCREMENT,
+	Fname varchar(25),
+	Lname varchar(25),
     UserID int not null,
     Street varchar(255) not null,
-    StreeOptional varchar(255),
+    StreetOptional varchar(255),
     City varchar(100),
     State varchar(100),
     Zipcode varchar(20),
@@ -99,7 +101,7 @@ create table PICTURES (
 );
 
 create table BIDDING (
-	BiddingID int not null primary key,
+	BiddingID int not null primary key AUTO_INCREMENT,
     ProductID int not null,
     BidderId int not null,
     BidPrice decimal(7, 2) not null,
@@ -113,7 +115,7 @@ create table BIDDING (
     foreign key (ManageID) references ADMINUSER(UserID)
 );
 create table ORDERS (
-	OrderID int not null primary key,
+	OrderID int not null primary key AUTO_INCREMENT,
     BiddingID int not null,
     OrderDate date,
     OrderStatus enum('Pending', 'Processing', 'Shipped', 'Delivered', 'Completed', 'Canceled', 'Refunded', 'Failed') not null,
@@ -152,7 +154,7 @@ create table MESSAGES(
     foreign key (OrderID) references ORDERS(OrderID)
 );
 create table REVIEWS (
-	ReviewID int not null primary key,
+	ReviewID int not null primary key AUTO_INCREMENT,
     ReviewerID int not null,
     ReviewerType enum('Seller', 'Buyer') not null,
     RevieweeID int not null,
@@ -181,10 +183,11 @@ CREATE TABLE ADMIN_TOKEN (
 -- average selling price view: ProductID, Category, AvgPrice, SellerID
 -- best selling view: ProductID, TotalQuantity, TotalProfit, Category, SellerID
 create view ORDERSVIEW as
-select o.OrderID, b.BiddingID, p.ProductID, p.Name as ProductName, c.CName as Category, p.SellerID, b.BidderID as BuyerID, b.BidPrice as SellingPrice, b.Quantity, b.BidPrice * b.Quantity as TotalAmount, o.OrderDate, o.OrderStatus, b.ManageID
+select o.OrderID, b.BiddingID, p.ProductID, p.Name as ProductName, c.CName as Category, p.SellerID, b.BidderID as BuyerID, b.BidPrice as SellingPrice, b.Quantity, b.BidPrice * b.Quantity as TotalAmount, o.OrderDate, o.OrderStatus, b.ManageID, pic.Picture
 from ORDERS o join BIDDING b on o.BiddingID = b.BiddingID
 	 join PRODUCTS p on b.ProductID = p.ProductID
      join CATEGORY c on c.CategoryID = p.CategoryID
+     join PICTURES pic on p.PictureID = pic.PictureID
 ;
 create view AVGSELLPRICE as
 select ProductID, Category, avg(SellingPrice), SellerID

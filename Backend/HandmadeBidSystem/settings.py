@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     # 'handmadeBid.apps.HandmadebidConfig',
     'django.contrib.admin',
     'django.contrib.auth',
-     'corsheaders',
+    'corsheaders',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -43,8 +43,6 @@ INSTALLED_APPS = [
     'handmadeBid',
     'rest_framework',
     'rest_framework.authtoken',
-   
-   
 ]
 
 MIDDLEWARE = [
@@ -122,11 +120,24 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'project',
             'USER': 'root',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        }
+    }
+"""
+Olivia's database setting
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'project',
+            'USER': 'root',
             'PASSWORD': 'root123456',
             'HOST': 'localhost',
             'PORT': '3306'
         }
     }
+"""
 
 DATABASE_APPS_MAPPING = {'handmadeBid': None}
 # Password validation
@@ -167,4 +178,8 @@ USE_TZ = True
 
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import logo1 from '../../Assests/logo1.png'
+import logo2 from '../../Assests/logo2.png'
 import '../../Styles/Footer.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faFacebook, faTwitter,faCcMastercard,faCcVisa,faCcDiscover,faCcPaypal,faCcAmex } from '@fortawesome/free-brands-svg-icons';
@@ -19,7 +19,7 @@ function Footer() {
         <div className="footer-container">
             <div className="footer-top-row">
                 <div className="footer-top">
-                    <img src={logo1} alt="Handmade Bid Heaven Logo" className="footer-logo"/>
+                    <img src={logo2} alt="Handmade Bid Heaven Logo" className="footer-logo"/>
                    
                 </div>
                 <div className="info-section">
