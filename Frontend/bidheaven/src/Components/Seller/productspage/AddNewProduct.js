@@ -63,6 +63,7 @@ export const AddNewProduct = () => {
       formData.append("description", description)
       formData.append("startPrice", parseInt(startPrice))
       formData.append("inventory", parseInt(inventory))
+      console.log(pictures)
       formData.append("pictures", pictures)
       if (id) {
         await http.post(`/updateproduct/${id}/`, formData, {mode: 'cors'});

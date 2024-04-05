@@ -1,4 +1,4 @@
-import { Card, Space, Col, Row, Button, Tooltip, Modal, Rate, List } from 'antd';
+import { Card, Space, Col, Row, Button, Tooltip, Modal, Rate, List, Input } from 'antd';
 import { useState, useEffect } from 'react';
 import { MoreOutlined, StarOutlined, CommentOutlined, TruckOutlined } from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
@@ -20,7 +20,9 @@ export const Orders = () => {
 
     const [value, setValue] = useState(2.5);
     const [isRateModalOpen, setIsRateModalOpen] = useState(false);
-    const showRateModal = () => {
+    const [rateData, setRateData] = useState(null)
+    const showRateModal = (data) => {
+      setRateData(data);
       setIsRateModalOpen(true);
     };
 
@@ -43,11 +45,17 @@ export const Orders = () => {
         navigate(`/orderdetail/${data.orderid}`);
     }
 
-    const [track, setTrack] = useState(null)
+    const [track, setTrack] = useState("");
     const [isShipModalOpen, setIsShipModalOpen] = useState(false);
-    const showShipModal = () => {
+    const [shipData, setShipData] = useState(null)
+    const showShipModal = (data) => {
+      setShipData(data)
       setIsShipModalOpen(true);
     };
+
+    const handleGetInputValue = (event) => {
+      setTrack(event.target.value);
+    }
 
     const handleShipOk = async (data) => {
       const {orderid, buyerid} = data
@@ -55,6 +63,7 @@ export const Orders = () => {
       formData.append("orderid", orderid);
       formData.append("buyerid", buyerid);
       formData.append("track", track);
+      console.log(track);
       await http.post('/addshipment', formData);
       setIsShipModalOpen(false);
     };
@@ -100,10 +109,10 @@ export const Orders = () => {
                         shape="circle"
                         icon={<StarOutlined />}
                         style={{marginTop: '30px'}}
-                        onClick={showRateModal}
+                        onClick={()=>showRateModal(item)}
                       />
                     </Tooltip>
-                    <Modal title="Please rate buyer" open={isRateModalOpen} onOk={()=>handleRateOk(item)} onCancel={handleRateCancel}>
+                    <Modal title="Please rate buyer" open={isRateModalOpen} onOk={()=>handleRateOk(rateData)} onCancel={handleRateCancel}>
                       <Rate allowHalf defaultValue={2.5} onChange={setValue} value={value} />
                     </Modal>
                     <Tooltip title="Contact">
@@ -122,10 +131,11 @@ export const Orders = () => {
                         shape="circle"
                         icon={<TruckOutlined />}
                         style={{marginTop: '30px'}}
+                        onClick={()=>showShipModal(item)}
                       />
                     </Tooltip>
-                    <Modal title="Please add tracking number" open={isShipModalOpen} onOk={()=>handleShipOk(item)} onCancel={handleShipCancel}>
-                    <Input placeholder="Tracking number..." onChange={setTrack} value={track} />
+                    <Modal title="Please add tracking number" open={isShipModalOpen} onOk={()=>handleShipOk(shipData)} onCancel={handleShipCancel}>
+                      <Input placeholder="Tracking number..." defaultValue='' value={track} onChange={handleGetInputValue}/>
                     </Modal>
                   </Space>
                  </Col>

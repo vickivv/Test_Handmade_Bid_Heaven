@@ -84,6 +84,11 @@ export const Bidding =() => {
 
   const columns = [
     {
+      title: 'Bidding ID',
+      dataIndex: 'biddingid',
+      width: 220
+    },
+    {
       title: 'Bidding Status',
       dataIndex: 'biddingstatus',
       width: 220

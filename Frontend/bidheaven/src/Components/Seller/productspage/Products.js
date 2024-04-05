@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, List, Divider, Flex  } from 'antd';
+import { Button, Card, List, Divider } from 'antd';
 import { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import './products.css';
@@ -37,7 +37,7 @@ const TopProducts = () => {
                 style={{ width: 240 }}
                 cover={<img alt={item.productname} src={`${ip}${item.picture}`} />}
               >
-                <Meta title={item.productname} description={`Category:${item.category} Sales:${item.quantity}`} />
+                <Meta title={item.productname} description={<span>Category:{item.category}<br />Sales:{item.quantity} </span>} />
               </Card>
             </List.Item>
           )}
@@ -53,7 +53,6 @@ export const Products = () => {
         <TopProducts />
         <Divider />
         <div>
-
             <Link to='/sell'>
                 <Button className="list" type="primary" size='large'>Add a Product</Button>
             </Link>

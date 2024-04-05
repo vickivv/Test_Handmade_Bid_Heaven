@@ -458,6 +458,7 @@ def add_rate(request):
 
 @csrf_exempt
 def add_shipment(request):
+    print(request.POST)
     if request.method=='POST':
         order_id = request.POST.get('orderid')
         order = Orders.objects.get(orderid=order_id)

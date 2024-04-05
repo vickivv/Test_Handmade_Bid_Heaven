@@ -144,7 +144,7 @@ const Bid = () => {
                 cover={<img alt={item.productName} src={`${ip}${item.picture}`} />}
               >
               <Link to={`/biddings`} style={{ textDecoration: 'none' }}>
-                <Meta title={item.productName} description={item.bidStatus} />
+                <Meta title={item.productName} description={ <span> ID:{item.bidid} <br /> Status:{item.bidStatus} </span>} />
               </Link>
               </Card>
             </List.Item>
@@ -154,11 +154,11 @@ const Bid = () => {
 };
 
 export const Overview = () => {
-    //
+
     return(
       <>
       <Card>
-        <h5>Seller:</h5>
+        <h5>Seller: </h5>
         <h5>hpotter</h5>
         </Card>
         <Divider />
