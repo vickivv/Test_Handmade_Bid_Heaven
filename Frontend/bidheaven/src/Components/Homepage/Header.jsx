@@ -4,8 +4,9 @@ import logo1 from '../../Assests/logo1.png'
 import '../../Styles/Header.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import {useAuth} from '../Context/AuthContext.js';
+
 
 
 function Header(){
@@ -22,6 +23,8 @@ const handleSignInClick = () => {
 const handleNavigateToMessage = () => {
   navigate('/message');
 };
+
+
 
 const toggleDropdown = () => {
   const dropdown = document.getElementById("userDropdown");

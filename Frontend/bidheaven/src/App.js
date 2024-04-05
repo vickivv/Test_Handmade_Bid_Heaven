@@ -9,6 +9,7 @@ import SignUp from './Components/Users/Sign_up';
 import Login from './Components/Users/Login';
 import { AuthProvider } from './Components/Context/AuthContext';
 import AdminLogin from './Components/Users/AdminLogin';
+import PaymentMethod from './Components/PaymentMethod/PaymentMethod';
 
 
 function App() {
@@ -25,7 +26,9 @@ function App() {
             <Route path="/message" element={<Messages />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login/>} />
+            <Route path="/payment-method" element={<PaymentMethod/>} />
             <Route path="/admin-login" element={<AdminLogin/>} />
+
           </Routes>
         </div>
         </AuthProvider>

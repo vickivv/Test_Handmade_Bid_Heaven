@@ -1,12 +1,14 @@
 -- insert values into adminuser table (adminuser's id starts with '1')
-INSERT INTO ADMINUSER (UserID, Fname, Lname, Password) VALUES
-(11, 'Alice', 'Johnson', 'password123'),
-(12, 'Bob', 'Smith', 'password456'),
-(13, 'Charlie', 'Miller', 'password789'),
-(14, 'Diana', 'Ross', 'password012'),
-(15, 'Evan', 'Wright', 'password345'),
-(16, 'Fiona', 'Gallagher', 'password678'),
-(17, 'George', 'Clooney', 'password901');
+
+
+INSERT INTO ADMINUSER (UserID, Fname, Lname, Email,Password) VALUES
+(11, 'Alice', 'Johnson', 'alice@gmailcom' ,  'password123'),
+(12, 'Bob', 'Smith', 'bob@gmailcom' ,'password456'),
+(13, 'Charlie', 'Miller','miller@gmailcom' , 'password789'),
+(14, 'Diana', 'Ross', 'ross@gmailcom' ,'password012'),
+(15, 'Evan', 'Wright', 'evan@gmailcom' ,'password345'),
+(16, 'Fiona', 'Gallagher', 'fiona@gmailcom' ,'password678'),
+(17, 'George', 'Clooney', 'george@gmailcom' ,'password901');
 
 -- insert values into report table
 INSERT INTO REPORT (ReportID, FilePath, UpdateDate) VALUES

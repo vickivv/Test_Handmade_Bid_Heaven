@@ -1,10 +1,36 @@
+
+
+
+
 -- create tables
-create table ADMINUSER (
-	UserID int not null primary key,
-    Fname varchar(25),
-    Lname varchar(25),
-    Password varchar(255)
+
+CREATE TABLE BASEUSER (
+    UserID INT NOT NULL AUTO_INCREMENT,
+    Email VARCHAR(255) UNIQUE NOT NULL,
+    Password VARCHAR(255) NOT NULL,
+    Fname VARCHAR(25),
+    Lname VARCHAR(25),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    is_staff BOOLEAN NOT NULL DEFAULT FALSE,
+    is_superuser BOOLEAN NOT NULL DEFAULT FALSE,
+    last_login DATETIME NULL,
+    PRIMARY KEY (UserID)
 );
+
+
+
+
+CREATE TABLE ADMINUSER (
+    UserID INT NOT NULL AUTO_INCREMENT,
+    base_user_id INT UNIQUE NOT NULL,
+    PRIMARY KEY (UserID),
+    FOREIGN KEY (base_user_id) REFERENCES BASEUSER(UserID) ON DELETE CASCADE
+);
+
+
+
+
+
 create table REPORT(
 	ReportID int not null primary key,
     FilePath varchar(2083),
@@ -19,20 +45,20 @@ create table GENERATES(
     primary key (UserID, ReportID)
 );
 
-create table NORMALUSER (
-	UserID int not null primary key,
-    Fname varchar(25),
-    Lname varchar(25),
-    Username varchar(50),
-    Password varchar(255),
-    DefaultAddressID int,
-    Email varchar(100),
-    Phone varchar(30),
-    Rate decimal(2, 1),
-    ManageID int not null,
-    is_superuser BOOL NOT NULL DEFAULT 0,
-    foreign key (ManageID) references ADMINUSER(UserID)
+CREATE TABLE NORMALUSER (
+    UserID INT NOT NULL AUTO_INCREMENT,
+    base_user_id INT UNIQUE NOT NULL,
+    Username VARCHAR(50) UNIQUE,
+    DefaultAddressID INT,
+    Phone VARCHAR(30),
+    Rate DECIMAL(2, 1),
+    ManageID INT NOT NULL,
+    PRIMARY KEY (UserID),
+    FOREIGN KEY (base_user_id) REFERENCES BASEUSER(UserID) ON DELETE CASCADE,
+    FOREIGN KEY (ManageID) REFERENCES ADMINUSER(UserID) ON DELETE CASCADE
 );
+
+
 create table ADDRESS (
 	AddressID int not null primary key,
     UserID int not null,
@@ -103,7 +129,8 @@ create table SHIPMENT (
 create table PAYMENT (
 	OrderID int not null primary key,
     PaymentStatus enum('Pending', 'Completed', 'Failed', 'Canceled', 'Refunding', 'Refunded') not null,
-    PaymentMethod enum('Credit/Debit card', 'E-Wallet', 'Check') not null,
+    -- PaymentMethod enum('Credit/Debit card', 'E-Wallet', 'Check') not null,
+    PaymentMethod enum('Credit/Debit card', 'Paypal') not null,
 	foreign key (OrderID) references ORDERS(OrderID)
 );
 
@@ -139,6 +166,14 @@ create table REVIEWS (
     foreign key (ProductID) references PRODUCTS(ProductID),
     foreign key (OrderID) references ORDERS(OrderID)
 );
+
+CREATE TABLE ADMIN_TOKEN (
+  `key` VARCHAR(40) NOT NULL,
+  `admin_user_id` INT NOT NULL,
+  `created` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (`key`),
+  CONSTRAINT `fk_admin_user` FOREIGN KEY (`admin_user_id`) REFERENCES `ADMINUSER` (`UserID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 -- create view
