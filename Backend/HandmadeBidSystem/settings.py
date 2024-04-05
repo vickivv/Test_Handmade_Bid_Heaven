@@ -71,7 +71,8 @@ REST_FRAMEWORK = {
 
 
 # Auth_user_model
-AUTH_USER_MODEL = 'handmadeBid.NORMALUSER'
+# AUTH_USER_MODEL = 'handmadeBid.NORMALUSER'
+AUTH_USER_MODEL = 'handmadeBid.BASEUSER'
 
 
 

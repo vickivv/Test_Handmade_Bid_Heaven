@@ -9,6 +9,7 @@ import SignUp from './Components/Users/Sign_up';
 import Login from './Components/Users/Login';
 import { AuthProvider } from './Components/Context/AuthContext';
 import AdminLogin from './Components/Users/AdminLogin';
+import PaymentMethod from './Components/PaymentMethod/PaymentMethod';
 
 import BuyerDashboard from './Pages/Buyer_dashboard';
 import Orders from './Pages/Orders';
@@ -36,7 +37,9 @@ function App() {
             <Route path="/message" element={<Messages />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/login" element={<Login/>} />
+            <Route path="/payment-method" element={<PaymentMethod/>} />
             <Route path="/admin-login" element={<AdminLogin/>} />
+
 
             <Route path="/review" element={<Review />} />
             <Route path="/addressbook" element={<AddressBook />} />

@@ -4,16 +4,13 @@ import Footer from '../Homepage/Footer';
 import instance from '../../axios/axios';
 
 function AdminLogin() {
-  const [firstName, setFirstName] = useState(''); 
-  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === 'first_name') {
-      setFirstName(value);
-    } else if (name === 'last_name') {
-      setLastName(value);
+    if (name === 'email') {
+      setEmail(value);
     } else if (name === 'password') {
       setPassword(value);
     }
@@ -22,8 +19,7 @@ function AdminLogin() {
   const handleAdminLoginSubmit = async (e) => {
     e.preventDefault();
     const loginData = {
-      first_name: firstName,
-      last_name: lastName,
+      Email :email,
       password,
     };
 
@@ -31,6 +27,7 @@ function AdminLogin() {
       const response = await instance.post('api/admin/login/', loginData);
       if (response && response.data && response.data.token) {
         console.log('Logged in successfully. Admin User ID:', response.data.userId);
+        alert ("Admin Logged in successfully.")
       } else {
         alert("Failed to login: Please check your first name, last name, and password.");
       }
@@ -42,8 +39,9 @@ function AdminLogin() {
         alert(`Login failed: ${errorMessage}`);
       }
     }
-  };
-
+  
+    }
+    
   return (
     <div className="admin-signin-page">
       <div className="signin-container">
@@ -55,14 +53,7 @@ function AdminLogin() {
             <div className="field">
               <div className="input-container">
                 <i className="fas fa-user-circle"></i>
-                <input type="text" placeholder="First Name" required name="first_name" value={firstName} onChange={handleInputChange} />
-              </div>
-            </div>
-
-            <div className="field">
-              <div className="input-container">
-                <i className="fas fa-user-circle"></i>
-                <input type="text" placeholder="Last Name" required name="last_name" value={lastName} onChange={handleInputChange} />
+                <input type="email" placeholder="Email" required name="email" value={email} onChange={handleInputChange} />
               </div>
             </div>
 
@@ -79,8 +70,8 @@ function AdminLogin() {
       <Footer />
     </div>
   );
-}
 
+};
 export default AdminLogin;
 
 

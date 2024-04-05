@@ -2,14 +2,18 @@ import React from 'react'
 import logo2 from '../../Assests/logo2.png'
 import '../../Styles/Footer.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram, faFacebook, faTwitter,faCcMastercard,faCcVisa,faCcDiscover,faApplePay,faCcAmex } from '@fortawesome/free-brands-svg-icons';
-
+import { faInstagram, faFacebook, faTwitter,faCcMastercard,faCcVisa,faCcDiscover,faCcPaypal,faCcAmex } from '@fortawesome/free-brands-svg-icons';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'; 
 import Messages from '../Messages/Messages';
+import PaymentMethod from '../PaymentMethod/PaymentMethod.jsx';
 
 function Footer() {
-
-
+    const navigate = useNavigate();
+    
+    const handlePayment=()=>{
+        navigate('/payment-method');
+      }
     
     return (
         <div className="footer-container">
@@ -44,13 +48,13 @@ function Footer() {
                    
 
 
-                    <div className="payment-method">
+                    <div className="payment-method"  onClick={handlePayment}>
                         <p>Payment Method</p>
                         <div className="payment-icons">
                             <FontAwesomeIcon icon={faCcVisa} className="payment-icon" />
                             <FontAwesomeIcon icon={faCcMastercard} className="payment-icon" />
                             <FontAwesomeIcon icon={faCcDiscover} className="payment-icon" />
-                            <FontAwesomeIcon icon={faApplePay} className="payment-icon" />
+                            <FontAwesomeIcon icon={faCcPaypal} className="payment-icon" />
                             <FontAwesomeIcon icon={faCcAmex} className="payment-icon" />
                         </div>
                     </div>
