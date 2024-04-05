@@ -120,7 +120,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'project',
             'USER': 'root',
-            'PASSWORD': '',
+            'PASSWORD': 'root123456',
             'HOST': 'localhost',
             'PORT': '3306'
         }
