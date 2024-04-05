@@ -18,6 +18,7 @@ export const ActiveLists = () => {
 
     // page settings
     const [params, setParams] = useState({
+        status: 'Active',
         page: 1,
         per_page: 10
     });
@@ -25,7 +26,8 @@ export const ActiveLists = () => {
     // data fetch function
     useEffect(() => {
       const loadList = async () => {
-        const res = await http.get('/activeproducts', { params })
+        console.log('params', params)
+        const res = await http.get('/getproducts', { params })
         const { result, total_count } = res.data
         setProductData({
           list: result,
@@ -60,13 +62,16 @@ export const ActiveLists = () => {
     const [categoryList, setCategoryList] = useState([]);
     const fetchCategory = async () => {
       await http.get("/category").then((res) => {
-        setCategoryList(res.data); 
+        const categories = res.data;
+        const allCategory = { id: -1, name: 'All' };
+        const newCategoryList = [allCategory].concat(categories);
+        setCategoryList(newCategoryList); 
       });
     }
+
     useEffect(() => {
       fetchCategory();
     }, []);
-
 
     // filter function
     const onFinish = (values) => {
@@ -77,13 +82,12 @@ export const ActiveLists = () => {
         }else if (biddingstatus===2){
           _params.bidnum = -1
         }
-        console.log(_params.bidnum)
 
-        if (categoryid) {
-          const categoryItem = categoryList[categoryid]
-          _params.category = categoryItem.name
-          console.log(_params.category)
+        console.log(categoryList)
+        if (categoryid != undefined && categoryid != null) {
+          _params.category = categoryid
         }
+
         if (date) {
           _params.begin_postdate = date[0].format('YYYY-MM-DD')
           _params.end_postdate = date[1].format('YYYY-MM-DD')
@@ -110,7 +114,6 @@ export const ActiveLists = () => {
           render:  (picture) => {
             const picture_path = picture.replace(/\"/g,"")
             const path = `${ip}${picture_path}`
-            console.log(path)
             return <img src={`${path}`} width={80} height={60} />
           }
         },

@@ -48,7 +48,7 @@ export const CompareBids = () => {
     };
 
     const loadProduct = async() => {
-        const res = await http.get(`/getproducts/${productId}/`, {mode:'cors'});
+        const res = await http.get(`/getproduct/${productId}/`, {mode:'cors'});
         setProductData(res.data);
         console.log(res.data.cover);
     }

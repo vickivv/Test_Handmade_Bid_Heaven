@@ -12,27 +12,55 @@ export const Orders = () => {
     const [orders, setOrders] = useState([]);
     const fetchOrders = async () => {
         const res = await http.get('/getorders');
-        setOrders(res.data.result)
+        setOrders(res.data.result);
     }
     useEffect(()=>{
         fetchOrders();
     },[]);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const showModal = () => {
-      setIsModalOpen(true);
+    const [value, setValue] = useState(2.5);
+    const [isRateModalOpen, setIsRateModalOpen] = useState(false);
+    const showRateModal = () => {
+      setIsRateModalOpen(true);
     };
-    const handleOk = () => {
-      setIsModalOpen(false);
+
+    const handleRateOk = async (data) => {
+      const {orderid, buyerid, productid} = data
+      const formData = new FormData();
+      formData.append("orderid", orderid);
+      formData.append("rate", value);
+      formData.append("buyerid", buyerid);
+      formData.append("productid", productid);
+      await http.post('/addrate', formData);
+      setIsRateModalOpen(false);
     };
-    const handleCancel = () => {
-      setIsModalOpen(false);
+    const handleRateCancel = () => {
+      setIsRateModalOpen(false);
     };
 
     const navigate = useNavigate()
     const getdetails = (data) =>{
         navigate(`/orderdetail/${data.orderid}`);
     }
+
+    const [track, setTrack] = useState(null)
+    const [isShipModalOpen, setIsShipModalOpen] = useState(false);
+    const showShipModal = () => {
+      setIsShipModalOpen(true);
+    };
+
+    const handleShipOk = async (data) => {
+      const {orderid, buyerid} = data
+      const formData = new FormData();
+      formData.append("orderid", orderid);
+      formData.append("buyerid", buyerid);
+      formData.append("track", track);
+      await http.post('/addshipment', formData);
+      setIsShipModalOpen(false);
+    };
+    const handleShipCancel = () => {
+      setIsShipModalOpen(false);
+    };
 
     return (
       <List
@@ -72,11 +100,11 @@ export const Orders = () => {
                         shape="circle"
                         icon={<StarOutlined />}
                         style={{marginTop: '30px'}}
-                        onClick={showModal}
+                        onClick={showRateModal}
                       />
                     </Tooltip>
-                    <Modal title="Please rate buyer" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                      <Rate allowHalf defaultValue={2.5} />
+                    <Modal title="Please rate buyer" open={isRateModalOpen} onOk={()=>handleRateOk(item)} onCancel={handleRateCancel}>
+                      <Rate allowHalf defaultValue={2.5} onChange={setValue} value={value} />
                     </Modal>
                     <Tooltip title="Contact">
                       <Button
@@ -96,6 +124,9 @@ export const Orders = () => {
                         style={{marginTop: '30px'}}
                       />
                     </Tooltip>
+                    <Modal title="Please add tracking number" open={isShipModalOpen} onOk={()=>handleShipOk(item)} onCancel={handleShipCancel}>
+                    <Input placeholder="Tracking number..." onChange={setTrack} value={track} />
+                    </Modal>
                   </Space>
                  </Col>
               </Row>

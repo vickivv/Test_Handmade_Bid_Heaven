@@ -10,20 +10,24 @@ const { RangePicker } = DatePicker
 
 export const SoldOutLists = () => {
 
+    //list to save active products data fetched from backend
     const [productData, setProductData] = useState({
         list: [],
         count: 0 
     });
 
+    // page settings
     const [params, setParams] = useState({
+        status: 'Sold out',
         page: 1,
         per_page: 10
     });
 
-  
+    // data fetch function
     useEffect(() => {
       const loadList = async () => {
-        const res = await http.get('/soldoutproducts', { params })
+        console.log(params)
+        const res = await http.get('/getproducts', { params })
         const { result, total_count } = res.data
         setProductData({
           list: result,
@@ -33,40 +37,63 @@ export const SoldOutLists = () => {
       loadList()
     }, [params])
 
-
-    const relistProduct = (data) => {
-      console.log("relist");
+    //modify product
+    const navigate = useNavigate();
+    const modifyProduct = (data) => {
+      navigate(`/sell?id=${data.productid}`); 
     };
+
+    //delete product
+    const delProduct = async (data) => {
+        await http.delete(`deleteproduct/${data.productid}/`)
+        setParams({
+           ...params,
+           page: 1
+        })
+    }
 
     //contact the admin user of a product
     const contactManager = (data) => {
         //to add contact api
-        console.log(data.managerID);
-    };
+        console.log("contact manager");
+    }
 
-    //to change to fetch from database
+    //fetch category from database
     const [categoryList, setCategoryList] = useState([]);
     const fetchCategory = async () => {
       await http.get("/category").then((res) => {
-        setCategoryList(res.data); 
+        const categories = res.data;
+        const allCategory = { id: -1, name: 'All' };
+        const newCategoryList = [allCategory].concat(categories);
+        setCategoryList(newCategoryList); 
       });
     }
+
     useEffect(() => {
       fetchCategory();
     }, []);
 
+
+    // filter function
     const onFinish = (values) => {
-        const { categoryId, date, status } = values
+        const { categoryid, date, biddingstatus } = values
         const _params = {}
-        _params.status = status
-       
-        if (categoryId) {
-          _params.category = categoryId
+        if (biddingstatus===1){
+          _params.bidnum = 0
+        }else if (biddingstatus===2){
+          _params.bidnum = -1
         }
+
+        console.log(categoryList)
+        if (categoryid) {
+          _params.category = categoryid
+        }
+
         if (date) {
-          _params.begin_pubdate = date[0].format('YYYY-MM-DD')
-          _params.end_pubdate = date[1].format('YYYY-MM-DD')
+          _params.begin_postdate = date[0].format('YYYY-MM-DD')
+          _params.end_postdate = date[1].format('YYYY-MM-DD')
         }
+
         setParams({
           ...params,
           ..._params
@@ -88,7 +115,6 @@ export const SoldOutLists = () => {
           render:  (picture) => {
             const picture_path = picture.replace(/\"/g,"")
             const path = `${ip}${picture_path}`
-            console.log(path)
             return <img src={`${path}`} width={80} height={60} />
           }
         },
@@ -142,27 +168,13 @@ export const SoldOutLists = () => {
         }
     ]
 
-    const data = [
-        {
-            name: 'Stained Glass Flowers',
-            category: 'Ceramics and Glass',
-            description: 'Stained glass flowers inspired by beautiful fall foliage',
-            startPrice: 20.0,
-            inventory: 1,
-            bidnum: 2,
-            picture: "",
-            managerID: 1,
-            postDate: '2024-03-01'
-        }
-    ]
-
     return (
         <div>
         <Card
           title={
             <Breadcrumb separator=">">
               <Breadcrumb.Item>
-                <Link to="/">Seller's Page</Link>
+                <Link to="/overview">Seller's Page</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 <Link to="/products">My Products</Link>
@@ -175,15 +187,15 @@ export const SoldOutLists = () => {
           <Form
             onFinish={onFinish}
             initialValues={{ status: null }}>
-            <Form.Item label="Bidding Status" name="status">
+            <Form.Item label="Bidding Status" name="biddingstatus">
               <Radio.Group>
-                <Radio value={null}>All</Radio>
-                <Radio value={0}>No Bidding</Radio>
-                <Radio value={1}>Has Bidding</Radio>
+                <Radio value={0}>All</Radio>
+                <Radio value={1}>No Bidding</Radio>
+                <Radio value={2}>Has Bidding</Radio>
               </Radio.Group>
             </Form.Item>
   
-            <Form.Item label="Category" name="category">
+            <Form.Item label="Category" name="categoryid">
               <Select
                 placeholder="Please choose category."
                 style={{ width: 120 }}

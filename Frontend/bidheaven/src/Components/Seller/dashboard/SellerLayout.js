@@ -2,6 +2,7 @@ import { Layout, Menu, theme } from 'antd';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { SellerHeader } from './SellerHeader';
 import "./layout.css";
+import "./sidebar.css";
 import { ContainerOutlined, PieChartOutlined, ShopOutlined, SyncOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout

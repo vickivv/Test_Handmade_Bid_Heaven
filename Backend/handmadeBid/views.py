@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from django.shortcuts import HttpResponse
-from .models import Products, Category, Normaluser, Adminuser, Pictures, Bidding, Orders, Payment
+from .models import Products, Category, Normaluser, Adminuser, Pictures, Bidding, Orders, Payment, Reviews, Shipment
 from datetime import date
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -116,7 +116,7 @@ def upload_picture(request):
         new_img.save()
         return JsonResponse(new_img.pk, safe=False)
 
-def get_products(request, product_id):
+def get_product(request, product_id):
     if request.method=='GET':
         product=Products.objects.get(productid=product_id)
         pictures=Pictures.objects.filter(productid=product.productid)
@@ -137,9 +137,31 @@ def get_products(request, product_id):
         }
         return JsonResponse(data, safe=False)
 
-def get_active_products(request):
+def get_products(request):
     if request.method=='GET':
-        products = Products.objects.filter(sellerid=21, status='Active')
+        seller_id=21
+        product_status=request.GET.get('status')
+        products = Products.objects.filter(sellerid=seller_id, status=product_status)
+        
+        bidnum = request.GET.get('bidnum')
+        if bidnum:       
+            products_in_bids = Bidding.objects.values_list('productid', flat=True)
+            if bidnum == '0':
+                products = products.exclude(productid__in=products_in_bids)
+            elif bidnum == '-1':
+                products = products.filter(productid__in=products_in_bids)
+        
+        category = request.GET.get('category')
+        if category:
+            category_id = int(category) + 1
+            if category_id != 0:
+                products = products.filter(categoryid=category_id)
+        
+        begin_date = request.GET.get('begin_postdate')
+        end_date = request.GET.get('end_postdate')
+        if begin_date and end_date:
+            products = products.filter(postdate__range=(begin_date, end_date))
+
         product_list = []
         for p in products:
             bidnum = Bidding.objects.filter(productid=p.productid).count()
@@ -164,32 +186,6 @@ def get_active_products(request):
         
         return JsonResponse(data, safe=False)
 
-def get_soldout_products(request):
-    if request.method=='GET':
-        products = Products.objects.filter(sellerid=21, status='Sold Out')
-        product_list = []
-        for p in products:
-            bidnum = Bidding.objects.filter(productid=p.productid).count()
-            picture = Pictures.objects.filter(pictureid=p.pictureid).first().picture
-            picture_path=json.dumps(str(picture))
-            p_item = {
-                'picture': picture_path,
-                'name': p.name,
-                'category': p.categoryid.cname,
-                'description': p.description,
-                'startPrice': p.startprice,
-                'inventory': p.inventory,
-                'bidnum': bidnum,
-                'postdate': p.postdate
-            }
-            product_list.append(p_item)
-        data={
-            'result': product_list,
-            'total_count': len(product_list)
-        }
-        
-        return JsonResponse(data, safe=False)
-    
 def get_overview_stat(request):
     if request.method == 'GET':
         product_list = Products.objects.filter(sellerid=21)
@@ -334,12 +330,14 @@ def get_orders(request):
         for order in order_list:
             bid=order.biddingid
             sale_amount=bid.quantity * bid.bidprice
-            product=bid.productid
+            product = bid.productid
             picture = Pictures.objects.filter(pictureid=product.pictureid).first().picture
             picture_path=json.dumps(str(picture)).replace('"', '')
             item={
-                "picture":picture_path,
+                "buyerid": bid.bidderid.userid,
+                "picture": picture_path,
                 "orderid": order.orderid,
+                "productid": bid.productid.productid,
                 "productName": product.name,
                 "orderStatus": order.orderstatus,
                 "orderDate": order.orderdate,
@@ -433,3 +431,45 @@ def get_product_bids(request, product_id):
             data_list.append(item)
         data={"result":data_list}
         return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def add_rate(request):
+    reviewer_id = 21
+    if request.method=='POST':
+        rate = request.POST.get('rate')
+        order_id = request.POST.get('orderid')
+        buyer_id = request.POST.get('buyerid')
+        reviewer = Normaluser.objects.get(userid=reviewer_id)
+        reviewee = Normaluser.objects.get(userid=buyer_id)
+        product_id = request.POST.get('productid')
+        product = Products.objects.get(productid=product_id)
+        order = Orders.objects.get(orderid=order_id)
+        new_review = Reviews(
+            reviewerid=reviewer,
+            reviewertype='Seller',
+            revieweeid=reviewee,
+            reviewdate=date.today(),
+            productid=product,
+            orderid = order,
+            rate = rate
+        )
+        new_review.save()
+        return HttpResponse('success')
+
+@csrf_exempt
+def add_shipment(request):
+    if request.method=='POST':
+        order_id = request.POST.get('orderid')
+        order = Orders.objects.get(orderid=order_id)
+        buyer_id = request.POST.get('buyerid')
+        buyer = Normaluser.objects.get(userid=buyer_id)
+        address = buyer.defaultaddressid
+        tracknumber = request.POST.get('track')
+        new_shipment=Shipment(
+            orderid=order,
+            trackingnumber=tracknumber,
+            addressid=address,
+            status='Shipped'
+        )
+        new_shipment.save()
+        return HttpResponse('success')

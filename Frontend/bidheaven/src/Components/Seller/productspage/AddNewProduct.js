@@ -60,13 +60,11 @@ export const AddNewProduct = () => {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("category", category)
-      console.log("category",category)
       formData.append("description", description)
       formData.append("startPrice", parseInt(startPrice))
       formData.append("inventory", parseInt(inventory))
       formData.append("pictures", pictures)
       if (id) {
-        console.log(formData)
         await http.post(`/updateproduct/${id}/`, formData, {mode: 'cors'});
       } else {
       await http.post(`/addproducts`, formData);
@@ -80,7 +78,7 @@ export const AddNewProduct = () => {
   const id = params.get('id');
   const [form] = Form.useForm();
   const loadDetail = async () => {
-    const res = await http.get(`/getproducts/${id}`)
+    const res = await http.get(`/getproduct/${id}`)
     const data = res.data
     form.setFieldsValue({
       name: data.name,

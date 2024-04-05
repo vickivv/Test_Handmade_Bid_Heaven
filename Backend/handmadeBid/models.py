@@ -164,7 +164,7 @@ class Report(models.Model):
 
 
 class Reviews(models.Model):
-    reviewid = models.IntegerField(db_column='ReviewID', primary_key=True)  # Field name made lowercase.
+    reviewid = models.AutoField(primary_key=True) # Field name made lowercase.
     reviewerid = models.ForeignKey(Normaluser, models.DO_NOTHING, db_column='ReviewerID', related_name='sent_review')  # Field name made lowercase.
     reviewertype = models.CharField(db_column='ReviewerType', max_length=6)  # Field name made lowercase.
     revieweeid = models.ForeignKey(Normaluser, models.DO_NOTHING, db_column='RevieweeID',related_name='get_review')  # Field name made lowercase.
