@@ -63,7 +63,6 @@ export const Orders = () => {
       formData.append("orderid", orderid);
       formData.append("buyerid", buyerid);
       formData.append("track", track);
-      console.log(track);
       await http.post('/addshipment', formData);
       setIsShipModalOpen(false);
     };

@@ -20,6 +20,7 @@ export const Bidding =() => {
   });
 
   const fetchBids = async() => {
+    console.log(params)
     const response = await http.get('/getbids', { params });
     const {result, count} = response.data
     setBidData({
@@ -31,6 +32,26 @@ export const Bidding =() => {
   useEffect(() => {
     fetchBids();
   },[params])
+
+      // filter function
+      const onFinish = (values) => {
+        const { date, status } = values
+        const _params = {}
+
+        if (status != undefined && status != null) {
+          _params.status = status
+        }
+
+        if (date) {
+          _params.begin_postdate = date[0].format('YYYY-MM-DD')
+          _params.end_postdate = date[1].format('YYYY-MM-DD')
+        }
+
+        setParams({
+          ...params,
+          ..._params
+        })
+    }
 
   const pageChange = (page) => {
     setParams({
@@ -185,7 +206,9 @@ return (
   <div>
       <Card style={{ marginBottom: 20 }}>
           <Form
-            initialValues={{ status: null }}>
+            onFinish={onFinish}
+            initialValues={{ status: null }}
+          >
   
             <Form.Item label="Status" name="status">
               <Select

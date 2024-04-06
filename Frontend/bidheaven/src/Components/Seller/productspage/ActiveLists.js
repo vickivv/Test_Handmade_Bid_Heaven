@@ -26,7 +26,6 @@ export const ActiveLists = () => {
     // data fetch function
     useEffect(() => {
       const loadList = async () => {
-        console.log('params', params)
         const res = await http.get('/getproducts', { params })
         const { result, total_count } = res.data
         setProductData({
@@ -77,13 +76,14 @@ export const ActiveLists = () => {
     const onFinish = (values) => {
         const { categoryid, date, biddingstatus } = values
         const _params = {}
-        if (biddingstatus===1){
+        if (biddingstatus===0){
+          _params.bidnum = 1
+        }else if (biddingstatus===1){
           _params.bidnum = 0
         }else if (biddingstatus===2){
           _params.bidnum = -1
         }
 
-        console.log(categoryList)
         if (categoryid != undefined && categoryid != null) {
           _params.category = categoryid
         }

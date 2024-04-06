@@ -35,11 +35,16 @@ export const AddNewProduct = () => {
       })
       const pictureKeys=fileList.map(file => {
         if(file.response){
+          console.log('newpictureresponse', file.response);
           return file.response;
       }})
       setFileList(formatList)
+      console.log('newpictureKeys', pictureKeys);
+      const addedValues = pictureKeys.filter(item => item != undefined);
+      pictures.push(...addedValues)
       // cacheImgList.current = formatList
-      setPictures(pictureKeys)
+      setPictures(pictures)
+    console.log("newpictures",pictures)
     }
 
     //fetch category data from database
@@ -63,7 +68,7 @@ export const AddNewProduct = () => {
       formData.append("description", description)
       formData.append("startPrice", parseInt(startPrice))
       formData.append("inventory", parseInt(inventory))
-      console.log(pictures)
+      console.log("tobackendpictures", pictures)
       formData.append("pictures", pictures)
       if (id) {
         await http.post(`/updateproduct/${id}/`, formData, {mode: 'cors'});
@@ -86,11 +91,13 @@ export const AddNewProduct = () => {
       category: data.category,
       startPrice: data.startPrice,
       inventory: data.inventory,
-      description: data.description,
-      type: data.pictures.map(url => (`${ip}${url}`))
+      description: data.description
     })
-    const formatImgList = data.pictures.map(url => (`${ip}${url}`))
+    const formatImgList = data.pictures.map(url => ({url:`${ip}${url}`}))
     setFileList(formatImgList)
+    console.log("frombackendurls", fileList)
+    setPictures(data.pictureKeys)
+    console.log("frombackendkeys", data.pictureKeys)
     // cacheImgList.current = formatImgList
   } 
   useEffect(() => {

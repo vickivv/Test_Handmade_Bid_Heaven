@@ -36,7 +36,8 @@ const cardStyle = {
   };
 
   const ip = 'http://localhost:8000/media/';
-  
+
+//compare all 'pending' bids for the product
 export const CompareBids = () => {
     const { productId } = useParams(); 
     const [bidData, setBidData] = useState([]);

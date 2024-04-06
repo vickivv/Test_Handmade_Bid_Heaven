@@ -60,6 +60,7 @@ def add_product(request):
 
 @csrf_exempt 
 def update_product(request, product_id):
+
     seller_id=21
     if request.method == 'POST':
         product = Products.objects.get(pk=product_id)
@@ -123,9 +124,11 @@ def get_product(request, product_id):
         cover=Pictures.objects.get(pictureid=product.pictureid)
         cover_path=json.dumps(str(cover.picture))
         picture_list=[]
+        picture_keys=[]
         for p in pictures:
             picture_path=json.dumps(str(p.picture))
             picture_list.append(picture_path.replace('"', ''))
+            picture_keys.append(p.pictureid)
         data={
             'name': product.name,
             'category': product.categoryid.cname,
@@ -133,7 +136,8 @@ def get_product(request, product_id):
             'inventory': product.inventory,
             'pictures': picture_list,
             "cover": cover_path.replace('"', ''),
-            'description': product.description
+            'description': product.description,
+            "pictureKeys":picture_keys
         }
         return JsonResponse(data, safe=False)
 
@@ -292,6 +296,16 @@ def get_bids(request):
         product_list = Products.objects.filter(sellerid=seller_id)
         product_ids= [p.productid for p in product_list]
         bidding_list = Bidding.objects.filter(productid__in=product_ids)
+        
+        bidstatus = request.GET.get('status')
+        if bidstatus:
+            bidding_list = bidding_list.filter(status=bidstatus)
+        
+        begin_date = request.GET.get('begin_postdate')
+        end_date = request.GET.get('end_postdate')
+        if begin_date and end_date:
+            bidding_list = bidding_list.filter(biddate__range=(begin_date, end_date))
+
         count = len(bidding_list)
         data_list = []
         for bid in bidding_list: 
