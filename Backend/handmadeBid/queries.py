@@ -160,3 +160,47 @@ def cancel_order(orderID):
         except Exception as e:
             print(e)
             return False
+
+
+def set_order(userID, orderID, paymentmethod):
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("""
+                SELECT DefaultAddressID FROM NORMALUSER WHERE UserID = %s
+            """, [userID])  # 假设你有orderID对应的userID
+            result = cursor.fetchone()
+            addressID = result[0] if result else None
+
+            cursor.execute("""
+                INSERT INTO PAYMENT (OrderID, PaymentStatus, PaymentMethod) 
+                VALUES (%s, %s, %s)
+                """, [orderID, 'Completed', paymentmethod])
+            cursor.execute("""
+                            INSERT INTO SHIPMENT (OrderID, TrackingNumber, AddressID, Status) 
+                            VALUES (%s, %s, %s, %s)
+                            """, [orderID, 'Not available yet', addressID, 'Awaiting Shipment'])
+            cursor.execute("""
+                           UPDATE ORDERS
+                           SET OrderStatus = %s
+                           WHERE OrderID = %s
+                           """, ['Processing', orderID])
+            connection.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
+
+def cancel_bid(biddingID):
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("""
+            UPDATE BIDDING
+            SET STATUS = %s
+            WHERE BiddingID = %s
+            """, ['Canceled', biddingID])
+            connection.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
