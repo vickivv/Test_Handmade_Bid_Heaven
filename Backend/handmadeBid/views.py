@@ -25,7 +25,7 @@ import logging
 
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
-    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order
+    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +35,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serialization import NormalUserSerializer
 
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+secondMerge
 
 @csrf_exempt
 @api_view(['POST'])
@@ -273,6 +275,30 @@ class CancelOrderAPIView(APIView):
         order_id = data.get('orderid')
         if cancel_order(order_id):
             return JsonResponse({'success': True, 'id': order_id})
+        else:
+            return JsonResponse({"error": "Unable to set"}, status=400)
+
+
+Olivia
+class SetOrderAPIView(APIView):
+    def put(self, request):
+        data = json.loads(request.body)
+        user_id = data.get('userid')
+        order_id = data.get('orderid')
+        payment_method = data.get('paymentmethod')
+        if set_order(user_id, order_id, payment_method):
+            return JsonResponse({'success': True, 'id': order_id})
+        else:
+            return JsonResponse({"error": "Unable to set"}, status=400)
+
+
+class CancelBidAPIView(APIView):
+    def put(self, request):
+        data = json.loads(request.body)
+
+        bid_id = data.get('biddingid')
+        if cancel_bid(bid_id):
+            return JsonResponse({'success': True})
         else:
             return JsonResponse({"error": "Unable to set"}, status=400)
 

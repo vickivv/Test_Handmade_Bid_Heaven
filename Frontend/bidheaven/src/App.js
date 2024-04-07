@@ -21,6 +21,7 @@ import Review from './Components/Dashboard/review'
 import Payment from './Pages/payment'
 import AddAddressPage from './Pages/AddAddressPage'
 import AddressBook from './Components/Users/AddressBook'
+import ThankYouPage from './Pages/ThankYouPage'
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
             <Route path="/addressbook" element={<AddressBook />} />
             <Route path="/add_address" element={<AddAddressPage />} />
             <Route path="/payment/:orderId" element={<Payment />} />
+            <Route path="/thankyou" element={<ThankYouPage />} />
             <Route path="/buyer/*" element={<BuyerDashboard />}>
               <Route path="overview" element={<Overview />} />
               <Route path="order" element={<Orders />} />
