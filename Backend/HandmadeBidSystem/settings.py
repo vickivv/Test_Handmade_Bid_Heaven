@@ -71,7 +71,8 @@ REST_FRAMEWORK = {
 
 
 # Auth_user_model
-AUTH_USER_MODEL = 'handmadeBid.NORMALUSER'
+# AUTH_USER_MODEL = 'handmadeBid.NORMALUSER'
+AUTH_USER_MODEL = 'handmadeBid.BASEUSER'
 
 
 
@@ -119,7 +120,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'project',
             'USER': 'root',
-            'PASSWORD': '',
+            'PASSWORD': 'root123456',
             'HOST': 'localhost',
             'PORT': '3306'
         }

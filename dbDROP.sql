@@ -15,6 +15,7 @@ drop view if exists BESTSELL;
 
 
 -- drop tables
+drop table   if exists ADMIN_TOKEN
 drop  table  if exists MESSAGES;
 drop  table  if exists REVIEWS;
 drop  table  if exists  SHIPMENT;
@@ -30,6 +31,8 @@ drop  table  if exists GENERATES;
 drop  table  if exists REPORT;
 drop  table  if exists CATEGORY;
 drop  table  if exists ADMINUSER;
+
+DROP TABLE IF EXISTS BaseUser;
 
 
 

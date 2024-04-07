@@ -6,7 +6,8 @@ import logo1 from '../../Assests/logo1.png'
 import Footer from '../../Components/Homepage/Footer';
 import '../../Styles/SignUp.css'
 import {getCsrfToken} from '../../utils.js'
-// import axios from 'axios';
+import axiosInstance from '../../axios/axios.js';
+
 const token = localStorage.getItem('token')
 
 const PasswordErrorMessage=()=>{
@@ -39,7 +40,7 @@ function SignUp(){
             lastName&&
             userName&&
             validateEmail(email)&&
-            password.value.length>=8 &&
+            password.value.length>=4 &&
             password.value===confirmPassword.value);
         
 
@@ -54,60 +55,59 @@ function SignUp(){
 
     }
     const navigate=useNavigate();
+
     const handleSignUpSubmit = (e) => {
-        e.preventDefault();  
-    
-        const apiUrl = 'http://localhost:8000/api/signup/'; 
+        e.preventDefault();
+
+        if (!getIsFormValid()) {
+            alert('Please fill in the form correctly.');
+            return; 
+        }
+
+        const csrfToken = getCsrfToken(); 
+        const apiUrl = '/api/signup/';
         const userData = {
             Fname: firstName,
             Lname: lastName,
             Username: userName,
-            Password: password.value,
+            password: password.value,
             Email: email,
             Phone: phone,
         };
-        
-        // 使用fetch发送请求
-        fetch(apiUrl, {
-            method: 'POST',
+
+        axiosInstance.post(apiUrl, userData, {
             headers: {
-                'Content-Type': 'application/json',
-              
-            },
-         
-            body: JSON.stringify(userData)
+                'X-CSRFToken': csrfToken 
+            }
         })
         .then(response => {
-            console.log('Response status:', response.status); 
-            if (!response.ok) {
-                
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.indexOf("application/json") !== -1) {
-                    return response.json().then(data => {
-                        let errorMessage = data.detail || "An error occurred";
-                        if (data.username) errorMessage = "Username already exists!";
-                        if (data.email) errorMessage = "Email already exists!";
-                        throw new Error(errorMessage);  
-                    });
-                } else {
-                    // 响应不是 JSON 格式
-                    throw new Error(`Request failed with status ${response.status}`);
-                }
-            }
-            return response.json(); // 返回解析后的JSON数据
-        })
-        .then(data => {
-            console.log('Success:', data); // 打印成功数据
+            console.log('Account successfully created:', response.data);
             alert("Account successfully created!");
-            clearForm(); // 清理表单
-            navigate("/login"); // 导航到登录页面
+            clearForm();
+            navigate("/login");
         })
         .catch(error => {
-            console.error("Error Message:", error.message);
-            alert(error.message);  // 显示错误信息
+            console.error("Error during sign up:", error);
+            let errorMessage = "An error occurred";
+            if (error.response) {
+                const contentType = error.response.headers['content-type'];
+                if (contentType && contentType.indexOf('application/json') !== -1) {
+                    errorMessage = error.response.data.detail || errorMessage;
+                    if (error.response.data.username) errorMessage = "Username already exists!";
+                    if (error.response.data.email) errorMessage = "Email already exists!";
+                } else {
+                    errorMessage = `Request failed with status ${error.response.status}`;
+                }
+            }
+            alert(errorMessage);
         });
     };
+
+
+
     console.log(getCsrfToken())
+
+
     const goToLogin=()=>{
         navigate("/login");
     }
