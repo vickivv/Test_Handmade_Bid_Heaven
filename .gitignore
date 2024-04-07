@@ -3,3 +3,5 @@
 /venv
 .DS_Store
 /node_modules
+*.pyc
+/Backend/handmadeBid/__pycache__

@@ -1,0 +1,126 @@
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(159, 126, 172);
+    color: white;
+    width: 100%;
+    padding: 0 10px 10px 10px;
+}
+
+.footer-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    flex-wrap: nowrap;
+
+}
+
+.footer-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* font-size: 10px; */
+    margin-right:auto;
+}
+.footer-logo{
+    width:230px;
+    margin-top:40px;
+}
+.info-section {
+    display: flex;
+    margin-top:50px;
+    flex-direction: row;
+    align-items: flex-start; 
+    justify-content: space-between; 
+    width: 100%;
+}
+
+.info-text { 
+    display: flex;
+    flex-direction: column;
+    margin:0 25px;
+    
+    margin-bottom:0px;
+    align-items: start; 
+    font-weight: bold;
+    position:relative;
+}
+
+.payment-method { 
+    display: flex;
+    flex-direction: column;
+    margin:0 20px;
+    margin-top:5px;
+    align-items: flex-start; 
+    font-weight: bold;
+}
+
+
+.payment-icons {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    width:300px;
+}
+
+.payment-icon {
+    margin: 5px;
+    width:60px;
+    height:40px;
+
+    
+}
+
+/* .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.bottom-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width:100%;
+} */
+.contact-section p{
+    margin:4px 0;
+}
+
+.social-icons {
+    display: flex;
+    justify-content:flex-start;
+    width:100%;
+    margin-top: 10px;
+}
+
+.social-icon {
+    margin: 0 10px;
+    font-size:24px;
+}
+
+.chatbot-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    margin-top: 5px; 
+    text-decoration: none;
+    align-self:flex-start;
+    font-weight: bold;
+}
+.contact-bottom{
+    display:flex;
+    flex-direction:column;
+    align-items: flex-start;
+}
+
+.footer-bottom-row{
+    text-align:center;
+    margin-top:20px;
+    font-size:10px;
+}

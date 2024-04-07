@@ -1,0 +1,10 @@
+/* styles.css */
+p {
+  display: 'flex';
+  align-items: 'center';
+  justify-content: 'center';
+  width: '100%';
+  margin: 0; /* Override default margins if necessary */
+  /* Additional styles for all <p> tags */
+}
+

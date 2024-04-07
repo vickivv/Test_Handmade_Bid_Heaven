@@ -32,19 +32,24 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'handmadeBid.apps.HandmadebidConfig',
+    # 'handmadeBid.apps.HandmadebidConfig',
     'django.contrib.admin',
     'django.contrib.auth',
+    'corsheaders',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'handmadeBid',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -53,6 +58,26 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3001",  
+    "http://localhost:3000",  
+    "http://127.0.0.1:3000", 
+]
+
+# Rest framwork
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
+
+# Auth_user_model
+# AUTH_USER_MODEL = 'handmadeBid.NORMALUSER'
+AUTH_USER_MODEL = 'handmadeBid.BASEUSER'
+
+
 
 ROOT_URLCONF = 'HandmadeBidSystem.urls'
 
@@ -92,19 +117,44 @@ if os.getenv('GAE_APPLICATION', None):
         'PORT': '3306',
     }
 }
-# else:
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Group2',
-        'USER': 'root',
-        'PASSWORD': 'root1234',
-        'HOST': 'localhost',
-        'PORT': '3306'
+# XW's database setting
+#  else:
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'Group2',
+#         'USER': 'root',
+#         'PASSWORD': 'root1234',
+#         'HOST': 'localhost',
+#         'PORT': '3306'
+#     }
+# }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'project',
+            'USER': 'root',
+            'PASSWORD': '',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        }
     }
-}
+"""
+Olivia's database setting
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'project',
+            'USER': 'root',
+            'PASSWORD': 'root123456',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        }
+    }
+"""
 
-
+DATABASE_APPS_MAPPING = {'handmadeBid': None}
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -147,8 +197,10 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')  
 MEDIA_URL = '/media/'
 
-CORS_ORIGIN_ALLOW_ALL = True
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+
