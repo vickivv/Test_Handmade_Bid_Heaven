@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from handmadeBid import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +37,26 @@ urlpatterns = [
     path('api/get_all_bids', views.GetAllBidsAPIView.as_view(), name='get_all_bids'),
     path('api/get_all_bids/<int:BiddingID>', views.GetBidDetailAPIView.as_view(), name='get_bid_detail'),
     path('api/insert_review', views.AddReviewAPIView.as_view(), name='add_review'),
-    path('api/add_address', views.AddAddressAPIView.as_view(), name='add_address')
-]
+    path('api/add_address', views.AddAddressAPIView.as_view(), name='add_address'),
+    path('addproducts',views.add_product,name ='addproducts'),
+    path('category', views.get_category, name='category'),
+    path('uploadpicture', views.upload_picture),
+    path('getproducts', views.get_products),
+    path('getstat/<int:userId>/', views.get_overview_stat),
+    path('getrecentorders/<int:userId>/', views.get_recent_orders),
+    path('getrecentbids/<int:userId>/', views.get_recent_bids),
+    path('bestsaleproducts/<int:userId>/', views.get_best_products),
+    path('getbids', views.get_bids),
+    path('getorders/<int:userId>/', views.get_orders),
+    path('orderdetail/<int:order_id>/', views.get_order_detail),
+    path('getproduct/<int:product_id>/', views.get_product),
+    path('updateproduct/<int:product_id>/', views.update_product),
+    path('deleteproduct/<int:product_id>/', views.delete_product),
+    path('updatebidstatus/<int:bidding_id>/', views.update_bid_status),
+    path('addorder/<int:bidding_id>/', views.add_order),
+    path('productbids/<int:product_id>/', views.get_product_bids),
+    path('addrate', views.add_rate),
+    path('addshipment', views.add_shipment),
+    path('getusername/<int:userId>/', views.get_username),
+]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 

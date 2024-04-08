@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'handmadeBid',
     'rest_framework',
+    'handmadeBid',
     'rest_framework.authtoken',
 ]
 
@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 CORS_ALLOW_ALL_ORIGINS = True 
 CORS_ALLOWED_ORIGINS = [
@@ -126,6 +127,18 @@ else:
         }
     }
 """
+Xiwei's database setting
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'Group2',
+            'USER': 'root',
+            'PASSWORD': 'root1234',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        }
+    }
+
 Olivia's database setting
     DATABASES = {
         'default': {
@@ -179,7 +192,14 @@ USE_TZ = True
 STATIC_ROOT = 'static'
 STATIC_URL = '/static/'
 
-CORS_ALLOW_ALL_ORIGINS = True
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')  
+MEDIA_URL = '/media/'
+
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+# ]
+
+# CORS_ALLOW_ALL_ORIGINS = True
 
 
 
