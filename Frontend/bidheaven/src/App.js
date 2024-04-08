@@ -22,6 +22,16 @@ import Payment from './Pages/payment'
 import AddAddressPage from './Pages/AddAddressPage'
 import AddressBook from './Components/Users/AddressBook'
 
+import { Products } from "./Components/Seller/productspage/Products";
+import { SellerOverview } from "./Components/Seller/overviewpage/SellerOverview";
+import { SellerOrders } from './Components/Seller/orders/SellerOrders';
+import { SellerLayout } from "./Components/Seller/dashboard/SellerLayout";
+import {ActiveLists} from "./Components/Seller/productspage/ActiveLists";
+import {SoldOutLists} from "./Components/Seller/productspage/SoldOutLists";
+import { AddNewProduct } from "./Components/Seller/productspage/AddNewProduct";
+import { Bidding } from "./Components/Seller/biddings/Bidding";
+import { SellerOrderDetail } from "./Components/Seller/orders/SellerOrderDetail";
+import { CompareBids } from "./Components/Seller/biddings/CompareBids";
 
 function App() {
 
@@ -51,6 +61,18 @@ function App() {
               <Route path="order/:orderId" element={<OrderDetail />} />
               <Route path="bid" element={<Bids />} />
               <Route path="bid/:BiddingID" element={<BidDetail />} />
+            </Route>
+            <Route path='/seller/*' element={<SellerLayout />} > 
+              <Route path='overview' element={<SellerOverview />} />
+              <Route path="products" exact element={<Products />} />
+              <Route path="activeproducts" element={<ActiveLists />} />
+              <Route path="soldout" element={<SoldOutLists />} />
+              <Route path="biddings" element={<Bidding />} /> 
+              <Route path='comparebids/:productId' element={<CompareBids />} />
+              <Route path="pendingbids" element={<Bidding />} /> 
+              <Route path="orders" element={<SellerOrders />} />
+              <Route path="orderdetail/:orderId" element={<SellerOrderDetail/>} />
+              <Route path="sell" element={<AddNewProduct />} />
             </Route>
           </Routes>
         </div>
