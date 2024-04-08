@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Space, Col, Row, List, Divider, Button} from 'antd';
 import { useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import {http} from '../../Seller/utils/http'
+import {http} from '../utils/http'
 import "./SellerPages.css"
 
 const ip = 'http://localhost:8000/media/';
@@ -16,7 +16,8 @@ const Stats = () => {
 
     useEffect(() => {
         const loadData = async () => {
-          const res = await http.get('/getstat');
+          const userId = localStorage.getItem('userId');
+          const res = await http.get(`/getstat/${userId}/`, {mode:'cors'});
           const { activeProduct, soldoutProduct, totalOrder, totalSale, averageBid } = res.data;
           setActiveNum(activeProduct);
           setSoldoutNum(soldoutProduct);
@@ -31,15 +32,15 @@ const Stats = () => {
 
 
     const goActiveLists = () => {
-        navigate('/activeproducts');
+        navigate('/seller/activeproducts');
     };
 
     const goSoldOutLists = () => {
-        navigate('/soldout');
+        navigate('/seller/soldout');
     };
 
     const goTotalOrders = () => {
-        navigate('/orders');
+        navigate('/seller/orders');
     }
 
     // add data fetching logic after building backend
@@ -78,7 +79,8 @@ const { Meta } = Card;
 const Order = () => {
     const [orders, setOrders] = useState([]);
     const fetchOrders = async() => {
-        const response = await http.get('/getrecentorders');
+        const userId = localStorage.getItem('userId');
+        const response = await http.get(`/getrecentorders/${userId}/`, {mode:'cors'});
         setOrders(response.data.result);
     };
     useEffect(() => {
@@ -104,7 +106,7 @@ const Order = () => {
                 style={{ width: 240 }}
                 cover={<img alt={item.productName} src={`${ip}${item.picture}`} />}
               >
-              <Link to={`/orderdetail/${item.orderid}`} style={{ textDecoration: 'none' }}>
+              <Link to={`/seller/orderdetail/${item.orderid}`} style={{ textDecoration: 'none' }}>
                 <Meta title={item.productName} description={item.orderStatus} />
               </Link>
               </Card>
@@ -117,7 +119,8 @@ const Order = () => {
 const Bid = () => {
     const [bids, setBids] = useState([])
     const fetchBids = async() => {
-        const response = await http.get('/getrecentbids');
+        const userId = localStorage.getItem('userId');
+        const response = await http.get(`/getrecentbids/${userId}/`, {mode:'cors'});
         setBids(response.data.result);
     };
     useEffect(() => {
@@ -143,7 +146,7 @@ const Bid = () => {
                 style={{ width: 240 }}
                 cover={<img alt={item.productName} src={`${ip}${item.picture}`} />}
               >
-              <Link to={`/biddings`} style={{ textDecoration: 'none' }}>
+              <Link to={`/seller/biddings`} style={{ textDecoration: 'none' }}>
                 <Meta title={item.productName} description={ <span> ID:{item.bidid} <br /> Status:{item.bidStatus} </span>} />
               </Link>
               </Card>
@@ -153,13 +156,20 @@ const Bid = () => {
       );
 };
 
-export const Overview = () => {
-
+export const SellerOverview = () => {
+    const userId = localStorage.getItem('userId');
+    const [username, setUsername] = useState();
+    const fetchName = async () => {
+      const response = await http.get(`/getusername/${userId}/`, {mode:'cors'});
+        setUsername(response.data.result);
+    };
+    useEffect(() => {
+        fetchName();
+    },[]);
     return(
       <>
       <Card>
-        <h5>Seller: </h5>
-        <h5>hpotter</h5>
+        <h5>Seller: {username}</h5>
         </Card>
         <Divider />
         <h5>Your Statistics</h5>

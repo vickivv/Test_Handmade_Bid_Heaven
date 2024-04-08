@@ -40,7 +40,7 @@ export const SoldOutLists = () => {
     //modify product
     const navigate = useNavigate();
     const modifyProduct = (data) => {
-      navigate(`/sell?id=${data.productid}`); 
+      navigate(`/seller/sell?id=${data.productid}`); 
     };
 
     //delete product
@@ -174,10 +174,10 @@ export const SoldOutLists = () => {
           title={
             <Breadcrumb separator=">">
               <Breadcrumb.Item>
-                <Link to="/overview">Seller's Page</Link>
+                <Link to="/seller/overview">Seller's Page</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to="/products">My Products</Link>
+                <Link to="/seller/products">My Products</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>Soldout Products</Breadcrumb.Item>
             </Breadcrumb>

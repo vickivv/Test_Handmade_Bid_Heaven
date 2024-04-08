@@ -11,7 +11,8 @@ const { Meta } = Card;
 const TopProducts = () => {
     const [products, setProducts] = useState([]);
     const fetchProducts = async() => {
-        const response = await http.get('/bestsaleproducts');
+        const userId = localStorage.getItem('userId');
+        const response = await http.get(`/bestsaleproducts/${userId}/`, {mode:'cors'});
         setProducts(response.data.result);
     };
     useEffect(() => {
@@ -53,7 +54,7 @@ export const Products = () => {
         <TopProducts />
         <Divider />
         <div>
-            <Link to='/sell'>
+            <Link to='/seller/sell'>
                 <Button className="list" type="primary" size='large'>Add a Product</Button>
             </Link>
 

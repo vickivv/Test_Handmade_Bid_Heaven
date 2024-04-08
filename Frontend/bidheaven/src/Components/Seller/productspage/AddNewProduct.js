@@ -40,9 +40,8 @@ export const AddNewProduct = () => {
       }})
       setFileList(formatList)
       console.log('newpictureKeys', pictureKeys);
-      const addedValues = pictureKeys.filter(item => item != undefined);
+      const addedValues = pictureKeys.filter(item => item !== undefined);
       pictures.push(...addedValues)
-      // cacheImgList.current = formatList
       setPictures(pictures)
     console.log("newpictures",pictures)
     }
@@ -62,20 +61,22 @@ export const AddNewProduct = () => {
     const navigate = useNavigate();
     const onFinish = async (values) => {
       const { name, category, description, startPrice, inventory } = values
+      const userId = localStorage.getItem('userId');
       const formData = new FormData();
       formData.append("name", name);
-      formData.append("category", category)
-      formData.append("description", description)
-      formData.append("startPrice", parseInt(startPrice))
-      formData.append("inventory", parseInt(inventory))
-      console.log("tobackendpictures", pictures)
-      formData.append("pictures", pictures)
+      formData.append("category", category);
+      console.log(category)
+      formData.append("description", description);
+      formData.append("startPrice", parseInt(startPrice));
+      formData.append("inventory", parseInt(inventory));
+      formData.append("userId", userId);
+      formData.append("pictures", pictures);
       if (id) {
         await http.post(`/updateproduct/${id}/`, formData, {mode: 'cors'});
       } else {
       await http.post(`/addproducts`, formData);
     }
-    navigate('/activeproducts');
+    navigate('/seller/activeproducts');
     message.success(`${id ? 'Update Completed' : 'List Completed'}`);
   }
 
@@ -98,7 +99,6 @@ export const AddNewProduct = () => {
     console.log("frombackendurls", fileList)
     setPictures(data.pictureKeys)
     console.log("frombackendkeys", data.pictureKeys)
-    // cacheImgList.current = formatImgList
   } 
   useEffect(() => {
     if (id) {
@@ -113,10 +113,10 @@ export const AddNewProduct = () => {
     title={
       <Breadcrumb separator=">">
         <Breadcrumb.Item>
-            <Link to="/">Seller's Page</Link>
+            <Link to="/seller/overview">Seller's Page</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>
-            <Link to="/products">My Products</Link>
+            <Link to="/seller/products">My Products</Link>
         </Breadcrumb.Item>
         <Breadcrumb.Item>{id? 'Edit Product' : 'Add Product'}</Breadcrumb.Item>
       </Breadcrumb>

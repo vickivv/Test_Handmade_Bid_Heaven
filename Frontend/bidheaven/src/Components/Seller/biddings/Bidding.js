@@ -9,18 +9,18 @@ const { RangePicker } = DatePicker;
 
 
 export const Bidding =() => {
-
+  const userId = localStorage.getItem('userId');
   const [bidData, setBidData] = useState({
     list: [],
     count: 0
   });
   const [params, setParams] = useState({
+    userId: userId,
     page: 1,
     per_page: 10
   });
 
   const fetchBids = async() => {
-    console.log(params)
     const response = await http.get('/getbids', { params });
     const {result, count} = response.data
     setBidData({
@@ -81,7 +81,7 @@ export const Bidding =() => {
     }
     updateBidStatus(values);
     addOrder(values);
-    navigate('/orders');
+    navigate('/seller/orders');
     message.success(`Bidding Accepted`);
   };
 
@@ -100,7 +100,7 @@ export const Bidding =() => {
   };
 
   const goCompare = (data) => {
-    navigate(`/comparebids/${data.productId}`);
+    navigate(`/seller/comparebids/${data.productId}`);
   };
 
   const columns = [

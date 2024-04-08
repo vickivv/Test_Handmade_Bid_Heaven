@@ -6,12 +6,12 @@ import {http} from "../utils/http";
 
 const ip = 'http://localhost:8000/media/';
 
-export const Orders = () => {
-
+export const SellerOrders = () => {
+    const userId = localStorage.getItem('userId');
     // to add a search bar
     const [orders, setOrders] = useState([]);
     const fetchOrders = async () => {
-        const res = await http.get('/getorders');
+        const res = await http.get(`/getorders/${userId}/`, {mode:'cors'});
         setOrders(res.data.result);
     }
     useEffect(()=>{
@@ -33,6 +33,7 @@ export const Orders = () => {
       formData.append("rate", value);
       formData.append("buyerid", buyerid);
       formData.append("productid", productid);
+      formData.append("userId", userId);
       await http.post('/addrate', formData);
       setIsRateModalOpen(false);
     };
@@ -42,7 +43,7 @@ export const Orders = () => {
 
     const navigate = useNavigate()
     const getdetails = (data) =>{
-        navigate(`/orderdetail/${data.orderid}`);
+        navigate(`/seller/orderdetail/${data.orderid}`);
     }
 
     const [track, setTrack] = useState("");

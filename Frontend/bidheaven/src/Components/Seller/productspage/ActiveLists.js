@@ -10,6 +10,7 @@ const { RangePicker } = DatePicker
 
 export const ActiveLists = () => {
 
+    const userId = localStorage.getItem('userId');
     //list to save active products data fetched from backend
     const [productData, setProductData] = useState({
         list: [],
@@ -18,6 +19,7 @@ export const ActiveLists = () => {
 
     // page settings
     const [params, setParams] = useState({
+        userId: userId,
         status: 'Active',
         page: 1,
         per_page: 10
@@ -26,6 +28,7 @@ export const ActiveLists = () => {
     // data fetch function
     useEffect(() => {
       const loadList = async () => {
+        const userId = localStorage.getItem('userId');
         const res = await http.get('/getproducts', { params })
         const { result, total_count } = res.data
         setProductData({
@@ -39,7 +42,7 @@ export const ActiveLists = () => {
     //modify product
     const navigate = useNavigate();
     const modifyProduct = (data) => {
-      navigate(`/sell?id=${data.productid}`); 
+      navigate(`/seller/sell?id=${data.productid}`); 
     };
 
     //delete product
@@ -189,10 +192,10 @@ export const ActiveLists = () => {
           title={
             <Breadcrumb separator=">">
               <Breadcrumb.Item>
-                <Link to="/overview">Seller's Page</Link>
+                <Link to="/seller/overview">Seller's Page</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to="/products">My Products</Link>
+                <Link to="/seller/products">My Products</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>Active Products</Breadcrumb.Item>
             </Breadcrumb>

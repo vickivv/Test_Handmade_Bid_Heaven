@@ -41,9 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
     'handmadeBid',
-    'rest_framework',
     'rest_framework.authtoken',
 ]
 
@@ -110,25 +108,13 @@ if os.getenv('GAE_APPLICATION', None):
     DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Group2',
+        'NAME': 'BidHeaven',
         'USER': 'root',
-        'PASSWORD': 'root1234',
-        'HOST': 'localhost',
+        'PASSWORD': '123456',
+        'HOST': '35.203.131.35',
         'PORT': '3306',
     }
-}
-# XW's database setting
-#  else:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'Group2',
-#         'USER': 'root',
-#         'PASSWORD': 'root1234',
-#         'HOST': 'localhost',
-#         'PORT': '3306'
-#     }
-# }
+    }
 else:
     DATABASES = {
         'default': {
@@ -141,6 +127,18 @@ else:
         }
     }
 """
+Xiwei's database setting
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'Group2',
+            'USER': 'root',
+            'PASSWORD': 'root1234',
+            'HOST': 'localhost',
+            'PORT': '3306'
+        }
+    }
+
 Olivia's database setting
     DATABASES = {
         'default': {
@@ -197,10 +195,11 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')  
 MEDIA_URL = '/media/'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+# ]
+
+# CORS_ALLOW_ALL_ORIGINS = True
 
 
 

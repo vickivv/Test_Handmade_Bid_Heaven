@@ -42,12 +42,12 @@ urlpatterns = [
     path('category', views.get_category, name='category'),
     path('uploadpicture', views.upload_picture),
     path('getproducts', views.get_products),
-    path('getstat', views.get_overview_stat),
-    path('getrecentorders', views.get_recent_orders),
-    path('getrecentbids', views.get_recent_bids),
-    path('bestsaleproducts', views.get_best_products),
+    path('getstat/<int:userId>/', views.get_overview_stat),
+    path('getrecentorders/<int:userId>/', views.get_recent_orders),
+    path('getrecentbids/<int:userId>/', views.get_recent_bids),
+    path('bestsaleproducts/<int:userId>/', views.get_best_products),
     path('getbids', views.get_bids),
-    path('getorders', views.get_orders),
+    path('getorders/<int:userId>/', views.get_orders),
     path('orderdetail/<int:order_id>/', views.get_order_detail),
     path('getproduct/<int:product_id>/', views.get_product),
     path('updateproduct/<int:product_id>/', views.update_product),
@@ -56,6 +56,7 @@ urlpatterns = [
     path('addorder/<int:bidding_id>/', views.add_order),
     path('productbids/<int:product_id>/', views.get_product_bids),
     path('addrate', views.add_rate),
-    path('addshipment', views.add_shipment)
+    path('addshipment', views.add_shipment),
+    path('getusername/<int:userId>/', views.get_username),
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 

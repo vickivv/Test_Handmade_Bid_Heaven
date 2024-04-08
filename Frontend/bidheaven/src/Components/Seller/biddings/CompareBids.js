@@ -97,10 +97,10 @@ export const CompareBids = () => {
           title={
             <Breadcrumb separator=">">
               <Breadcrumb.Item>
-                <Link to="/overview">Seller's Page</Link>
+                <Link to="/seller/overview">Seller's Page</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <Link to="/biddings">My Biddings</Link>
+                <Link to="/seller/biddings">My Biddings</Link>
               </Breadcrumb.Item>
               <Breadcrumb.Item>Compare Bids</Breadcrumb.Item>
             </Breadcrumb>

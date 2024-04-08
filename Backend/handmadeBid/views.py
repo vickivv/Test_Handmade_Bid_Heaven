@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from django.shortcuts import HttpResponse
-from .models import Products, Category, Normaluser, Adminuser, Pictures, Bidding, Orders, Payment, Reviews, Shipment
+from .models import Products, Category, NormalUser, AdminUser, Pictures, Bidding, Orders, Payment, Shipment, Reviews
 from datetime import date
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -17,7 +17,6 @@ from rest_framework.parsers import JSONParser
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import NormalUser,AdminUser
 from rest_framework.decorators import api_view
 from .serialization import NormalUserSerializer ,LoginSerializer ,AdminUserSerializer,AdminLoginSerializer
 from django.views.decorators.csrf import csrf_exempt
@@ -75,7 +74,7 @@ class LoginView(APIView):
                 token, created = Token.objects.get_or_create(user=base_user)
                 return Response({
                     "token": token.key,
-                    "userId": base_user.UserID,
+                    "userId": user.UserID,
                     "username": user.Username,  # Make sure this is the correct attribute
                 }, status=status.HTTP_200_OK)
             else:
@@ -126,7 +125,6 @@ class GetOverviewPayAPIView(APIView):
 class GetOverviewOrderAPIView(APIView):
     def get(self, request):
         user_id = request.query_params.get('userId')
-
         if not user_id:
             return JsonResponse({'error': 'userId parameter is required'}, status=400)
         try:
@@ -284,15 +282,15 @@ class CancelOrderAPIView(APIView):
 def add_product(request):
     if request.method == 'POST':
         name = request.POST['name']
-        categoryId = request.POST['category']
+        categoryId = int(request.POST['category']) + 1
         description = request.POST['description']
         startPrice = request.POST['startPrice']
         inventory = request.POST['inventory']
         category = Category.objects.get(pk=categoryId)
-        
+        seller_id=request.POST['userId']
         today = date.today()
-        seller = Normaluser.objects.get(userid=21)
-        manager = Adminuser.objects.filter(userid = 11).first()
+        seller = NormalUser.objects.get(UserID=seller_id)
+        manager = AdminUser.objects.filter(UserID = 1).first()
         pictureList = request.POST['pictures']
 
         firstKey = 0
@@ -329,18 +327,16 @@ def add_product(request):
 
 @csrf_exempt 
 def update_product(request, product_id):
-
-    seller_id=21
     if request.method == 'POST':
         product = Products.objects.get(pk=product_id)
         product.name=request.POST['name']
         category_name = request.POST['category']
         product.description = request.POST['description']
-        product.startPrice = request.POST['startPrice']
+        product.startprice = request.POST['startPrice']
         product.inventory = request.POST['inventory']
         product.categoryid = Category.objects.get(cname = category_name)
         product.postdate = date.today()
-        product.manager = Adminuser.objects.filter(userid = 11).first()
+        product.manageid = AdminUser.objects.filter(UserID = 1).first()
         pictureList = request.POST['pictures']
 
         firstKey = 0
@@ -412,7 +408,7 @@ def get_product(request, product_id):
 
 def get_products(request):
     if request.method=='GET':
-        seller_id=21
+        seller_id=request.GET.get('userId')
         product_status=request.GET.get('status')
         products = Products.objects.filter(sellerid=seller_id, status=product_status)
         
@@ -459,11 +455,13 @@ def get_products(request):
         
         return JsonResponse(data, safe=False)
 
-def get_overview_stat(request):
+@csrf_exempt 
+def get_overview_stat(request, userId):
     if request.method == 'GET':
-        product_list = Products.objects.filter(sellerid=21)
-        active_num = Products.objects.filter(sellerid=21, status='Active').count()
-        sold_out_num = Products.objects.filter(sellerid=21, status='Sold Out').count()
+        seller_id=userId
+        product_list = Products.objects.filter(sellerid=seller_id)
+        active_num = product_list.filter(status='Active').count()
+        sold_out_num = product_list.filter(status='Sold Out').count()
         bidding_list = []
         bidding_count = 0
         total_bidding_price = 0
@@ -481,19 +479,23 @@ def get_overview_stat(request):
                 if Orders.objects.filter(biddingid=b.biddingid).exists():
                     order_count += 1
                     total_sales += b.bidprice * b.quantity
+        average_bid = 0
+        if bidding_count != 0:
+            average_bid=round(total_bidding_price/bidding_count)
         data ={
             "activeProduct": active_num,
             "soldoutProduct": sold_out_num,
             "totalOrder": order_count,
             "totalSale": round(total_sales),
-            "averageBid": round(total_bidding_price/bidding_count)
+            "averageBid": average_bid
         }
         return JsonResponse(data, safe=False)
     
 
-def get_recent_orders(request):
+def get_recent_orders(request, userId):
     if request.method=="GET":
-        product_list = Products.objects.filter(sellerid=21)
+        seller_id=userId
+        product_list = Products.objects.filter(sellerid=seller_id)
         product_ids= [p.productid for p in product_list]
         bidding_list = Bidding.objects.filter(productid__in=product_ids)
         bidding_ids = [b.biddingid for b in bidding_list]
@@ -514,9 +516,10 @@ def get_recent_orders(request):
         data={'result': data_list}
         return JsonResponse(data, safe=False)
 
-def get_recent_bids(request):
+def get_recent_bids(request, userId):
     if request.method == 'GET':
-        product_list = Products.objects.filter(sellerid=21)
+        seller_id = userId
+        product_list = Products.objects.filter(sellerid=seller_id)
         product_ids= [p.productid for p in product_list]
         recent_bids = Bidding.objects.filter(productid__in=product_ids).order_by('-biddate')[:4]
         data_list = []
@@ -536,9 +539,11 @@ def get_recent_bids(request):
         data={'result': data_list}
         return JsonResponse(data,safe=False)
 
-def get_best_products(request):
+def get_best_products(request, userId):
     if request.method=='GET':
-        order_list = Bidding.objects.filter(biddingid__in=Orders.objects.values_list('biddingid', flat=True))
+        seller_id=userId
+        product_list=Products.objects.filter(sellerid=seller_id)
+        order_list = Bidding.objects.filter(productid__in=product_list, biddingid__in=Orders.objects.values_list('biddingid', flat=True))
         product_quantities = order_list.values('productid').annotate(
             total_quantity=Sum('quantity')
         ).order_by('-total_quantity')[:3]
@@ -561,7 +566,8 @@ def get_best_products(request):
 
 def get_bids(request):
     if request.method=='GET':
-        seller_id=21
+        seller_id=request.GET.get('userId')
+        print(seller_id)
         product_list = Products.objects.filter(sellerid=seller_id)
         product_ids= [p.productid for p in product_list]
         bidding_list = Bidding.objects.filter(productid__in=product_ids)
@@ -579,9 +585,9 @@ def get_bids(request):
         data_list = []
         for bid in bidding_list: 
             product = bid.productid
-            bidder = Normaluser.objects.get(userid=bid.bidderid.userid)
-            bidder_name=bidder.username
-            bidder_rate=bidder.rate
+            bidder = NormalUser.objects.get(UserID=bid.bidderid.UserID)
+            bidder_name=bidder.Username
+            bidder_rate=bidder.Rate
             final_date=bid.biddate+timedelta(days=bid.activedays)
             item={
                 'biddingid': bid.biddingid,
@@ -602,9 +608,9 @@ def get_bids(request):
         }
         return JsonResponse(data, safe=False)
 
-def get_orders(request):
+def get_orders(request, userId):
     if request.method == 'GET':
-        seller_id=21
+        seller_id=userId
         product_list = Products.objects.filter(sellerid=seller_id)
         product_ids= [p.productid for p in product_list]
         bidding_list = Bidding.objects.filter(productid__in=product_ids)
@@ -617,7 +623,7 @@ def get_orders(request):
             picture = Pictures.objects.filter(pictureid=product.pictureid).first().picture
             picture_path=json.dumps(str(picture)).replace('"', '')
             item={
-                "buyerid": bid.bidderid.userid,
+                "buyerid": bid.bidderid.UserID,
                 "picture": picture_path,
                 "orderid": order.orderid,
                 "productid": bid.productid.productid,
@@ -651,7 +657,7 @@ def get_order_detail(request, order_id):
         data={
             "orderid": order_id,
             "orderDate": order.orderdate,
-            "buyerid": bidding.bidderid.userid,
+            "buyerid": bidding.bidderid.UserID,
             "quantity": bidding.quantity,
             "totalAmount": totalAmount,
             "paymentMethod": payment_method,
@@ -700,15 +706,15 @@ def get_product_bids(request, product_id):
         bidding_list = Bidding.objects.filter(productid=product_id, status='Pending')
         data_list = []
         for bid in bidding_list: 
-            bidder = Normaluser.objects.get(userid=bid.bidderid.userid)
+            bidder = NormalUser.objects.get(UserID=bid.bidderid.UserID)
             final_date=bid.biddate+timedelta(days=bid.activedays)
             item={
                 'biddingid': bid.biddingid,
                 'bidPrice': bid.bidprice,
                 'quantity': bid.quantity,
                 "bidDate": bid.biddate,
-                "bidderName": bidder.username,
-                "bidderRate": bidder.rate,
+                "bidderName": bidder.Username,
+                "bidderRate": bidder.Rate,
                 "validDate": final_date,
             }
             data_list.append(item)
@@ -717,13 +723,13 @@ def get_product_bids(request, product_id):
 
 @csrf_exempt
 def add_rate(request):
-    reviewer_id = 21
     if request.method=='POST':
+        reviewer_id=request.POST.get('userId')
         rate = request.POST.get('rate')
         order_id = request.POST.get('orderid')
         buyer_id = request.POST.get('buyerid')
-        reviewer = Normaluser.objects.get(userid=reviewer_id)
-        reviewee = Normaluser.objects.get(userid=buyer_id)
+        reviewer = NormalUser.objects.get(UserID=reviewer_id)
+        reviewee = NormalUser.objects.get(UserID=buyer_id)
         product_id = request.POST.get('productid')
         product = Products.objects.get(productid=product_id)
         order = Orders.objects.get(orderid=order_id)
@@ -741,13 +747,12 @@ def add_rate(request):
 
 @csrf_exempt
 def add_shipment(request):
-    print(request.POST)
     if request.method=='POST':
         order_id = request.POST.get('orderid')
         order = Orders.objects.get(orderid=order_id)
         buyer_id = request.POST.get('buyerid')
-        buyer = Normaluser.objects.get(userid=buyer_id)
-        address = buyer.defaultaddressid
+        buyer = NormalUser.objects.get(UserID=buyer_id)
+        address = buyer.DefaultAddressID
         tracknumber = request.POST.get('track')
         new_shipment=Shipment(
             orderid=order,
@@ -756,4 +761,17 @@ def add_shipment(request):
             status='Shipped'
         )
         new_shipment.save()
+
+        order.orderstatus='Shipped'
+        order.save()
+        
         return HttpResponse('success')
+
+def get_username(request, userId):
+    if request.method=='GET':
+        user_id = userId
+        username = NormalUser.objects.get(UserID = user_id).Username
+        data={
+            'result':username
+        }
+        return JsonResponse(data, safe=False)

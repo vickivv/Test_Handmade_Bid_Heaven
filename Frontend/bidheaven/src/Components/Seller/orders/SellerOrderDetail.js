@@ -39,7 +39,7 @@ const col60Style = {
 };
 
 
-export const OrderDetail = () => {
+export const SellerOrderDetail = () => {
   const { orderId } = useParams(); 
 
   const [orderDetails, setOrderDetails] = useState(null);
