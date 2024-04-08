@@ -76,6 +76,7 @@ const OrderItem = ({ products }) => {
             <>
             <Review sellerid={product.SellerID} productid={product.ProductID} orderid={product.OrderID} />
             <Link to={`/buyer/order/${product.OrderID}`} style={{ color: '#50123c' }}>View Order Details</Link>
+            <Link to={`/message`} style={{ color: '#50123c' }}>Contact Seller</Link>
             </>
             )}
             </div>

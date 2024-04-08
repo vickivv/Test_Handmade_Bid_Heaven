@@ -25,6 +25,7 @@ from django.contrib.auth.hashers import check_password
 
 
 
+
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
@@ -36,7 +37,7 @@ import logging
 
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
-    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order
+    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,7 @@ logger = logging.getLogger(__name__)
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serialization import NormalUserSerializer
+
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
@@ -82,7 +84,7 @@ class LoginView(APIView):
         except NormalUser.DoesNotExist:
             return Response({"error": "Invalid username"}, status=status.HTTP_400_BAD_REQUEST)
 
-        
+
 class AdminLoginView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = AdminLoginSerializer(data=request.data)  
@@ -313,12 +315,70 @@ def add_product(request):
         )
         new_product.save()
 
+class SetOrderAPIView(APIView):
+    def put(self, request):
+        data = json.loads(request.body)
+        user_id = data.get('userid')
+        order_id = data.get('orderid')
+        payment_method = data.get('paymentmethod')
+        if set_order(user_id, order_id, payment_method):
+            return JsonResponse({'success': True, 'id': order_id})
+        else:
+            return JsonResponse({"error": "Unable to set"}, status=400)
+
+
+class CancelBidAPIView(APIView):
+    def put(self, request):
+        data = json.loads(request.body)
+
+        bid_id = data.get('biddingid')
+        if cancel_bid(bid_id):
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({"error": "Unable to set"}, status=400)
+
+
+@csrf_exempt
+def add_product(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        categoryId = int(request.POST['category']) + 1
+        description = request.POST['description']
+        startPrice = request.POST['startPrice']
+        inventory = request.POST['inventory']
+        category = Category.objects.get(pk=categoryId)
+        seller_id = request.POST['userId']
+        today = date.today()
+        seller = NormalUser.objects.get(UserID=seller_id)
+        manager = AdminUser.objects.filter(UserID=1).first()
+        pictureList = request.POST['pictures']
+
+        firstKey = 0
+        for s in pictureList:
+            if s == ',':
+                break
+            firstKey = firstKey * 10 + int(s)
+
+        new_product = Products(
+            name=name,
+            categoryid=category,
+            description=description,
+            startprice=startPrice,
+            postdate=today,
+            status='Active',
+            inventory=inventory,
+            sellerid=seller,
+            pictureid=firstKey,
+            manageid=manager
+        )
+        new_product.save()
+
         productId = new_product.pk
         x = 0
         for key in pictureList:
-            if key==',':
+            if key == ',':
                 Pictures.objects.filter(pictureid=x).update(productid=productId)
-                x=0
+                x = 0
             else:
                 x = x * 10 + int(key)
         Pictures.objects.filter(pictureid=x).update(productid=productId)
