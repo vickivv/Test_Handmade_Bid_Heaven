@@ -7,7 +7,7 @@ import Header from '../Components/Homepage/Header'
 import Footer from '../Components/Homepage/Footer'
 // import '../Styles/payment.css'
 import { ExclamationCircleFilled } from '@ant-design/icons';
-
+import PaymentMethod from '../Components/PaymentMethod/PaymentMethodNoHeader'
 
 const cardStyle = {
   display: 'flex',
@@ -86,6 +86,7 @@ const Items = () => {
             if (response.ok) {
               const result = await response.json();
               console.log('Success:', result);
+              navigate('/buyer/overview');
             } else {
               console.error('Error:', response.statusText);
             }
@@ -210,11 +211,11 @@ const Payment = () => {
       const dataToSend = {
           userid: userId,
           orderid: orderId,
-          paymentmethod: 'E-Wallet',
+          paymentmethod: 'Paypal',
         };
       try {
         const response = await fetch('http://127.0.0.1:8000/api/set_order', {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -224,6 +225,7 @@ const Payment = () => {
         if (response.ok) {
           const result = await response.json();
           console.log('Success:', result);
+          navigate('/thankyou');
         } else {
           console.error('Error:', response.statusText);
         }
@@ -243,6 +245,7 @@ const Payment = () => {
       <Delivery  />
       <Divider />
       <h4>Payment info</h4>
+      <PaymentMethod />
       <Divider />
       <div  style={{...colStyleBase, flexBasis: '50%'}}>
       <Button key="submit"
