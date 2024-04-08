@@ -26,7 +26,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
-    UserID= models.BigAutoField(primary_key=True)
+    UserID= models.AutoField(primary_key=True)
     Email = models.EmailField(_('email address'), unique=True, db_column='Email')
     Fname = models.CharField(max_length=25, db_column='Fname')
     Lname = models.CharField(max_length=25, db_column='Lname')
@@ -50,7 +50,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
    
 class AdminUser(models.Model):
     base_user = models.OneToOneField(BaseUser, on_delete=models.CASCADE, related_name='admin_user')
-    UserID= models.BigAutoField(primary_key=True,default=1)
+    UserID= models.AutoField(primary_key=True,default=1)
     
 
     class Meta:
@@ -62,7 +62,7 @@ class AdminUser(models.Model):
 
 class NormalUser(models.Model):
     base_user = models.OneToOneField(BaseUser, on_delete=models.CASCADE)
-    UserID= models.BigAutoField(primary_key=True)
+    UserID= models.AutoField(primary_key=True)
     Username = models.CharField(max_length=50, unique=True, db_column='Username')
     DefaultAddressID = models.IntegerField(null=True, blank=True, db_column='DefaultAddressID')
     Phone = models.CharField(max_length=30, null=True, blank=True, db_column='Phone')

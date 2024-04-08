@@ -14,6 +14,7 @@ from django.contrib.auth.hashers import check_password
 
 
 
+
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
@@ -38,7 +39,6 @@ from .serialization import NormalUserSerializer
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-secondMerge
 
 @csrf_exempt
 @api_view(['POST'])
@@ -69,16 +69,13 @@ class LoginView(APIView):
                 token, created = Token.objects.get_or_create(user=base_user)
                 return Response({
                     "token": token.key,
-                    "userId": base_user.UserID,
+                    "userId": user.UserID,
                     "username": user.Username,  # Make sure this is the correct attribute
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
         except NormalUser.DoesNotExist:
             return Response({"error": "Invalid username"}, status=status.HTTP_400_BAD_REQUEST)
-
-        
-
 
 
 
@@ -279,7 +276,6 @@ class CancelOrderAPIView(APIView):
             return JsonResponse({"error": "Unable to set"}, status=400)
 
 
-Olivia
 class SetOrderAPIView(APIView):
     def put(self, request):
         data = json.loads(request.body)
