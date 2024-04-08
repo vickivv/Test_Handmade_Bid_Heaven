@@ -26,6 +26,9 @@ const handleNavigateToMessage = () => {
   navigate('/message');
 };
 
+const handleNavigateToSeller = () => {
+  navigate('/seller/overview');
+}
 
 
 const toggleDropdown = () => {
@@ -63,7 +66,7 @@ return (
                 <li>Account</li>
                 <li onClick={handleNavigateToBuyer}    >Buyer</li>
                 <li  onClick={handleNavigateToMessage}    >Message</li>
-                <li>Selling</li>
+                <li onClick={handleNavigateToSeller}>Selling</li>
                 <li>Profile</li>
                 <li onClick={logout}>Logout</li>
               </ul>

@@ -1,0 +1,8 @@
+.ant-layout {
+    height: 100%;
+}
+
+
+.layout-content {
+    overflow-y: auto;
+}
