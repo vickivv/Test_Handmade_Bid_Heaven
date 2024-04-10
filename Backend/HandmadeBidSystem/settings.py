@@ -107,45 +107,25 @@ pymysql.install_as_MySQLdb()
 if os.getenv('GAE_APPLICATION', None):
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'Group2',
-            'USER': 'root',
-            'PASSWORD': 'root1234',
-            'HOST': 'localhost',
-            'PORT': '3306'
-        }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'BidHeaven',
+        'USER': 'root',
+        'PASSWORD': '123456',
+        'HOST': '35.203.131.35',
+        'PORT': '3306',
     }
-    # DATABASES = {
-    #     'default': {
-    #     'ENGINE': 'django.db.backends.mysql',
-    #     'NAME': 'BidHeaven',
-    #     'USER': 'root',
-    #     'PASSWORD': '123456',
-    #     'HOST': '35.203.131.35',
-    #     'PORT': '3306',
-    # }
-    # }
+    }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'Group2',
+            'NAME': 'project',
             'USER': 'root',
-            'PASSWORD': 'root1234',
+            'PASSWORD': '',
             'HOST': 'localhost',
             'PORT': '3306'
         }
     }
-    # DATABASES = {
-    #     'default': {
-    #         'ENGINE': 'django.db.backends.mysql',
-    #         'NAME': 'project',
-    #         'USER': 'root',
-    #         'PASSWORD': '',
-    #         'HOST': 'localhost',
-    #         'PORT': '3306'
-    #     }
-    # }
 """
 Xiwei's database setting
     DATABASES = {
