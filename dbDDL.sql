@@ -124,7 +124,7 @@ create table ORDERS (
 );
 
 create table SHIPMENT (
-	OrderID int not null primary key,
+	OrderID int not null primary key AUTO_INCREMENT,
     TrackingNumber varchar(50) not null,
     AddressID int not null,
     Status enum('Awaiting Shipment', 'Shipped', 'In Transit', 'Out for Delivery', 'Delivered', 'Delayed', 'Returned') not null,
@@ -132,7 +132,7 @@ create table SHIPMENT (
 );
 
 create table PAYMENT (
-	OrderID int not null primary key,
+	OrderID int not null primary key AUTO_INCREMENT,
     PaymentStatus enum('Pending', 'Completed', 'Failed', 'Canceled', 'Refunding', 'Refunded') not null,
     -- PaymentMethod enum('Credit/Debit card', 'E-Wallet', 'Check') not null,
     PaymentMethod enum('Credit/Debit card', 'Paypal') not null,
