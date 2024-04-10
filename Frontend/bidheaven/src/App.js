@@ -33,6 +33,7 @@ import { AddNewProduct } from "./Components/Seller/productspage/AddNewProduct";
 import { Bidding } from "./Components/Seller/biddings/Bidding";
 import { SellerOrderDetail } from "./Components/Seller/orders/SellerOrderDetail";
 import { CompareBids } from "./Components/Seller/biddings/CompareBids";
+import { AddBids } from './Components/Bids/AddBids';
 
 function App() {
 
@@ -50,6 +51,7 @@ function App() {
             <Route path="/login" element={<Login/>} />
             <Route path="/payment-method" element={<PaymentMethod/>} />
             <Route path="/admin-login" element={<AdminLogin/>} />
+            <Route path="/bidding/:productId" element={<AddBids />} />
 
 
             <Route path="/review" element={<Review />} />

@@ -759,6 +759,11 @@ def add_order(request, bidding_id):
         orderstatus=status
     )
     new_order.save()
+
+    quantity = bidding.quantity
+    product = bidding.productid
+    product.inventory = product.inventory - quantity
+    product.save()
     return HttpResponse("success")
 
 def get_product_bids(request, product_id):
@@ -835,3 +840,29 @@ def get_username(request, userId):
             'result':username
         }
         return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def add_bid(request):
+    if request.method == 'POST':
+        bidder_id=request.POST.get('userid')
+        bidder = NormalUser.objects.get(UserID=bidder_id)
+        product_id = request.POST.get('productid')
+        product = Products.objects.get(productid=product_id)
+        bid_price = request.POST.get('bidprice')
+        bid_q = request.POST.get('quantity')
+        active_days = request.POST.get('activedays')
+        manager = AdminUser.objects.filter(UserID = 1).first()
+
+        new_bid = Bidding(
+            productid=product,
+            bidderid = bidder,
+            bidprice = bid_price,
+            quantity = bid_q,
+            biddate = date.today(),
+            activedays = active_days,
+            status = 'Pending',
+            manageid = manager
+        )
+        new_bid.save()
+
+        return HttpResponse('success')
