@@ -6,3 +6,9 @@ Image {
   margin: 0;
   padding: 0;
 }
+
+.cancelButton {
+  background-color: #9F7EAC !important; /* Change to a slightly darker color */
+  border-color: #9F7EAC !important;
+  color: #fff !important;
+}

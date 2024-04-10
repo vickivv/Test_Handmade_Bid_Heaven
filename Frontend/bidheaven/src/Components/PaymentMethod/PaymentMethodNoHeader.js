@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import '../../Styles/payment.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCcMastercard, faCcVisa, faCcDiscover, faCcPaypal, faCcAmex } from '@fortawesome/free-brands-svg-icons';
-import Header from '../Homepage/Header';
 
 function PaymentMethod() {
   const [paymentMethod, setPaymentMethod] = useState('');
@@ -19,11 +19,7 @@ function PaymentMethod() {
 
   return (
     <div className="payment">
-      <div className="header">
-        <Header />
-      </div>
       <div style={{ margin: '20px' }}>
-        <h2>Pay With</h2>
         <div style={{ marginBottom: '20px' }}>
           <label>
             <input
@@ -51,7 +47,7 @@ function PaymentMethod() {
         <input type="text" style={{ width: '100%' }} />
       </div>
     </div>
-    
+
     <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
       <label style={{ marginRight: '10px' }}>First Name</label>
       <input type="text" style={{ width: '100%' }} />
@@ -86,8 +82,7 @@ function PaymentMethod() {
             <FontAwesomeIcon icon={faCcPaypal} alt="PayPal" style={{ margin: '5px' }} /> PayPal
           </label>
         </div>
-        
-        <button style={{ marginTop: '20px' }}>Done</button>
+
       </div>
     </div>
   );
