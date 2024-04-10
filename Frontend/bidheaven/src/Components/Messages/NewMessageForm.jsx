@@ -15,19 +15,26 @@ function NewMessageForm() {
   const { message, updateMessage } = useContext(MessageContext);
   const { user } = useAuth();
   const context = useContext(MessageContext);
-  const [productSearch, setProductSearch] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
  
-  useEffect(() => {
-    const storedEmail = localStorage.getItem('email');
-    if (storedEmail) {
-      updateMessage({ from_email: storedEmail });
-    }
-  }, []);
-  
-  
-  
+ 
 
+
+  useEffect(() => {
+
+    if (user?.email) {
+      updateMessage({ from_email: user.email });
+    } else {
+      
+      const storedEmail = localStorage.getItem('email');
+      if (storedEmail) {
+        updateMessage({ from_email: storedEmail });
+      } else {
+        console.log('No email in context or localStorage');
+      }
+    }
+  }, [user]); 
+  
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,33 +92,6 @@ function NewMessageForm() {
     navigate('/message');
   };
 
-// handle product search 
-const handleProductSearch = async (e) => {
-  const searchTerm = e.target.value;
-  setProductSearch(searchTerm);
-
-  if (searchTerm) {
-    try {
-      const response = await instance.get(`/api/products?search=${searchTerm}`);
-      setSearchResults(response.data);
-    } catch (error) {
-      console.error('Failed to search products:', error);
-    }
-  } else {
-    setSearchResults([]);
-  }
-};
-
-//handle product select 
-const handleProductSelect = (product) => {
-  setExtraInfo(product.name);
-  setSearchResults([]);
-};
-
-
-
-
-
   return (
     <div className="email-form-container">
       <div className="email-form-header">
@@ -149,28 +129,6 @@ const handleProductSelect = (product) => {
               onChange={(e) => setExtraInfo(e.target.value)}
               className="email-form-input"
             />
- <input
-              type="text"
-              placeholder="Search products..."
-              value={productSearch}
-              onChange={handleProductSearch}
-              className="email-form-input"
-            />
-            {searchResults.length > 0 && (
-              <ul className="search-results">
-                {searchResults.map((product) => (
-                  <li
-                    key={product.id}
-                    onClick={() => handleProductSelect(product)}
-                  >
-                    {product.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-
-
           </div>
         )}
         {subjectType === 'Order' && (
