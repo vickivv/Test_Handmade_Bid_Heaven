@@ -16,8 +16,8 @@ CREATE TABLE BASEUSER (
     is_superuser BOOLEAN NOT NULL DEFAULT FALSE,
     last_login DATETIME NULL,
     PRIMARY KEY (UserID)
-
---Adminuser and normal user tables have already created, if migrate before
+);
+-- Adminuser and normal user tables have already created, if migrate before
 
 
 CREATE TABLE ADMINUSER (
@@ -28,18 +28,16 @@ CREATE TABLE ADMINUSER (
 );
 
 
-
-
-
 create table REPORT(
-	ReportID int not null primary key,
+	ReportID int not null auto_increment primary key ,
     FilePath varchar(2083),
     UpdateDate date
 );
+
 create table GENERATES(
 	UserID int not null,
     ReportID int not null,
-    GenerateDate date,
+    GenerateDate date, 
     foreign key (UserID) references ADMINUSER(UserID),
     foreign key (ReportID) references REPORT(ReportID),
     primary key (UserID, ReportID)
@@ -77,8 +75,9 @@ create table CATEGORY (
     CName varchar(50),
     Description varchar(255)
 );
+
 create table PRODUCTS (
-	ProductID int not null primary key,
+	ProductID int not null auto_increment primary key,
     SellerID int not null,
     Name varchar(100),
     CategoryID int not null,
@@ -93,9 +92,10 @@ create table PRODUCTS (
     foreign key (SellerID) references NORMALUSER(UserID),
     foreign key (ManageID) references ADMINUSER(UserID)
 );
+
 create table PICTURES (
-	PictureID int not null primary key,
-    ProductID int not null,
+	PictureID int not null auto_increment primary key,
+    ProductID int,
     Picture varchar(2083),
     foreign key (ProductID) references PRODUCTS(ProductID)
 );
@@ -114,6 +114,7 @@ create table BIDDING (
     foreign key (BidderID) references NORMALUSER(UserID),
     foreign key (ManageID) references ADMINUSER(UserID)
 );
+
 create table ORDERS (
 	OrderID int not null primary key AUTO_INCREMENT,
     BiddingID int not null,
@@ -121,15 +122,17 @@ create table ORDERS (
     OrderStatus enum('Pending', 'Processing', 'Shipped', 'Delivered', 'Completed', 'Canceled', 'Refunded', 'Failed') not null,
     foreign key (BiddingID) references BIDDING(BiddingID)
 );
+
 create table SHIPMENT (
-	OrderID int not null primary key,
+	OrderID int not null primary key AUTO_INCREMENT,
     TrackingNumber varchar(50) not null,
     AddressID int not null,
     Status enum('Awaiting Shipment', 'Shipped', 'In Transit', 'Out for Delivery', 'Delivered', 'Delayed', 'Returned') not null,
     foreign key (OrderID) references ORDERS(OrderID)
 );
+
 create table PAYMENT (
-	OrderID int not null primary key,
+	OrderID int not null primary key AUTO_INCREMENT,
     PaymentStatus enum('Pending', 'Completed', 'Failed', 'Canceled', 'Refunding', 'Refunded') not null,
     -- PaymentMethod enum('Credit/Debit card', 'E-Wallet', 'Check') not null,
     PaymentMethod enum('Credit/Debit card', 'Paypal') not null,
@@ -153,6 +156,7 @@ create table MESSAGES(
     foreign key (ProductID) references PRODUCTS(ProductID),
     foreign key (OrderID) references ORDERS(OrderID)
 );
+
 create table REVIEWS (
 	ReviewID int not null primary key AUTO_INCREMENT,
     ReviewerID int not null,

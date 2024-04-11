@@ -5,15 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f69a8f4d-6e40-4d62-aa7b-d1160da8eaaf" name="Changes" comment="again">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/HandmadeBidSystem/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/HandmadeBidSystem/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/HandmadeBidSystem/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/HandmadeBidSystem/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/queries.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/queries.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/handmadeBid/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/handmadeBid/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/biditem.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/biditem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/orderitem.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Dashboard/orderitem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/PaymentMethod/PaymentMethod.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/PaymentMethod/PaymentMethod.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/payment.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Pages/payment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Styles/payment.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Styles/payment.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/venv/bin/python" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/venv/bin/python3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/venv/bin/python3.10" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Homepage/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Homepage/Header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Users/AddressBook.js" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Components/Users/AddressBook.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Styles/Payment.css" beforeDir="false" afterPath="$PROJECT_DIR$/Frontend/bidheaven/src/Styles/Payment.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Frontend/bidheaven/src/Styles/payment.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbDDL.sql" beforeDir="false" afterPath="$PROJECT_DIR$/dbDDL.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
