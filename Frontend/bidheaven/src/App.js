@@ -10,6 +10,7 @@ import Login from './Components/Users/Login';
 import { AuthProvider } from './Components/Context/AuthContext';
 import AdminLogin from './Components/Users/AdminLogin';
 import PaymentMethod from './Components/PaymentMethod/PaymentMethod';
+import Account from './Components/Users/Account'
 
 import BuyerDashboard from './Pages/Buyer_dashboard';
 import Orders from './Pages/Orders';
@@ -57,6 +58,7 @@ function App() {
             <Route path="/new-message" element={<NewMessageForm/>} />
             <Route path="/sent" element={<Sent/>} />
             <Route path="/inbox" element={<Inbox/>} />
+            <Route path="/account" element={<Account />} />
 
             <Route path="/review" element={<Review />} />
             <Route path="/addressbook" element={<AddressBook />} />
