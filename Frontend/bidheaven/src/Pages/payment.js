@@ -5,7 +5,8 @@ import { useParams, Link, useNavigate, useRouteMatch, } from 'react-router-dom';
 import AddressBook from '../Components/Users/AddressBook'
 import Header from '../Components/Homepage/Header'
 import Footer from '../Components/Homepage/Footer'
-// import '../Styles/payment.css'
+
+import '../Styles/payment.css'
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import PaymentMethod from '../Components/PaymentMethod/PaymentMethodNoHeader'
 

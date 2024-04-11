@@ -207,6 +207,46 @@ def cancel_bid(biddingID):
             print(e)
             return False
 
+
+def get_account_details(userID):
+    with connection.cursor() as cursor:
+        # 第一个查询
+        cursor.execute("SELECT UserID, Username, Phone, Rate, base_user_id "
+                       "FROM NORMALUSER "
+                       "WHERE UserID = %s", [userID])
+        columns_order = [col[0] for col in cursor.description]
+        user_details_result = cursor.fetchall()
+
+        # 如果没有找到用户，直接返回空结果
+        if not user_details_result:
+            return {
+                'user_details': [],
+                'baseuser_details': []
+            }
+
+        user_details = [dict(zip(columns_order, row)) for row in user_details_result]
+        base_user_id = user_details[0].get('base_user_id')
+
+        cursor.execute("SELECT Email, Fname, Lname FROM BASEUSER WHERE UserID = %s", [base_user_id])
+        columns_shipment = [col[0] for col in cursor.description]
+        baseuser_details = [dict(zip(columns_shipment, row)) for row in cursor.fetchall()]
+
+        return {
+            'user_details': user_details,
+            'baseuser_details': baseuser_details
+        }
+
+
+def update_account_details(userID, username, phone):
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("UPDATE NORMALUSER SET Username = %s, Phone = %s WHERE UserID = %s", [username, phone, userID])
+            connection.commit()
+            return True
+        except Exception as e:
+            print(e)
+            return False
+
 # Message 
 def send_message(from_email, to_email, subject_type, product_info, order_info, content):
     with connection.cursor() as cursor:
@@ -336,4 +376,5 @@ def delete_message_by_id(message_id):
         except Exception as e:
             print(traceback.format_exc())
             return False
+
 
