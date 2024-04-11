@@ -108,7 +108,6 @@ const OrderDetail = () => {
       <div style={{...col60Style, padding: '20px'}}>
         <p>{orderDetails.ProductName}</p>
         <p>ProductID: {orderDetails.ProductID}</p>
-        <a href="#" style={{ display: 'block' }}>View Item</a>
       </div>
       <div style={col20Style}>${orderDetails.SellingPrice}</div>
     </div>
