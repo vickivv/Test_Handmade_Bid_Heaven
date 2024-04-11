@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../Styles/Payment.css';
+import '../../Styles/payment.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCcMastercard, faCcVisa, faCcDiscover, faCcPaypal, faCcAmex } from '@fortawesome/free-brands-svg-icons';
 
