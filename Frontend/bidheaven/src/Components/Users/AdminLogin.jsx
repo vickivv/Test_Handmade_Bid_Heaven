@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import '../../Styles/Admin_login.css';
 import Footer from '../Homepage/Footer';
+import { useNavigate } from 'react-router-dom';
 import instance from '../../axios/axios';
 
 function AdminLogin() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState(''); 
   const [password, setPassword] = useState('');
 
@@ -28,6 +30,7 @@ function AdminLogin() {
       if (response && response.data && response.data.token) {
         console.log('Logged in successfully. Admin User ID:', response.data.userId);
         alert ("Admin Logged in successfully.")
+        navigate('/admin-dashboard')
       } else {
         alert("Failed to login: Please check your first name, last name, and password.");
       }
