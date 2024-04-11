@@ -23,7 +23,7 @@ function AdminLogin() {
     const loginData = {
       Email :email,
       password,
-    };
+    }; 
 
     try {
       const response = await instance.post('api/admin/login/', loginData);

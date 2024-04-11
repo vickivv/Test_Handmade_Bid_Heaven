@@ -37,6 +37,9 @@ import { CompareBids } from "./Components/Seller/biddings/CompareBids";
 import { MessageProvider } from './Components/Context/MessageContext';
 import Sent from './Components/Messages/Pages/Sent';
 import Inbox from './Components/Messages/Pages/Inbox';
+import AdminDashboard from "./Components/Admin/AdminDashboard.jsx";
+import AdminOverview from './Components/Admin/AdminOverview.jsx';
+import ManageReports from './Components/Admin/ManageReports.jsx';
 function App() {
 
   
@@ -57,6 +60,12 @@ function App() {
             <Route path="/new-message" element={<NewMessageForm/>} />
             <Route path="/sent" element={<Sent/>} />
             <Route path="/inbox" element={<Inbox/>} />
+
+            <Route path="/admin-dashboard/*" element={<AdminDashboard />}>
+            <Route path="overview" element={<AdminOverview />} />
+            <Route path="report" element={<ManageReports />} />
+            </Route>
+
 
             <Route path="/review" element={<Review />} />
             <Route path="/addressbook" element={<AddressBook />} />
