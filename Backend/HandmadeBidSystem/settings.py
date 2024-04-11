@@ -110,7 +110,7 @@ if os.getenv('GAE_APPLICATION', None):
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'BidHeaven',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': '',
         'HOST': '35.203.131.35',
         'PORT': '3306',
     }
@@ -121,7 +121,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'project',
             'USER': 'root',
-            'PASSWORD': 'root123456',
+            'PASSWORD': '',
             'HOST': 'localhost',
             'PORT': '3306'
         }
