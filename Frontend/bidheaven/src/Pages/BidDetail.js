@@ -157,7 +157,6 @@ const BidDetail = () => {
       <div style={{...col60Style, padding: '20px'}}>
         <p>{bidDetails.Name}</p>
         <p>ProductID: {bidDetails.ProductID}</p>
-        <a href="#" style={{ display: 'block' }}>View Item</a>
       </div>
       <div style={col20Style}>Start Price: ${bidDetails.StartPrice}</div>
     </div>
