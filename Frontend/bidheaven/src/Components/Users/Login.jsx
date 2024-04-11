@@ -27,29 +27,40 @@ function Login() {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const loginData = {
-      Username: username, // Here we are assuming the backend expects "Username" with a capital "U"
-      password, // The password is likely expected as is.
+      Username: username, 
+      password, 
     };
   
     try {
       const response = await instance.post('api/login/', loginData);
+    
       if (response && response.data && response.data.token) {
-        // Assuming the backend response includes these fields.
+        console.log("Token for frotend login:",response.data.token)
         login({
           token: response.data.token,
           username: response.data.username, 
           userId: response.data.userId,
+          email: response.data.email, 
+          is_staff: response.data.is_staff 
+        
         });
-        console.log('Logged in successfully. User ID:', response.data.userId);
+        console.log('Logged in successfully. User ID:', response.data);
         navigate("/"); 
       } else {
-        // It's not common to enter this block if the request was successful.
+       
         alert("Failed to login: Please check your username and password.");
       }
     } catch (error) {
-      // You may want to check for more specific error codes or messages depending on your backend implementation.
-      const errorMessage = error.response?.data?.error || "An unexpected error occurred. Please try again.";
-      alert(`Login failed: ${errorMessage}`);
+    
+      console.error("Login failed: Detailed error", error);
+    
+    
+    const errorMessage = error.response?.data?.detail 
+                           || error.message  
+                           || "An unexpected error occurred. Please try again.";
+
+   
+    alert(`Login failed: ${errorMessage}`);
     }
   };
   

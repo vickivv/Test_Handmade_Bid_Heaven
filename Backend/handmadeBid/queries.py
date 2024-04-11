@@ -1,5 +1,7 @@
 from django.db import connection
 from django.utils import timezone
+import traceback
+
 
 
 def get_all_orders(userID):
@@ -205,6 +207,7 @@ def cancel_bid(biddingID):
             print(e)
             return False
 
+
 def get_account_details(userID):
     with connection.cursor() as cursor:
         # 第一个查询
@@ -243,3 +246,135 @@ def update_account_details(userID, username, phone):
         except Exception as e:
             print(e)
             return False
+
+# Message 
+def send_message(from_email, to_email, subject_type, product_info, order_info, content):
+    with connection.cursor() as cursor:
+        try:
+            #get sender's type and base_user_id from email
+            cursor.execute("SELECT UserID, is_staff FROM BASEUSER WHERE Email=%s", [from_email])
+            sender_base_user_id, sender_is_staff = cursor.fetchone()
+            sender_type = 'Admin' if sender_is_staff else 'Normal'
+
+            ##get receiver's type and base_user_id from email
+            cursor.execute("SELECT UserID, is_staff FROM BASEUSER WHERE Email=%s", [to_email])
+            receiver_base_user_id, receiver_is_staff = cursor.fetchone()
+            receiver_type = 'Admin' if receiver_is_staff else 'Normal'
+
+            # get sender_id from base_user_id
+            if sender_type == 'Normal':
+                cursor.execute("SELECT UserID FROM NORMALUSER WHERE base_user_id =%s", [sender_base_user_id])
+                sender_user_id = cursor.fetchone()[0]
+                admin_sender_id = None
+            else:
+                cursor.execute("SELECT UserID FROM ADMINUSER WHERE base_user_id=%s", [sender_base_user_id])
+                admin_sender_id = cursor.fetchone()[0]
+                sender_user_id = None
+
+           # get receiver_id from base_user_id
+            if receiver_type == 'Normal':
+                cursor.execute("SELECT UserID FROM NORMALUSER WHERE base_user_id=%s", [receiver_base_user_id])
+                receiver_user_id = cursor.fetchone()[0]
+                admin_receiver_id = None
+            else:
+                cursor.execute("SELECT UserID FROM ADMINUSER WHERE base_user_id=%s", [receiver_base_user_id])
+                admin_receiver_id = cursor.fetchone()[0]
+                receiver_user_id = None
+
+            product_id = None
+            order_id = None
+
+            if subject_type == 'Product':
+                if product_info:
+                    cursor.execute("SELECT ProductID FROM PRODUCTS WHERE Name=%s", [product_info])
+                    product_id_result = cursor.fetchone()
+                    if product_id_result:
+                        product_id = product_id_result[0]
+            elif subject_type == 'Order':
+                if order_info:
+                    order_id = order_info
+            else:
+                raise ValueError(f"Unknown subject type: {subject_type}")
+
+            # insert info
+            cursor.execute("""
+                INSERT INTO MESSAGES (AdminSenderID, SenderID, AdminReceiverID, ReceiverID, Content, ProductID, OrderID, CreateDate, SubjectType)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, [admin_sender_id, sender_user_id, admin_receiver_id, receiver_user_id, content, product_id, order_id, timezone.now(), subject_type])
+
+
+            connection.commit()
+            return True
+        except Exception as e:
+            print(traceback.format_exc())
+            return False
+        
+def get_messages_by_user_id(user_id):
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute("""
+                 SELECT
+                    m.MESSAGEID AS messageId,
+                    COALESCE(sender_base.Email, admin_sender_base.Email) AS sender_email,
+                    COALESCE(receiver_base.Email, admin_receiver_base.Email) AS receiver_email,
+                    m.Content,
+                    m.CreateDate,
+                    COALESCE(p.Name, '') AS product_info,
+                    COALESCE(o.OrderID, '') AS order_info,
+                    m.SubjectType
+                FROM MESSAGES m
+                LEFT JOIN NORMALUSER s_normal ON m.SenderID = s_normal.UserID
+                LEFT JOIN BASEUSER sender_base ON s_normal.base_user_id = sender_base.UserID
+                LEFT JOIN ADMINUSER s_admin ON m.AdminSenderID = s_admin.UserID
+                LEFT JOIN BASEUSER admin_sender_base ON s_admin.base_user_id = admin_sender_base.UserID
+                LEFT JOIN NORMALUSER r_normal ON m.ReceiverID = r_normal.UserID
+                LEFT JOIN BASEUSER receiver_base ON r_normal.base_user_id = receiver_base.UserID
+                LEFT JOIN ADMINUSER r_admin ON m.AdminReceiverID = r_admin.UserID
+                LEFT JOIN BASEUSER admin_receiver_base ON r_admin.base_user_id = admin_receiver_base.UserID
+                LEFT JOIN PRODUCTS p ON m.ProductID = p.ProductID
+                LEFT JOIN ORDERS o ON m.OrderID = o.OrderID
+                WHERE s_normal.UserID = %s OR s_admin.UserID = %s OR r_normal.UserID = %s OR r_admin.UserID = %s
+            """, [user_id, user_id, user_id, user_id])
+            results = cursor.fetchall()
+            print(f"Query executed successfully for User ID: {user_id}, results obtained: {len(results)}")
+            messages = []
+            for result in results:
+                # Ensure that either sender or receiver is not NULL
+                if result[1] is not None and result[2] is not None:
+                    message = {
+                        'messageId':result[0],
+                        'sender_email': result[1],
+                        'receiver_email': result[2],
+                        'content': result[3],
+                        'create_date': result[4].strftime("%Y-%m-%d %H:%M:%S") if result[3] else "",
+                        'product_info': result[5],
+                        'order_info': result[6],
+                        'subject_type': result[7]
+                    
+                    }
+                    messages.append(message)
+            return messages
+        except Exception as e:
+            print(e)
+            return []
+
+
+
+
+
+
+def delete_message_by_id(message_id):
+    with connection.cursor() as cursor:
+        try:
+            cursor.execute(""" 
+    DELETE FROM MESSAGES WHERE MESSAGEID = %s
+
+    """
+        ,[message_id])
+            connection.commit()
+            return True
+        except Exception as e:
+            print(traceback.format_exc())
+            return False
+
+

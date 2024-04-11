@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext(null);
@@ -6,26 +6,45 @@ export const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); 
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedUserId = localStorage.getItem('userId');
+    const storedEmail = localStorage.getItem('email');
+    const storedUsername = localStorage.getItem('username');
+    const storedIsStaff = localStorage.getItem('isStaff');
+
+    if (storedToken) {
+      setUser({
+        token: storedToken,
+        userId: storedUserId,
+        email: storedEmail,
+        isStaff: storedIsStaff === 'true', 
+      });
+    }
+  }, []);
 
   const login = (userData) => {
-    setUser(userData); 
-    localStorage.setItem('token', userData.token); // if loggedin, store token in userData
-    localStorage.setItem('userId', userData.userId);//if loggedin, store userID in userData
-
+    setUser(userData);
+    localStorage.setItem('token', userData.token);
+    localStorage.setItem('username', userData.username);
+    localStorage.setItem('userId', userData.userId);
+    localStorage.setItem('email', userData.email);
+    localStorage.setItem('isStaff', String(userData.is_staff)); 
     navigate('/'); 
   };
 
   const logout = () => {
-    localStorage.removeItem('token'); 
-    localStorage.removeItem('userId'); 
-    setUser(null); 
-    navigate('/'); 
+    setUser(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('isStaff');
+    navigate('/login'); 
   };
 
-  // 准备并传递context的值
   const value = { user, login, logout };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

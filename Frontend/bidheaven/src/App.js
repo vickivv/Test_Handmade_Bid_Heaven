@@ -23,6 +23,7 @@ import Payment from './Pages/payment'
 import AddAddressPage from './Pages/AddAddressPage'
 import AddressBook from './Components/Users/AddressBook'
 import ThankYouPage from './Pages/ThankYouPage'
+import NewMessageForm from './Components/Messages/NewMessageForm';
 
 import { Products } from "./Components/Seller/productspage/Products";
 import { SellerOverview } from "./Components/Seller/overviewpage/SellerOverview";
@@ -34,7 +35,9 @@ import { AddNewProduct } from "./Components/Seller/productspage/AddNewProduct";
 import { Bidding } from "./Components/Seller/biddings/Bidding";
 import { SellerOrderDetail } from "./Components/Seller/orders/SellerOrderDetail";
 import { CompareBids } from "./Components/Seller/biddings/CompareBids";
-
+import { MessageProvider } from './Components/Context/MessageContext';
+import Sent from './Components/Messages/Pages/Sent';
+import Inbox from './Components/Messages/Pages/Inbox';
 function App() {
 
   
@@ -43,6 +46,7 @@ function App() {
 
         <Router>
            <AuthProvider>
+            <MessageProvider>
         <div>
           <Routes>
             <Route path="/" element={<Homepage />} />
@@ -52,7 +56,13 @@ function App() {
             <Route path="/payment-method" element={<PaymentMethod/>} />
             <Route path="/admin-login" element={<AdminLogin/>} />
 
+
             <Route path="/account" element={<Account />} />
+
+            <Route path="/new-message" element={<NewMessageForm/>} />
+            <Route path="/sent" element={<Sent/>} />
+            <Route path="/inbox" element={<Inbox/>} />
+
             <Route path="/review" element={<Review />} />
             <Route path="/addressbook" element={<AddressBook />} />
             <Route path="/add_address" element={<AddAddressPage />} />
@@ -79,6 +89,7 @@ function App() {
             </Route>
           </Routes>
         </div>
+        </MessageProvider>
         </AuthProvider>
       </Router>
 
