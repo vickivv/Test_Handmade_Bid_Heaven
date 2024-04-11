@@ -139,23 +139,29 @@ create table PAYMENT (
 	foreign key (OrderID) references ORDERS(OrderID)
 );
 
-create table MESSAGES(
-	MessageID int not null primary key,
-    AdminSenderID int,
-    SenderID int,
-    AdminReceiverID int,
-    ReceiverID int,
-    Content varchar(1000),
-    CreateDate date,
-    ProductID int,
-    OrderID int,
-    foreign key (AdminSenderID) references ADMINUSER(UserID),
-    foreign key (SenderID) references NORMALUSER(UserID),
-    foreign key (AdminReceiverID) references ADMINUSER(UserID),
-    foreign key (ReceiverID) references NORMALUSER(UserID),
-    foreign key (ProductID) references PRODUCTS(ProductID),
-    foreign key (OrderID) references ORDERS(OrderID)
+CREATE TABLE MESSAGES (
+    MessageID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    AdminSenderID INT,
+    SenderID INT,
+    AdminReceiverID INT,
+    ReceiverID INT,
+    Content VARCHAR(1000) NOT NULL,
+    CreateDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ProductID INT,
+    OrderID INT,
+    SubjectType ENUM('Product', 'Order') NOT NULL,
+    FOREIGN KEY (AdminSenderID) REFERENCES ADMINUSER(UserID),
+    FOREIGN KEY (SenderID) REFERENCES NORMALUSER(UserID),
+    FOREIGN KEY (AdminReceiverID) REFERENCES ADMINUSER(UserID),
+    FOREIGN KEY (ReceiverID) REFERENCES NORMALUSER(UserID),
+    FOREIGN KEY (ProductID) REFERENCES PRODUCTS(ProductID),
+    FOREIGN KEY (OrderID) REFERENCES ORDERS(OrderID),
+    INDEX idx_sender (AdminSenderID, SenderID),
+    INDEX idx_receiver (AdminReceiverID, ReceiverID),
+    INDEX idx_subject_product (ProductID),
+    INDEX idx_subject_order (OrderID)
 );
+
 
 create table REVIEWS (
 	ReviewID int not null primary key AUTO_INCREMENT,

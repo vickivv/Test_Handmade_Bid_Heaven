@@ -1,17 +1,21 @@
 -- insert values into adminuser table (adminuser's id starts with '1')
+INSERT INTO BASEUSER (Email, Password, Fname, Lname, is_active, is_staff, is_superuser,last_login) VALUES 
+('admin2@handmade.com', 'adminpassword2', 'Admin2', 'Admin2', 1, 1, 0,null),
+('mike1@gmail.com', '1234', 'Mike', 'AB', 1, 0, 0,null),
+('hook1@outlook.com', '1234', 'Alice', 'KK', 1, 0, 0,null);
 
 
+INSERT INTO ADMINUSER (base_user_id) VALUES
+((SELECT UserID FROM BASEUSER WHERE Email = 'admin2@handmade.com'));
 
-INSERT INTO ADMINUSER (UserID, Fname, Lname, Email,Password) VALUES
-(11, 'Alice', 'Johnson', 'alice@gmailcom' ,  'password123'),
-(12, 'Bob', 'Smith', 'bob@gmailcom' ,'password456'),
-(13, 'Charlie', 'Miller','miller@gmailcom' , 'password789'),
-(14, 'Diana', 'Ross', 'ross@gmailcom' ,'password012'),
-(15, 'Evan', 'Wright', 'evan@gmailcom' ,'password345'),
-(16, 'Fiona', 'Gallagher', 'fiona@gmailcom' ,'password678'),
-(17, 'George', 'Clooney', 'george@gmailcom' ,'password901');
 
 ALTER TABLE NORMALUSER MODIFY COLUMN is_superuser BOOLEAN NOT NULL DEFAULT 0;
+
+-- insert values into normaluser table (normal user's id starts with '2') 
+INSERT INTO NORMALUSER (base_user_id, Username, DefaultAddressID, Phone, Rate, ManageID) VALUES
+((SELECT UserID FROM BASEUSER WHERE Email = 'mike1@gmail.com'), 'mike123', 1, '1234567890', 0.0, (SELECT UserID FROM ADMINUSER WHERE base_user_id = 1)),
+((SELECT UserID FROM BASEUSER WHERE Email = 'hook1@outlook.com'), 'hope123', 1, '1234567890', 0.0, (SELECT UserID FROM ADMINUSER WHERE base_user_id = 1));
+
 
 
 
@@ -39,15 +43,7 @@ INSERT INTO GENERATES (UserID, ReportID, GenerateDate) VALUES
 (16, 6, '2024-03-16'),
 (17, 7, '2024-04-02');
 
--- insert values into normaluser table (normal user's id starts with '2') 
-INSERT INTO NORMALUSER (UserID, Fname, Lname, Username, Password, DefaultAddressID, Email, Phone, Rate, ManageID) VALUES
-(21, 'Harry', 'Potter', 'hpotter', 'magic123', 1, 'harry@hogwarts.com', '1234567890', 0.0, 11),
-(22, 'Ron', 'Weasley', 'rweasley', 'magic456', 2, 'ron@hogwarts.com', '2345678901', 0.0, 12),
-(23, 'Hermione', 'Granger', 'hgranger', 'magic789', 3, 'hermione@hogwarts.com', '3456789012', 0.0, 13),
-(24, 'Draco', 'Malfoy', 'dmalfoy', 'magic012', 4, 'draco@hogwarts.com', '4567890123', 0.0, 14),
-(25, 'Luna', 'Lovegood', 'llovegood', 'magic345', 5, 'luna@hogwarts.com', '5678901234', 0.0, 15),
-(26, 'Neville', 'Longbottom', 'nlongbottom', 'magic678', 6, 'neville@hogwarts.com', '6789012345', 0.0, 16),
-(27, 'Ginny', 'Weasley', 'gweasley', 'magic901', 7, 'ginny@hogwarts.com', '7890123456', 0.0, 17);
+
 
 -- insert values into address table 
 INSERT INTO ADDRESS (AddressID, Fname, Lname, UserID, Street, StreetOptional, City, State, Zipcode) VALUES
@@ -184,14 +180,10 @@ INSERT INTO PAYMENT (OrderID, PaymentStatus, PaymentMethod) VALUES
 (7, 'Completed', 'Credit/Debit card');
 
 -- insert values into messages table
-INSERT INTO MESSAGES (MessageID, AdminSenderID, SenderID, AdminReceiverID, ReceiverID, Content, CreateDate, ProductID, OrderID) VALUES
-(1, 11, NULL, NULL, 27, 'Welcome to the wizarding marketplace!', '2024-01-01', NULL, NULL),
-(2, NULL, 27, 11, NULL, 'Thank you! Excited to be here.', '2024-01-02', NULL, NULL),
-(3, NULL, 21, NULL, 27, 'Interested in the Stained Glass Flowers?', '2024-01-10', 1, NULL),
-(4, NULL, 27, NULL, 21, 'Yes, is it still available?', '2024-01-10', 1, NULL),
-(5, NULL, 25, NULL, 21, 'Do you have more Stained Glass Flowers in stock?', '2024-01-16', 1, NULL),
-(6, 11, NULL, NULL, 27, 'Your order has been shipped.', '2024-01-18', NULL, 1),
-(7, NULL, 27, 11, NULL, 'Thank you for the update!', '2024-01-19', NULL, 1);
+INSERT INTO MESSAGES ( AdminSenderID, SenderID, AdminReceiverID, ReceiverID, Content, CreateDate, ProductID, OrderID, SubjectType) VALUES
+(1, NULL, NULL, 2, 'Welcome to the wizarding marketplace!', '2024-01-01', NULL, NULL, 'Order');
+
+
 
 -- insert values into reviews table
 INSERT INTO REVIEWS (ReviewID, ReviewerID, ReviewerType, RevieweeID, Content, ReviewDate, ProductID, OrderID, Rate) VALUES

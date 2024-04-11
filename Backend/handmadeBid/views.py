@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from django.shortcuts import HttpResponse
-from .models import Products, Category, NormalUser, AdminUser, Pictures, Bidding, Orders, Payment, Shipment, Reviews
+from .models import Products, Category, NormalUser, AdminUser, Pictures, Bidding, Orders, Payment, Shipment, Reviews,Messages
 from datetime import date
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -18,17 +18,15 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from .serialization import NormalUserSerializer ,LoginSerializer ,AdminUserSerializer,AdminLoginSerializer
+from .serializers_user import NormalUserSerializer ,LoginSerializer ,AdminUserSerializer,AdminLoginSerializer
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
-
-
-
-
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
+from django.utils import timezone
+from django.contrib.auth.models import User
 
 from rest_framework import status
 import json
@@ -37,18 +35,22 @@ import logging
 
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
-    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid
+    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid,delete_message_by_id,get_messages_by_user_id,send_message
 
 logger = logging.getLogger(__name__)
 
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serialization import NormalUserSerializer
+from .serializers_user import NormalUserSerializer
 
 
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -72,12 +74,15 @@ class LoginView(APIView):
         try:
             user = NormalUser.objects.get(Username=username) 
             base_user = user.base_user
+            print("normal User email:", base_user.Email)
             if base_user.check_password(password):  
                 token, created = Token.objects.get_or_create(user=base_user)
                 return Response({
                     "token": token.key,
                     "userId": user.UserID,
-                    "username": user.Username,  # Make sure this is the correct attribute
+                    "username": user.Username, 
+                    "email": base_user.Email,
+                    "is_staff": user.base_user.is_staff,
                 }, status=status.HTTP_200_OK)
             else:
                 return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
@@ -99,6 +104,7 @@ class AdminLoginView(APIView):
                         "token": token.key,
                         "adminUserId": admin_user.UserID,  
                         "email": Email, 
+                        "is_staff": admin_user.base_user.is_staff,
                     }, status=status.HTTP_200_OK)
                 else:
                     return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
@@ -106,6 +112,59 @@ class AdminLoginView(APIView):
                 return Response({"error": "Invalid email"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+class MessageAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, format=None):
+        from_email = request.data.get('from_email')
+        to_email = request.data.get('to_email')
+        subject_type = request.data.get('subject_type')
+        product_info = request.data.get('product_info')
+        order_info = request.data.get('order_info')
+        content = request.data.get('content')
+
+        if not all([from_email, to_email, subject_type, content]):
+            return Response({'error': 'Missing required fields'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if subject_type == 'Product' and not product_info:
+            product_info=None
+        elif subject_type == 'Order' and not order_info:
+            order_info=None
+
+        success = send_message(from_email, to_email, subject_type, product_info, order_info, content)
+
+        if success:
+            return Response({'message': 'Message sent successfully'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Failed to send message'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+ 
+    def get(self, request, user_id, format=None):
+       
+        message_data = get_messages_by_user_id(user_id)
+        if message_data:
+            return Response(message_data, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'No messages found or error occurred'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+    def delete(self, request, message_id, format=None):
+      
+        if not request.user.is_authenticated:
+            return Response({'error': 'User not authenticated. Please login.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        success = delete_message_by_id(message_id)
+        if success:
+            return Response({'message': 'Message deleted successfully'})
+        else:
+            return Response({'error': 'Failed to delete message'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
@@ -357,7 +416,10 @@ def add_product(request):
         for s in pictureList:
             if s == ',':
                 break
+           
             firstKey = firstKey * 10 + int(s)
+           
+
 
         new_product = Products(
             name=name,

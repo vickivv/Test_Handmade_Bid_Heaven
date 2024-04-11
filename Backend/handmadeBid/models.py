@@ -92,6 +92,27 @@ class NormalUser(models.Model):
 #          Password=make_password('adminpassword')
 #  )
 
+
+# Message 
+class Messages(models.Model):
+    admin_sender = models.ForeignKey('AdminUser', on_delete=models.CASCADE, related_name='sent_admin_messages', null=True, blank=True)
+    sender = models.ForeignKey('NormalUser', on_delete=models.CASCADE, related_name='sent_normal_messages', null=True, blank=True)
+    admin_receiver = models.ForeignKey('AdminUser', on_delete=models.CASCADE, related_name='received_admin_messages', null=True, blank=True)
+    receiver = models.ForeignKey('NormalUser', on_delete=models.CASCADE, related_name='received_normal_messages', null=True, blank=True)
+    content = models.TextField()
+    create_date = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey('Products', on_delete=models.SET_NULL, null=True)
+    order = models.ForeignKey('Orders', on_delete=models.SET_NULL, null=True)
+    subject_type = models.CharField(max_length=10, choices=[('Product', 'Product'), ('Order', 'Order')],db_column='subject_type')
+    
+    class Meta:
+        db_table = 'MESSAGES'
+
+
+
+
+
+
 class Address(models.Model):
     addressid = models.AutoField(primary_key=True)  # Field name made lowercase.
     userid = models.ForeignKey('NormalUser', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.

@@ -32,7 +32,7 @@ drop  table  if exists REPORT;
 drop  table  if exists CATEGORY;
 drop  table  if exists ADMINUSER;
 
-DROP TABLE IF EXISTS BaseUser;
+DROP TABLE IF EXISTS BASEUSER;
 
 
 
