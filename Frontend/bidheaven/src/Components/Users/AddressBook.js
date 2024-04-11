@@ -3,10 +3,11 @@ import { Card, Space, Button } from 'antd';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import Header from '../Homepage/Header'
 import Footer from '../Homepage/Footer'
-import './AddressBook.css'
+
 
 const AddressBook = ({ onAddressSelect }) => {
-  const [addresses, setAddresses] = useState([]);
+
+const [addresses, setAddresses] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -51,7 +52,7 @@ const AddressBook = ({ onAddressSelect }) => {
     <Header />
     <div style={{ margin: '50px' }}>
     <h3>All Addresses</h3>
-      {addresses.map((address) => (
+    {addresses.map((address) => (
        <Card title={`${address.Fname} ${address.Lname}`} size="small" onClick={() => handleAddressClick(address)}>
          <p>{address.Street}, {address.City}, {address.State}, {address.Zipcode}</p>
          <Button  >Deliver to this address</Button>

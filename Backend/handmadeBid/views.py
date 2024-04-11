@@ -37,7 +37,8 @@ import logging
 
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
-    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid
+    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid, \
+    get_account_details, update_account_details
 
 logger = logging.getLogger(__name__)
 
@@ -835,3 +836,22 @@ def get_username(request, userId):
             'result':username
         }
         return JsonResponse(data, safe=False)
+
+
+class GetAccountDetailAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        user_id = request.query_params.get('userId')
+        data = get_account_details(user_id)
+        return Response(data)
+
+
+class SetAccountDetailAPIView(APIView):
+    def put(self, request):
+        data = JSONParser().parse(request)
+        user_id = data.get('userid')
+        phone = data.get('phone')
+        username = data.get('username')
+        if update_account_details(user_id, username, phone):
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({"error": "Unable to set"}, status=400)
