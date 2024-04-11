@@ -5,3 +5,13 @@
 /node_modules
 *.pyc
 /Backend/handmadeBid/__pycache__
+/Backend/venv
+/Backend1/
+/Frontend1
+.DS_Store
+/Backend/.DS_Store
+/Backend/handmadeBid/.DS_Store
+/Frontend/.DS_Store
+/Frontend/bidheaven/src
+/Backend/media/photos
+/Frontend/bidheaven/.DS_Store

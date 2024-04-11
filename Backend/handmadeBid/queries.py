@@ -218,7 +218,9 @@ def send_message(from_email, to_email, subject_type, product_info, order_info, c
 
             ##get receiver's type and base_user_id from email
             cursor.execute("SELECT UserID, is_staff FROM BASEUSER WHERE Email=%s", [to_email])
+            print("Backend to email:",to_email)
             receiver_base_user_id, receiver_is_staff = cursor.fetchone()
+            print("receiver_base_user_id at backend :",receiver_base_user_id)
             receiver_type = 'Admin' if receiver_is_staff else 'Normal'
 
             # get sender_id from base_user_id
@@ -252,7 +254,12 @@ def send_message(from_email, to_email, subject_type, product_info, order_info, c
                         product_id = product_id_result[0]
             elif subject_type == 'Order':
                 if order_info:
-                    order_id = order_info
+                    cursor.execute("SELECT OrderID FROM ORDERS WHERE OrderID=%s", [order_info])
+                    order_id_result = cursor.fetchone()
+                    if order_id_result:
+                        order_id = order_id_result[0]
+                    else:
+                        order_id = None
             else:
                 raise ValueError(f"Unknown subject type: {subject_type}")
 
