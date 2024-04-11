@@ -190,7 +190,7 @@ class Orders(models.Model):
 
 
 class Payment(models.Model):
-    orderid = models.ForeignKey(Orders, models.DO_NOTHING, db_column='OrderID')  # Field name made lowercase.
+    orderid = models.OneToOneField(Orders, models.DO_NOTHING, db_column='OrderID', primary_key=True)  # Field name made lowercase.
     paymentstatus = models.CharField(db_column='PaymentStatus', max_length=9)  # Field name made lowercase.
     paymentmethod = models.CharField(db_column='PaymentMethod', max_length=17)  # Field name made lowercase.
 
