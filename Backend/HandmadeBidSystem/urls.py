@@ -24,8 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('handmadeBid.urls')),
 
-    path('api/get_account_detail', views.GetAccountDetailAPIView.as_view(), name='get_account_detail'),
-    path('api/set_account_detail', views.SetAccountDetailAPIView.as_view(), name='get_account_detail'),
     path('api/get_overview_pay', views.GetOverviewPayAPIView.as_view(), name='get_overview_pay'),
     path('api/get_overview_order', views.GetOverviewOrderAPIView.as_view(), name='get_overview_order'),
     path('api/get_overview_bid', views.GetOverviewBidAPIView.as_view(), name='get_overview_bid'),
