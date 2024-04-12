@@ -85,7 +85,7 @@ create table PRODUCTS (
     StartPrice decimal(7, 2),
     PictureID int not null,
     PostDate date,
-    Status enum('Active', 'Sold out') not null,
+    Status enum('Active', 'Sold out', 'Deleted') not null,
     Inventory int not null,
     ManageID int not null,
     foreign key (CategoryID) references CATEGORY(CategoryID),
