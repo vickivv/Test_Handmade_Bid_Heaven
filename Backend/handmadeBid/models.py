@@ -122,6 +122,7 @@ class Address(models.Model):
         managed = False
         db_table = 'ADDRESS'
 
+
 class Bidding(models.Model):
     biddingid = models.AutoField(primary_key=True)  # Field name made lowercase.
     productid = models.ForeignKey('Products', models.DO_NOTHING, db_column='ProductID')  # Field name made lowercase.
