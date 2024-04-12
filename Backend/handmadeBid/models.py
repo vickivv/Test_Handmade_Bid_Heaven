@@ -109,10 +109,6 @@ class Messages(models.Model):
         db_table = 'MESSAGES'
 
 
-
-
-
-
 class Address(models.Model):
     addressid = models.AutoField(primary_key=True)  # Field name made lowercase.
     userid = models.ForeignKey('NormalUser', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
