@@ -103,29 +103,18 @@ WSGI_APPLICATION = 'HandmadeBidSystem.wsgi.application'
 import pymysql  # noqa: 402
 pymysql.version_info = (1, 4, 6, 'final', 0)  # change mysqlclient version
 pymysql.install_as_MySQLdb()
+# [START db_setup]
 # if os.getenv('GAE_APPLICATION', None):
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Group2',
-        'USER': 'root',
-        'PASSWORD': 'root1234',
-        'HOST': 'localhost',
-        'PORT': '3306'
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'BidHeaven',
+    'USER': 'root',
+    'PASSWORD': '1234',
+    'HOST': '35.203.131.35',
+    'PORT': '3306',
     }
 }
-# [START db_setup]
-# if os.getenv('GAE_APPLICATION', None):
-# DATABASES = {
-#     'default': {
-#     'ENGINE': 'django.db.backends.mysql',
-#     'NAME': 'BidHeaven',
-#     'USER': 'root',
-#     'PASSWORD': '1234',
-#     'HOST': '35.203.131.35',
-#     'PORT': '3306',
-#     }
-# }
 # else:
 #     DATABASES = {
 #         'default': {
