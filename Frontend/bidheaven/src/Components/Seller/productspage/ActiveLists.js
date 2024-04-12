@@ -47,7 +47,9 @@ export const ActiveLists = () => {
 
     //delete product
     const delProduct = async (data) => {
+        console.log(data.productid);
         await http.delete(`deleteproduct/${data.productid}/`)
+        
         setParams({
            ...params,
            page: 1
@@ -57,7 +59,7 @@ export const ActiveLists = () => {
     //contact the admin user of a product
     const contactManager = (data) => {
         //to add contact api
-        console.log("contact manager");
+        navigate('/new-message');
     }
 
     //fetch category from database
@@ -176,7 +178,7 @@ export const ActiveLists = () => {
                   danger
                   shape="circle"
                   icon={<CommentOutlined />}
-                  onClick={() => contactManager(data)}
+                  onClick={() => contactManager()}
                 />
                 </Tooltip>
               </Space>

@@ -35,15 +35,12 @@ export const AddNewProduct = () => {
       })
       const pictureKeys=fileList.map(file => {
         if(file.response){
-          console.log('newpictureresponse', file.response);
           return file.response;
       }})
       setFileList(formatList)
-      console.log('newpictureKeys', pictureKeys);
       const addedValues = pictureKeys.filter(item => item !== undefined);
       pictures.push(...addedValues)
       setPictures(pictures)
-    console.log("newpictures",pictures)
     }
 
     //fetch category data from database
@@ -65,7 +62,6 @@ export const AddNewProduct = () => {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("category", category);
-      console.log(category)
       formData.append("description", description);
       formData.append("startPrice", parseInt(startPrice));
       formData.append("inventory", parseInt(inventory));
@@ -96,9 +92,7 @@ export const AddNewProduct = () => {
     })
     const formatImgList = data.pictures.map(url => ({url:`${ip}${url}`}))
     setFileList(formatImgList)
-    console.log("frombackendurls", fileList)
     setPictures(data.pictureKeys)
-    console.log("frombackendkeys", data.pictureKeys)
   } 
   useEffect(() => {
     if (id) {

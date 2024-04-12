@@ -534,7 +534,7 @@ def get_products(request):
         seller_id=request.GET.get('userId')
         product_status=request.GET.get('status')
         products = Products.objects.filter(sellerid=seller_id, status=product_status)
-        
+
         bidnum = request.GET.get('bidnum')
         if bidnum:       
             products_in_bids = Bidding.objects.values_list('productid', flat=True)
@@ -584,7 +584,7 @@ def get_overview_stat(request, userId):
         seller_id=userId
         product_list = Products.objects.filter(sellerid=seller_id)
         active_num = product_list.filter(status='Active').count()
-        sold_out_num = product_list.filter(status='Sold Out').count()
+        sold_out_num = product_list.filter(status='Sold out').count()
         bidding_list = []
         bidding_count = 0
         total_bidding_price = 0
@@ -697,7 +697,8 @@ def get_bids(request):
         
         bidstatus = request.GET.get('status')
         if bidstatus:
-            bidding_list = bidding_list.filter(status=bidstatus)
+            if bidstatus != 'All':
+                bidding_list = bidding_list.filter(status=bidstatus)
         
         begin_date = request.GET.get('begin_postdate')
         end_date = request.GET.get('end_postdate')
@@ -796,9 +797,12 @@ def get_order_detail(request, order_id):
 @csrf_exempt
 def delete_product(request, product_id):
     try:
-        Products.objects.get(pk=product_id).delete()
+        product=Products.objects.get(pk=product_id)
+        product.status='Deleted'
+        product.save()
         return HttpResponse('success')
     except Exception as e:
+        print(e)
         return HttpResponseNotFound('Record not found')
 
 @csrf_exempt
@@ -822,6 +826,11 @@ def add_order(request, bidding_id):
         orderstatus=status
     )
     new_order.save()
+    product = bidding.productid
+    product.inventory = product.inventory - bidding.quantity
+    if product.inventory==0:
+        product.status='Sold out'
+    product.save()
     return HttpResponse("success")
 
 def get_product_bids(request, product_id):
