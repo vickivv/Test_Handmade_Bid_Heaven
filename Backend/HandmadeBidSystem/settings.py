@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'handmadeBid',
+   
     'rest_framework.authtoken',
+     'handmadeBid',
 ]
 
 MIDDLEWARE = [
@@ -101,31 +102,51 @@ WSGI_APPLICATION = 'HandmadeBidSystem.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 import pymysql  # noqa: 402
+
 pymysql.version_info = (1, 4, 6, 'final', 0)  # change mysqlclient version
 pymysql.install_as_MySQLdb()
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  
+        'HOST': '35.203.131.35',              
+        'PORT': '3306',                      
+        'NAME': 'BidHeaven',                  
+        'USER': 'root',                      
+        'PASSWORD': '123456',                  #
+    }
+}
 # [START db_setup]
 if os.getenv('GAE_APPLICATION', None):
-    DATABASES = {
+     DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'HOST': 'db-group2-415119:us-west1:db-group2',
         'NAME': 'BidHeaven',
         'USER': 'root',
         'PASSWORD': '123456',
-        'HOST': '35.203.131.35',
-        'PORT': '3306',
+       
     }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'project',
-            'USER': 'root',
-            'PASSWORD': 'root123456',
-            'HOST': 'localhost',
-            'PORT': '3306'
-        }
-    }
+}
+# else :
+#   
+#      }
+
+
+
+
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'NAME': 'project',
+#             'USER': 'root',
+#             'PASSWORD': 'root123456',
+#             'HOST': 'localhost',
+#             'PORT': '3306'
+#         }
+#     }
 """
 Xiwei's database setting
     DATABASES = {

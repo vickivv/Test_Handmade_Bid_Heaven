@@ -1,6 +1,6 @@
 
 import AdminOverview from '../Admin/AdminOverview';
-import ManageSoldOutLists from '../Admin/ManageSoldOutLists';
+// import ManageSoldOutLists from '../Admin/ManageSoldOutLists';
 
 // 在AdminDashboard.jsx中
 import { Outlet } from 'react-router-dom';
