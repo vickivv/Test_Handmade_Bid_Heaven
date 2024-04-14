@@ -666,7 +666,7 @@ def get_recent_bids(request, userId):
 def get_best_products(request, userId):
     if request.method=='GET':
         seller_id=userId
-        product_list=Products.objects.filter(sellerid=seller_id)
+        product_list=Products.objects.filter(sellerid=seller_id).exclude(status='Deleted')
         order_list = Bidding.objects.filter(productid__in=product_list, biddingid__in=Orders.objects.values_list('biddingid', flat=True))
         product_quantities = order_list.values('productid').annotate(
             total_quantity=Sum('quantity')
@@ -927,3 +927,29 @@ class SetAccountDetailAPIView(APIView):
             return JsonResponse({'success': True})
         else:
             return JsonResponse({"error": "Unable to set"}, status=400)
+        
+@csrf_exempt
+def add_bid(request):
+    if request.method == 'POST':
+        bidder_id=request.POST.get('userid')
+        bidder = NormalUser.objects.get(UserID=bidder_id)
+        product_id = request.POST.get('productid')
+        product = Products.objects.get(productid=product_id)
+        bid_price = request.POST.get('bidprice')
+        bid_q = request.POST.get('quantity')
+        active_days = request.POST.get('activedays')
+        manager = AdminUser.objects.filter(UserID = 1).first()
+
+        new_bid = Bidding(
+            productid=product,
+            bidderid = bidder,
+            bidprice = bid_price,
+            quantity = bid_q,
+            biddate = date.today(),
+            activedays = active_days,
+            status = 'Pending',
+            manageid = manager
+        )
+        new_bid.save()
+
+        return HttpResponse('success')
