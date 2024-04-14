@@ -24,7 +24,7 @@ import AddAddressPage from './Pages/AddAddressPage'
 import AddressBook from './Components/Users/AddressBook'
 import ThankYouPage from './Pages/ThankYouPage'
 import NewMessageForm from './Components/Messages/NewMessageForm';
-
+import { AddBids } from './Bid/Addbids.js';
 import { Products } from "./Components/Seller/productspage/Products";
 import { SellerOverview } from "./Components/Seller/overviewpage/SellerOverview";
 import { SellerOrders } from './Components/Seller/orders/SellerOrders';
@@ -36,7 +36,7 @@ import { Bidding } from "./Components/Seller/biddings/Bidding";
 import { SellerOrderDetail } from "./Components/Seller/orders/SellerOrderDetail";
 import { CompareBids } from "./Components/Seller/biddings/CompareBids";
 import { MessageProvider } from './Components/Context/MessageContext';
-import { AddBids } from './Components/Bids/AddBids';
+
 import Sent from './Components/Messages/Pages/Sent';
 import Inbox from './Components/Messages/Pages/Inbox';
 import AdminDashboard from "./Components/Admin/AdminDashboard.jsx";

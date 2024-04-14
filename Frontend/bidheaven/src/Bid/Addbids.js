@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import {http} from '../../Components/Seller/utils/http';
+import {http} from '../Components/Seller/utils/http';
 import { Card, Divider, Input, Form, Image, message, Space, Button } from 'antd';
 import { useState, useEffect } from 'react';
 const cardStyle = {
