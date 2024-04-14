@@ -20,3 +20,5 @@
 *.pack
 /Backend/HandmadeBidSystem/__pycache__
 /Frontend/bidheaven/node_modules
+/Frontend/bidheaven/node_modules/.cache/.eslintcache
+/Frontend/bidheaven/node_modules/.cache/default-development/index.pack.old
