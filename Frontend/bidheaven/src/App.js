@@ -36,6 +36,7 @@ import { Bidding } from "./Components/Seller/biddings/Bidding";
 import { SellerOrderDetail } from "./Components/Seller/orders/SellerOrderDetail";
 import { CompareBids } from "./Components/Seller/biddings/CompareBids";
 import { MessageProvider } from './Components/Context/MessageContext';
+import { AddBids } from './Components/Bids/AddBids';
 import Sent from './Components/Messages/Pages/Sent';
 import Inbox from './Components/Messages/Pages/Inbox';
 function App() {
@@ -59,6 +60,7 @@ function App() {
             <Route path="/sent" element={<Sent/>} />
             <Route path="/inbox" element={<Inbox/>} />
             <Route path="/account" element={<Account />} />
+            <Route path="/bidding/:productId" element={<AddBids />} />
 
             <Route path="/review" element={<Review />} />
             <Route path="/addressbook" element={<AddressBook />} />
