@@ -96,8 +96,7 @@ create table PRODUCTS (
 create table PICTURES (
 	PictureID int not null auto_increment primary key,
     ProductID int,
-    Picture varchar(2083),
-    foreign key (ProductID) references PRODUCTS(ProductID)
+    Picture varchar(2083)
 );
 
 create table BIDDING (
@@ -120,11 +119,13 @@ create table ORDERS (
     BiddingID int not null,
     OrderDate date,
     OrderStatus enum('Pending', 'Processing', 'Shipped', 'Delivered', 'Completed', 'Canceled', 'Refunded', 'Failed') not null,
-    foreign key (BiddingID) references BIDDING(BiddingID)
+    ManageID int not null,
+    foreign key (BiddingID) references BIDDING(BiddingID),
+    foreign key (ManageID) references ADMINUSER(UserID)
 );
 
 create table SHIPMENT (
-	OrderID int not null primary key AUTO_INCREMENT,
+	OrderID int not null primary key,
     TrackingNumber varchar(50) not null,
     AddressID int not null,
     Status enum('Awaiting Shipment', 'Shipped', 'In Transit', 'Out for Delivery', 'Delivered', 'Delayed', 'Returned') not null,
@@ -132,7 +133,7 @@ create table SHIPMENT (
 );
 
 create table PAYMENT (
-	OrderID int not null primary key AUTO_INCREMENT,
+	OrderID int not null primary key,
     PaymentStatus enum('Pending', 'Completed', 'Failed', 'Canceled', 'Refunding', 'Refunded') not null,
     -- PaymentMethod enum('Credit/Debit card', 'E-Wallet', 'Check') not null,
     PaymentMethod enum('Credit/Debit card', 'Paypal') not null,

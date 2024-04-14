@@ -665,7 +665,7 @@ def get_recent_bids(request, userId):
 def get_best_products(request, userId):
     if request.method=='GET':
         seller_id=userId
-        product_list=Products.objects.filter(sellerid=seller_id)
+        product_list=Products.objects.filter(sellerid=seller_id).exclude(status='Deleted')
         order_list = Bidding.objects.filter(productid__in=product_list, biddingid__in=Orders.objects.values_list('biddingid', flat=True))
         product_quantities = order_list.values('productid').annotate(
             total_quantity=Sum('quantity')
