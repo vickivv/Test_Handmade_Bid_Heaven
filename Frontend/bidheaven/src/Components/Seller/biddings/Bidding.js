@@ -22,6 +22,7 @@ export const Bidding =() => {
 
   const fetchBids = async() => {
     const response = await http.get('/getbids', { params });
+    console.log(params);
     const {result, count} = response.data
     setBidData({
       list:result,
@@ -102,6 +103,10 @@ export const Bidding =() => {
   const goCompare = (data) => {
     navigate(`/seller/comparebids/${data.productId}`);
   };
+
+  const contactManager = () => {
+    navigate('/new-message');
+  }
 
   const columns = [
     {
@@ -185,6 +190,7 @@ export const Bidding =() => {
               danger
               shape="circle"
               icon={<CommentOutlined />}
+              onClick={() => contactManager()}
             />
             </Tooltip>
           </Space>
@@ -195,6 +201,7 @@ export const Bidding =() => {
   ]
 
   const statusList=[
+    {id:0, name:'All'},
     {id:1, name:'Pending'},
     {id:2, name:'Accepted'},
     {id:3, name: 'Rejected'},

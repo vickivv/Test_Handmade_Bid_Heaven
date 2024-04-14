@@ -10,6 +10,7 @@ const { RangePicker } = DatePicker
 
 export const SoldOutLists = () => {
 
+    const userId = localStorage.getItem('userId');
     //list to save active products data fetched from backend
     const [productData, setProductData] = useState({
         list: [],
@@ -18,6 +19,7 @@ export const SoldOutLists = () => {
 
     // page settings
     const [params, setParams] = useState({
+        userId: userId,
         status: 'Sold out',
         page: 1,
         per_page: 10
@@ -29,6 +31,7 @@ export const SoldOutLists = () => {
         console.log(params)
         const res = await http.get('/getproducts', { params })
         const { result, total_count } = res.data
+        console.log(res.data)
         setProductData({
           list: result,
           count: total_count

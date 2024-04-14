@@ -35,7 +35,8 @@ import logging
 
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
-    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid,delete_message_by_id,get_messages_by_user_id,send_message
+    get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid,\
+    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +104,7 @@ class AdminLoginView(APIView):
                     return Response({
                         "token": token.key,
                         "adminUserId": admin_user.UserID,  
+                        "adminfirstname": admin_user.base_user.Fname, 
                         "email": Email, 
                         "is_staff": admin_user.base_user.is_staff,
                     }, status=status.HTTP_200_OK)
@@ -533,7 +535,7 @@ def get_products(request):
         seller_id=request.GET.get('userId')
         product_status=request.GET.get('status')
         products = Products.objects.filter(sellerid=seller_id, status=product_status)
-        
+
         bidnum = request.GET.get('bidnum')
         if bidnum:       
             products_in_bids = Bidding.objects.values_list('productid', flat=True)
@@ -583,7 +585,7 @@ def get_overview_stat(request, userId):
         seller_id=userId
         product_list = Products.objects.filter(sellerid=seller_id)
         active_num = product_list.filter(status='Active').count()
-        sold_out_num = product_list.filter(status='Sold Out').count()
+        sold_out_num = product_list.filter(status='Sold out').count()
         bidding_list = []
         bidding_count = 0
         total_bidding_price = 0
@@ -696,7 +698,8 @@ def get_bids(request):
         
         bidstatus = request.GET.get('status')
         if bidstatus:
-            bidding_list = bidding_list.filter(status=bidstatus)
+            if bidstatus != 'All':
+                bidding_list = bidding_list.filter(status=bidstatus)
         
         begin_date = request.GET.get('begin_postdate')
         end_date = request.GET.get('end_postdate')
@@ -795,9 +798,12 @@ def get_order_detail(request, order_id):
 @csrf_exempt
 def delete_product(request, product_id):
     try:
-        Products.objects.get(pk=product_id).delete()
+        product=Products.objects.get(pk=product_id)
+        product.status='Deleted'
+        product.save()
         return HttpResponse('success')
     except Exception as e:
+        print(e)
         return HttpResponseNotFound('Record not found')
 
 @csrf_exempt
@@ -821,6 +827,11 @@ def add_order(request, bidding_id):
         orderstatus=status
     )
     new_order.save()
+    product = bidding.productid
+    product.inventory = product.inventory - bidding.quantity
+    if product.inventory==0:
+        product.status='Sold out'
+    product.save()
     return HttpResponse("success")
 
 def get_product_bids(request, product_id):
@@ -897,3 +908,22 @@ def get_username(request, userId):
             'result':username
         }
         return JsonResponse(data, safe=False)
+
+
+class GetAccountDetailAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        user_id = request.query_params.get('userId')
+        data = get_account_details(user_id)
+        return Response(data)
+
+
+class SetAccountDetailAPIView(APIView):
+    def put(self, request):
+        data = JSONParser().parse(request)
+        user_id = data.get('userid')
+        phone = data.get('phone')
+        username = data.get('username')
+        if update_account_details(user_id, username, phone):
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({"error": "Unable to set"}, status=400)

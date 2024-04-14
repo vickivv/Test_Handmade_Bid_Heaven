@@ -110,11 +110,11 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  
-        'HOST': '35.203.131.35',              
+        'HOST': '34.82.11.192',              
         'PORT': '3306',                      
         'NAME': 'BidHeaven',                  
         'USER': 'root',                      
-        'PASSWORD': '123456',                  #
+        'PASSWORD': 'handmadebid123456',                  
     }
 }
 # [START db_setup]
@@ -122,10 +122,10 @@ if os.getenv('GAE_APPLICATION', None):
      DATABASES = {
         'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'db-group2-415119:us-west1:db-group2',
+        'HOST': 'db-group2-420303:us-west1:group2-db',
         'NAME': 'BidHeaven',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': 'handmadebid123456',
        
     }
 }

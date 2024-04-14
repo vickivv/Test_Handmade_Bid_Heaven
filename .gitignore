@@ -1,8 +1,9 @@
+/node_modules
+*.pack
 /Frontend/bidheaven/node_modules
 /Frontend/bidheaven/venv
 /venv
 .DS_Store
-/node_modules
 *.pyc
 /Backend/handmadeBid/__pycache__
 /Backend/venv
@@ -16,3 +17,6 @@
 /Backend/media/photos
 /Frontend/bidheaven/.DS_Store
 /Backend/handmadeBid/__pycache__
+*.pack
+/Backend/HandmadeBidSystem/__pycache__
+/Frontend/bidheaven/node_modules
