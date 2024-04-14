@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import logo1 from '../../Assests/logo1.png';
+import React, { useState, useEffect, useCallback } from 'react';
+import logo1 from '../../Assets/logo1.png';
 import '../../Styles/Header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,51 @@ import { useAuth } from '../Context/AuthContext.js';
 function Header() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const [showDropdown, setShowDropdown] = useState(false);
+    const initialState = user
+    ? user.isStaff
+      ? { showDropdown: false, showAdminDropdown: true, isAdminDropdownShown: true }
+      : { showDropdown: true, showAdminDropdown: false, isAdminDropdownShown: false }
+    : { showDropdown: false, showAdminDropdown: false, isAdminDropdownShown: false };
+
+    const [state, setState] = useState(initialState);
+
+
+
+
+    const { showDropdown, showAdminDropdown, isAdminDropdownShown } = state;
+
+
+
+
+    const setShowDropdown = useCallback((value) => {
+        setState((prevState) => ({ ...prevState, showDropdown: value }));
+    }, []);
+
+    const setIsAdminDropdownShown = useCallback((value) => {
+        setState((prevState) => ({ ...prevState, isAdminDropdownShown: value }));
+    }, []);
+
+    const setShowAdminDropdown = useCallback((value) => {
+        setState((prevState) => ({ ...prevState, showAdminDropdown: value }));
+    }, []);
+
+    useEffect(() => {
+      if (user) {
+          if (user.isStaff) {
+              setShowDropdown(false);
+              setIsAdminDropdownShown(true);
+              setShowAdminDropdown(true);
+          } else {
+              setShowDropdown(true);
+              setIsAdminDropdownShown(false);
+              setShowAdminDropdown(false);
+          }
+      }
+  }, [user, setShowDropdown, setIsAdminDropdownShown, setShowAdminDropdown]);
+
+
+
+
 
     const handleSignUpClick = () => {
         navigate('/signup');
@@ -39,8 +83,19 @@ function Header() {
         navigate('/');
     };
 
+    const handleAdminLogout = () => {
+        logout();
+        navigate('/admin-login');
+    };
+
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
+        setShowAdminDropdown(false);
+    };
+
+    const toggleAdminDropdown = () => {
+        setShowAdminDropdown(!showAdminDropdown);
+        setShowDropdown(false);
     };
 
     return (
@@ -64,8 +119,18 @@ function Header() {
             </div>
             {user ? (
                 user.isStaff ? (
-                    <div className="admin-welcome">
-                        Welcome, {user.adminfirstname || 'Admin'}
+                    <div className="admin-dropdown">
+                        <button className="admin-dropbtn" onClick={toggleAdminDropdown}>
+                            Welcome, {user.adminfirstname}
+                            <i className="fa fa-caret-down"></i>
+                        </button>
+                        {showAdminDropdown && (
+                            <div id="adminDropdown" className={`admin-dropdown-content ${showAdminDropdown ? 'show' : ''}`}>
+                                <ul>
+                                    <li onClick={handleAdminLogout}>Logout</li>
+                                </ul>
+                            </div>
+                        )}
                     </div>
                 ) : (
                     <div className="dropdown">

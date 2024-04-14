@@ -29,20 +29,20 @@ function AdminLogin() {
 
         try {
             const response = await instance.post('api/admin/login/', loginData);
-            if (response && response.data && response.data.token) {
+            if (response && response.data) {
                 console.log('Logged in successfully. Admin User ID:', response.data.adminUserId);
                 alert("Admin Logged in successfully.");
 
                 const userData = {
-                    token: response.data.token,
-                    userId: response.data.adminUserId,
-                    email: response.data.email,
-                    is_staff: response.data.is_staff,
-                    adminfirstname: response.data.adminfirstname,
+                  adminToken: response.data.adminToken,
+                  adminUserId: response.data.adminUserId,
+                  adminEmail: response.data.adminEmail,
+                  is_staff: response.data.is_staff,
+                  adminfirstname: response.data.adminfirstname,
                 };
 
                 login(userData);
-                navigate('/admin-dashboard');
+                // navigate('/admin-dashboard');
             } else {
                 alert("Failed to login: Please check your first name, last name, and password.");
             }
@@ -90,7 +90,7 @@ function AdminLogin() {
                                 />
                             </div>
                         </div>
-                        <button type="submit" className="signin-btn">Sign In</button>
+                        <button type="submit" className="signin-btn"  >Sign In</button>
                     </form>
                 </div>
             </div>

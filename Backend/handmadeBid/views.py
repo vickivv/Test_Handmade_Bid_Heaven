@@ -102,10 +102,10 @@ class AdminLoginView(APIView):
                 if admin_user.base_user.check_password(password):
                     token, created = Token.objects.get_or_create(user=admin_user.base_user)
                     return Response({
-                        "token": token.key,
+                        "adminToken": token.key,
                         "adminUserId": admin_user.UserID,  
                         "adminfirstname": admin_user.base_user.Fname, 
-                        "email": Email, 
+                        "adminEmail": Email, 
                         "is_staff": admin_user.base_user.is_staff,
                     }, status=status.HTTP_200_OK)
                 else:

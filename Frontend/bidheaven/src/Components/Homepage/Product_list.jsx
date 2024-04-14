@@ -1,6 +1,6 @@
 import React from 'react'
 
-import jewelry1_1 from '../../Assests/images/Jewelry_and_Accessories/jewelry1_1.png'
+import jewelry1_1 from '../../Assets/images/Jewelry_and_Accessories/jewelry1_1.png'
 import "../../Styles/Product_list.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faClock} from  '@fortawesome/free-solid-svg-icons';

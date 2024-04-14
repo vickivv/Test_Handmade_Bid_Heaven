@@ -2,7 +2,7 @@ import {useState} from "react";
 import React from "react";
 import{validateEmail} from "../../utils";
 import {useNavigate} from "react-router-dom";
-import logo1 from '../../Assests/logo1.png'
+import logo1 from '../../Assets/logo1.png'
 import Footer from '../../Components/Homepage/Footer';
 import '../../Styles/SignUp.css'
 import {getCsrfToken} from '../../utils.js'
