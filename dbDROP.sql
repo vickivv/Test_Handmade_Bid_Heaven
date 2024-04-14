@@ -1,44 +1,40 @@
--- drop procedure
-drop procedure if exists GetReviews;
-drop procedure  if exists GetHistoryOrders;
-drop procedure if exists GetProducts;
+-- Drop Views
+DROP VIEW IF EXISTS ORDERSVIEW;
+DROP VIEW IF EXISTS AVGSELLPRICE;
+DROP VIEW IF EXISTS BESTSELL;
 
--- drop triggers
-drop trigger if exists rate_update;
-drop trigger if exists check_quantity;
+-- Drop Triggers
+DROP TRIGGER IF EXISTS rate_update;
+DROP TRIGGER IF EXISTS check_quantity;
+
+-- Drop Tables with no dependencies
+DROP TABLE IF EXISTS REVIEWS;
+DROP TABLE IF EXISTS SHIPMENT;
+DROP TABLE IF EXISTS PAYMENT;
+
+-- Drop Tables with dependent records that need to be cleaned up first
+DROP TABLE IF EXISTS MESSAGES;
+DROP TABLE IF EXISTS BIDDING;
+DROP TABLE IF EXISTS ORDERS;
+DROP TABLE IF EXISTS PICTURES;
+
+-- These might have dependencies and should be carefully ordered
+DROP TABLE IF EXISTS PRODUCTS;
+DROP TABLE IF EXISTS ADDRESS;
+
+-- Drop Intermediate Tables
+DROP TABLE IF EXISTS GENERATES;
+DROP TABLE IF EXISTS NORMALUSER;
+DROP TABLE IF EXISTS ADMIN_TOKEN;
 
 
--- drop Views if they exist
-drop view if exists ORDERSVIEW;
-drop view if exists AVGSELLPRICE;
-drop view if exists BESTSELL;
-
-
--- drop tables
-drop table   if exists ADMIN_TOKEN
-drop  table  if exists MESSAGES;
-drop  table  if exists REVIEWS;
-drop  table  if exists  SHIPMENT;
-drop  table  if exists  PAYMENT;
-
-drop  table  if exists ORDERS;
-drop  table  if exists BIDDING;
-drop  table  if exists PICTURES;
-drop  table  if exists PRODUCTS;
-drop  table  if exists ADDRESS;
-drop  table  if exists NORMALUSER ;
-drop  table  if exists GENERATES;
-drop  table  if exists REPORT;
-drop  table  if exists CATEGORY;
-drop  table  if exists ADMINUSER;
-
+-- Finally, drop the base and root tables
+DROP TABLE IF EXISTS ADMINUSER;
+DROP TABLE IF EXISTS CATEGORY;
+DROP TABLE IF EXISTS REPORT;
 DROP TABLE IF EXISTS BASEUSER;
 
-
-
-
-
-
-
-
-
+-- Drop Procedures
+DROP PROCEDURE IF EXISTS GetReviews;
+DROP PROCEDURE IF EXISTS GetHistoryOrders;
+DROP PROCEDURE IF EXISTS GetProducts;

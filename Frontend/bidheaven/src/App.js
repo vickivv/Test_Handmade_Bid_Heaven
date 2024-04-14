@@ -39,6 +39,9 @@ import { MessageProvider } from './Components/Context/MessageContext';
 import { AddBids } from './Components/Bids/AddBids';
 import Sent from './Components/Messages/Pages/Sent';
 import Inbox from './Components/Messages/Pages/Inbox';
+import AdminDashboard from "./Components/Admin/AdminDashboard.jsx";
+import AdminOverview from './Components/Admin/AdminOverview.jsx';
+import ManageReports from './Components/Admin/ManageReports.jsx';
 function App() {
 
   
@@ -61,6 +64,12 @@ function App() {
             <Route path="/inbox" element={<Inbox/>} />
             <Route path="/account" element={<Account />} />
             <Route path="/bidding/:productId" element={<AddBids />} />
+
+            <Route path="/admin-dashboard/*" element={<AdminDashboard />}>
+            <Route path="overview" element={<AdminOverview />} />
+            <Route path="report" element={<ManageReports />} />
+            </Route>
+
 
             <Route path="/review" element={<Review />} />
             <Route path="/addressbook" element={<AddressBook />} />

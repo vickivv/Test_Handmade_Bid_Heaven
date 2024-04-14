@@ -7,13 +7,13 @@ function Nav() {
 
     return (
         <nav className="navbar">
-        <div className="nav-item"><a href="/jewelry">Jewelry and Accessories</a></div>
-        <div className="nav-item"><a href="/apparel">Apparel</a></div>
-        <div className="nav-item"><a href="/homedecor">Home Decor</a></div>
-        <div className="nav-item"><a href="/beauty">Beauty and Personal Care</a></div>
-        <div className="nav-item"><a href="/handicrafts">Handicrafts</a></div>
-        <div className="nav-item"><a href="/toys">Toys</a></div>
-        <div className="nav-item"><a href="/other">Other</a></div>
+        <div className="nav-item"><a href="/jewelry">Ceramics and Glass</a></div>
+        <div className="nav-item"><a href="/apparel">Paper Crafts</a></div>
+        <div className="nav-item"><a href="/homedecor">Yarn and Fiber Crafts</a></div>
+        <div className="nav-item"><a href="/beauty">Upcycling Crafts</a></div>
+        <div className="nav-item"><a href="/handicrafts">Decorative Crafts</a></div>
+        <div className="nav-item"><a href="/toys">Fashion Crafts</a></div>
+        <div className="nav-item"><a href="/other">Miscellaneous Crafts</a></div>
       </nav>
       
 

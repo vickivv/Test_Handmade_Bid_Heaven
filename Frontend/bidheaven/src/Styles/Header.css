@@ -46,8 +46,7 @@
 .auth-buttons button {
     padding: 10px 20px;
     border: none;
-    border-radius: 20px; /* Rounded borders */
-    cursor: pointer;
+    border-radius: 20px; 
 }
 
 .auth-buttons .login {
@@ -71,51 +70,72 @@
 
 
 .user-menu {
-    position: relative; /* 使下拉菜单相对于父容器定位 */
+    position: relative; 
+  }
+  .admin-menu {
+    position: relative;
+}
+  
+  .dropdown ,.admin-dropdown {
+    display: inline-block; 
   }
   
-  .dropdown {
-    display: inline-block; /* 使下拉菜单与其他元素在同一行上 */
+
+
+
+  .dropbtn,.admin-dropbtn {
+    background-color: transparent; 
+    border: none; 
+    color: #333; 
+    cursor: pointer; 
+    padding: 8px 16px; 
+    text-decoration: none; 
   }
   
-  .dropbtn {
-    background-color: transparent; /* 设置背景为透明 */
-    border: none; /* 移除边框 */
-    color: #333; /* 设置文本颜色 */
-    cursor: pointer; /* 设置光标为指针 */
-    padding: 8px 16px; /* 设置填充 */
-    text-decoration: none; /* 移除下划线 */
+  .dropbtn:hover,
+  .admin-dropbtn:hover  {
+    color: #666; 
   }
   
-  .dropbtn:hover {
-    color: #666; /* 鼠标悬停时改变文本颜色 */
-  }
+  .dropdown-content,
+.admin-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    z-index: 1;
+}
+
   
-  .dropdown-content {
-    display: none; /* 初始状态下隐藏下拉菜单 */
-    position: absolute; /* 使下拉菜单绝对定位 */
-    background-color: #f9f9f9; /* 设置背景颜色 */
-    min-width: 160px; /* 设置最小宽度 */
-    z-index: 1; /* 设置堆叠顺序 */
-  }
+.dropdown-content ul,
+.admin-dropdown-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
   
-  .dropdown-content ul {
-    list-style-type: none; /* 移除列表样式 */
-    padding: 0; /* 移除内边距 */
-    margin: 0; /* 移除外边距 */
-  }
+.dropdown-content ul li,
+.admin-dropdown-content ul li {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
   
-  .dropdown-content ul li {
-    padding: 12px 16px; /* 设置填充 */
-    text-decoration: none; /* 移除下划线 */
-    display: block; /* 设置为块级元素 */
-    cursor: pointer; /* 设置光标为指针 */
-  }
-  
-  .dropdown-content ul li:hover {
-    background-color: #ddd; /* 鼠标悬停时改变背景颜色 */
-  }
-  
+.dropdown-content ul li:hover,
+.admin-dropdown-content ul li:hover {
+    background-color: #ddd;
+}
   .show {
     display: block; 
   }
+  .dropdown-content {
+    display: none;
+
+  }
+  
+  .dropdown-content.show {
+    display: block;
+  
+  }
+  
