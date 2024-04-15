@@ -37,6 +37,7 @@ const ProductList = () => {
     navigate(`/bidding/${productid}`);
   };
 
+  
   const handleViewDetails = (product) => {
     navigate(`/product/${product.productid}`);
   };

@@ -6,22 +6,26 @@ import SideBar from './SideBar';
 import Nav from './nav';
 import Lists from './Lists';
 import Footer from '../Homepage/Footer';
+import { useAuth } from '../Context/AuthContext'; 
 
 import "../../Styles/Header.css";
 import "../../Styles/Messages.css";
 
 function Messages() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [isLogged, setIsLogged] = useState(true); 
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setIsLogged(false);
-      alert("You are not logged in. You will be redirected to the login page.")
-      navigate('/login')
+    if (!user) {
+      // Assuming there's a way to determine if the attempted login was for an admin
+      const attemptedAdminLogin = localStorage.getItem('attemptedAdminLogin') === 'true';
+      const loginPath = attemptedAdminLogin ? '/admin-login' : '/login';
+      alert(`You are not logged in. You will be redirected to the ${attemptedAdminLogin ? 'admin' : 'normal user'} login page.`);
+      navigate(loginPath);
     }
-  }, [navigate]);
+    // If additional role-based access control is needed, implement here
+  }, [user, navigate]);
 
   return (
     <div className="Message-container">

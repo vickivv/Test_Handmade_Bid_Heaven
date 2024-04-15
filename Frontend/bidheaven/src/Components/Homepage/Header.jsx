@@ -83,6 +83,10 @@ function Header() {
         navigate('/');
     };
 
+    const handleMessage = () => {
+     
+      navigate('/message');
+  };
 
 
 
@@ -139,6 +143,7 @@ function Header() {
                             
                             >
                                 <ul>
+                                < li onClick={handleMessage}>Message</li>
                                     <li onClick={handleAdminLogout}>Logout</li>
                                 </ul>
                             </div>

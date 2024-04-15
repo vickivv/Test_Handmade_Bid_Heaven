@@ -42,6 +42,7 @@ import Inbox from './Components/Messages/Pages/Inbox';
 import AdminDashboard from "./Components/Admin/AdminDashboard.jsx";
 import AdminOverview from './Components/Admin/AdminOverview.jsx';
 import ManageReports from './Components/Admin/ManageReports.jsx';
+import Ceramics from './Components/Categories/Ceramics.jsx';
 function App() {
 
   
@@ -68,6 +69,10 @@ function App() {
             <Route path="/admin-dashboard/*" element={<AdminDashboard />}>
             <Route path="overview" element={<AdminOverview />} />
             <Route path="report" element={<ManageReports />} />
+            
+            {/* <Route path="/ceramics" element={<Ceramics />} /> */}
+
+
             </Route>
 
 
