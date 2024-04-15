@@ -27,6 +27,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
 
 from rest_framework import status
 import json
@@ -953,3 +954,4 @@ def add_bid(request):
         new_bid.save()
 
         return HttpResponse('success')
+

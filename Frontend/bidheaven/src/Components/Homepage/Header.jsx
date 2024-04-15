@@ -83,10 +83,18 @@ function Header() {
         navigate('/');
     };
 
+
+
+
+
     const handleAdminLogout = () => {
         logout();
         navigate('/admin-login');
     };
+
+
+
+
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -125,7 +133,11 @@ function Header() {
                             <i className="fa fa-caret-down"></i>
                         </button>
                         {showAdminDropdown && (
-                            <div id="adminDropdown" className={`admin-dropdown-content ${showAdminDropdown ? 'show' : ''}`}>
+                            <div id="adminDropdown" className={`admin-dropdown-content ${showAdminDropdown ? 'show' : ''}`}
+                            onMouseLeave={() => setShowDropdown(false)}
+                            
+                            
+                            >
                                 <ul>
                                     <li onClick={handleAdminLogout}>Logout</li>
                                 </ul>
@@ -139,13 +151,17 @@ function Header() {
                             <i className="fa fa-caret-down"></i>
                         </button>
                         {showDropdown && (
-                            <div id="userDropdown" className={`dropdown-content ${showDropdown ? 'show' : ''}`}>
+                            <div id="userDropdown" className={`dropdown-content ${showDropdown ? 'show' : ''}`}
+                            onMouseLeave={() => setShowDropdown(false)}
+                            >
                                 <ul>
                                     <li onClick={handleNavigateToAccount}>Account</li>
                                     <li onClick={handleNavigateToBuyer}>Buyer</li>
                                     <li onClick={handleNavigateToMessage}>Message</li>
                                     <li onClick={handleNavigateToSeller}>Selling</li>
                                     <li onClick={handleNavigateToHome}>Home</li>
+                                  
+
                                     <li onClick={logout}>Logout</li>
                                 </ul>
                             </div>

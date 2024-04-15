@@ -9,4 +9,6 @@ urlpatterns = [
     path('messages/send/',MessageAPIView.as_view(), name='send_message'),
     path('messages/delete/<int:message_id>/', MessageAPIView.as_view(),name='delete_message'),
     path('messages/<int:user_id>/',MessageAPIView.as_view(),name = 'get_messages'),
+    
+   
 ]
