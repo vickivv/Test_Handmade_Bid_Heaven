@@ -51,6 +51,7 @@ const OrderDetail = () => {
   const [shipmentDetails, setShipmentDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const ip = 'http://localhost:8000/media/';
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -103,7 +104,8 @@ const OrderDetail = () => {
     <div style={col80Style}>
     <div style={{...cardStyle, margin: '0px', padding: '0px'}}>
         <div style={{...col20Style}}>
-        <img style={{maxWidth: '150px', maxHeight: '150px'}} alt={orderDetails.ProductName} src={orderDetails.Picture}/>
+        <img style={{maxWidth: '150px', maxHeight: '150px'}} alt={orderDetails.ProductName}
+        src={`${ip}${orderDetails.Picture.replace(/\\/g, "").replace(/\"/g, '')}`}/>
         </div>
       <div style={{...col60Style, padding: '20px'}}>
         <p>{orderDetails.ProductName}</p>

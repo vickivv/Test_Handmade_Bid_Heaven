@@ -4,7 +4,7 @@ import moment from 'moment';
 
 const CustomCountdown = ({ BidDate, ActiveDays }) => {
   const { Countdown } = Statistic;
-  const deadline = moment(BidDate).add(ActiveDays + 30, 'days').valueOf(); // 加上额外的10天
+  const deadline = moment(BidDate).add(ActiveDays, 'days').valueOf(); // 加上额外的10天
 
   return (
   <Row gutter={16}>

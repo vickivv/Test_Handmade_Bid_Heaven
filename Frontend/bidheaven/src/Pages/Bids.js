@@ -17,15 +17,30 @@ const Bids = () => {
 
   const [selectedStatus, setSelectedStatus] = useState('All Bids');
   const [bids, setBids] = useState([]);
-
-  useEffect(() => {
+  const ip = 'http://localhost:8000/media/';
   const userId = localStorage.getItem('userId');
   const statusQuery = selectedStatus !== 'All Bids' ? `&status=${encodeURIComponent(selectedStatus)}` : '';
-  fetch(`http://127.0.0.1:8000/api/get_all_bids?userId=${userId}${statusQuery}`) // Use backticks here
-    .then((response) => response.json())
-    .then((data) => setBids(data))
-    .catch((error) => console.error('Error fetching data:', error));
-}, [selectedStatus]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/get_all_bids?userId=${userId}${statusQuery}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const cleanedData = data.map(bid => ({
+          ...bid,
+          Picture: `${ip}${bid.Picture.replace(/\\/g, "").replace(/\"/g, '')}`
+        }));
+        setBids(cleanedData);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, [userId, selectedStatus]);
 
 
 
