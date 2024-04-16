@@ -1,7 +1,7 @@
 import { Card, Space, Col, Row, Button, Tooltip, Modal, Rate, List, Input } from 'antd';
 import { useState, useEffect } from 'react';
 import { MoreOutlined, StarOutlined, CommentOutlined, TruckOutlined } from '@ant-design/icons';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 import {http} from "../utils/http";
 
 const ip = 'http://localhost:8000/media/';
@@ -71,9 +71,9 @@ export const SellerOrders = () => {
       setIsShipModalOpen(false);
     };
 
-    const contactManager = () => {
-      navigate('/new-message');
-    }
+    // const contactManager = () => {
+    //   navigate('/new-message');
+    // }
 
     return (
       <List
@@ -120,14 +120,16 @@ export const SellerOrders = () => {
                       <Rate allowHalf defaultValue={2.5} onChange={setValue} value={value} />
                     </Modal>
                     <Tooltip title="Contact">
+                    <Link to="/new-message" state={{bidderemail: item.buyeremail}}>
                       <Button
                         type="primary"
                         danger
                         shape="circle"
                         icon={<CommentOutlined />}
                         style={{marginTop: '30px'}}
-                        onClick={()=>contactManager()}
+                        // onClick={()=>contactManager()}
                       />
+                      </Link>
                     </Tooltip>
                     <Tooltip title="Shipment">
                       <Button
