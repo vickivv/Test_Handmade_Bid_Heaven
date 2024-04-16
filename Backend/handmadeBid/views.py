@@ -799,19 +799,22 @@ def get_orders(request, userId):
         data_list = []
         for order in order_list:
             bid=order.biddingid
+            bidder = bid.bidderid
+            base = bidder.base_user
             sale_amount=bid.quantity * bid.bidprice
             product = bid.productid
             picture = Pictures.objects.filter(pictureid=product.pictureid).first().picture
             picture_path=json.dumps(str(picture)).replace('"', '')
             item={
-                "buyerid": bid.bidderid.UserID,
+                "buyerid": bidder.UserID,
                 "picture": picture_path,
                 "orderid": order.orderid,
                 "productid": bid.productid.productid,
                 "productName": product.name,
                 "orderStatus": order.orderstatus,
                 "orderDate": order.orderdate,
-                "amount": sale_amount
+                "amount": sale_amount,
+                "buyeremail":base.Email
             }
             data_list.append(item)
         data={
