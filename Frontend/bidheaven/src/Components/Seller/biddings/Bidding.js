@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Table, Space, Card, Form, Button, DatePicker, Select, Tooltip, message } from 'antd';
 import { CheckOutlined, CloseOutlined, CommentOutlined, FileSearchOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
@@ -22,7 +22,6 @@ export const Bidding =() => {
 
   const fetchBids = async() => {
     const response = await http.get('/getbids', { params });
-    console.log(params);
     const {result, count} = response.data
     setBidData({
       list:result,
@@ -104,10 +103,6 @@ export const Bidding =() => {
     navigate(`/seller/comparebids/${data.productId}`);
   };
 
-  const contactManager = () => {
-    navigate('/new-message');
-  }
-
   const columns = [
     {
       title: 'Bidding ID',
@@ -176,6 +171,7 @@ export const Bidding =() => {
             />
             </Tooltip>
             <Tooltip title="Compare Pending Bids">
+             
             <Button
               type="primary"
               danger
@@ -183,15 +179,17 @@ export const Bidding =() => {
               icon={<FileSearchOutlined />}
               onClick={() => goCompare(data)}
             />
+
             </Tooltip> 
             <Tooltip title="Contact">
+               <Link to="/new-message" state={{bidderemail: data.bidderemail}}>
             <Button
               type="primary"
               danger
               shape="circle"
               icon={<CommentOutlined />}
-              onClick={() => contactManager()}
             />
+              </Link>
             </Tooltip>
           </Space>
         )
@@ -237,7 +235,7 @@ return (
             </Form.Item>
           </Form>
           </Card>
-      <Card title={bidData.count == 1 ? ` One Bid Found:`: `${bidData.count} Bids Found:`}> {/*待前文fetch逻辑加入后将One修改为count*/}
+      <Card title={bidData.count == 1 ? ` One Bid Found:`: `${bidData.count} Bids Found:`}> 
      <Table
       rowKey="id"
       columns={columns}

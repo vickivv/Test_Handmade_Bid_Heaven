@@ -4,8 +4,14 @@ import { useAuth } from '../Context/AuthContext.js';
 import { useNavigate } from 'react-router-dom';
 import { MessageContext } from '../Context/MessageContext.jsx';
 import instance from '../../axios/axios.js';
+import { useLocation } from 'react-router-dom';
 
 function NewMessageForm() {
+
+  const location = useLocation();
+  const { bidderemail } = location.state || {}; 
+  console.log("bidderemail", bidderemail);
+
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
