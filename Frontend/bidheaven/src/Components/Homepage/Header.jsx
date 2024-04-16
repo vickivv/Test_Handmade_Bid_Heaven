@@ -189,7 +189,7 @@ function Header() {
                     </button>
                 </div>
             )}
-            <FontAwesomeIcon icon={faCartShopping} className="cart-icon" />
+            {/* <FontAwesomeIcon icon={faCartShopping} className="cart-icon" /> */}
         </div>
     );
 }
