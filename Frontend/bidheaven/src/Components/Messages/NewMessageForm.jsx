@@ -45,17 +45,13 @@ function NewMessageForm() {
     console.log('Subject:', subject);
     console.log('Content:', content);
     console.log('Subject Type:', subjectType);
-    console.log('Extra Info:', extraInfo);
+   
 
-  const productInfo = subjectType === 'Product' ? extraInfo : null;
-  const orderInfo = subjectType === 'Order' ? extraInfo : null;
     const newMessage = {
       from_email: message.from_email,
       to_email: recipients.join(','),
       subject_type: subjectType,
       content: content,
-      product_info: productInfo,
-      order_info: orderInfo,
     };
 
     updateMessage(newMessage);
@@ -71,6 +67,7 @@ function NewMessageForm() {
 
   const sendMessageToBackend = async (messageData) => {
     try {
+
       const response = await instance.post('/api/messages/send/', messageData);
       if (response && response.data) {
         console.log('Message sent successfully:', response.data);
@@ -120,30 +117,6 @@ function NewMessageForm() {
             <option value="Order">Order</option>
           </select>
         </div>
-        {subjectType === 'Product' && (
-          <div className="email-form-row">
-            <label htmlFor="email-product-info">Product Info:</label>
-            <input
-              id="email-product-info"
-              type="text"
-              value={extraInfo}
-              onChange={(e) => setExtraInfo(e.target.value)}
-              className="email-form-input"
-            />
-          </div>
-        )}
-        {subjectType === 'Order' && (
-          <div className="email-form-row">
-            <label htmlFor="email-order-info">Order Info:</label>
-            <input
-              id="email-order-info"
-              type="text"
-              value={extraInfo}
-              onChange={(e) => setExtraInfo(e.target.value)}
-              className="email-form-input"
-            />
-          </div>
-        )}
         <div className="email-form-row">
           <label htmlFor="email-content">Message</label>
           <textarea id="email-content" className="email-textarea" value={content} onChange={(e) => setContent(e.target.value)} required></textarea>

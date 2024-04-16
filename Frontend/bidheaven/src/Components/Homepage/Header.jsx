@@ -9,6 +9,10 @@ import { useAuth } from '../Context/AuthContext.js';
 function Header() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
+    const handleSearchChange = (event) => {
+      setSearchQuery(event.target.value);
+    };
     const initialState = user
     ? user.isStaff
       ? { showDropdown: false, showAdminDropdown: true, isAdminDropdownShown: true }
@@ -122,6 +126,8 @@ function Header() {
                     placeholder="Search items"
                     aria-label="Search items"
                     aria-describedby="basic-addon2"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
                 />
                 <div className="input-group-append">
                     <button className="btn" id="basic-addon2" type="button">

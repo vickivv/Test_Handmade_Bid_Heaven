@@ -1,22 +1,80 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import "../../Styles/Nav.css"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useLocation} from 'react-router-dom';
 
-function Nav() {
+function Nav({ onCategoryClick }) {
   const navigate = useNavigate();
-
+  const location = useLocation();
   
+  const handleCategoryClick =(category)=>{
+    if (category ==='All'){
+      navigate('/');
+    }else{
+      onCategoryClick(category);
+    }
+  }
 
     return (
         <nav className="navbar">
-        <div className="nav-item" onClick={() => navigate('/ceramics')}>Ceramics and Glass</div>
-        <div className="nav-item"><a href="/apparel">Paper Crafts</a></div>
-        <div className="nav-item"><a href="/homedecor">Yarn and Fiber Crafts</a></div>
-        <div className="nav-item"><a href="/beauty">Upcycling Crafts</a></div>
-        <div className="nav-item"><a href="/handicrafts">Decorative Crafts</a></div>
-        <div className="nav-item"><a href="/toys">Fashion Crafts</a></div>
-        <div className="nav-item"><a href="/other">Miscellaneous Crafts</a></div>
+            <div
+        className="nav-item"
+        onClick={() => handleCategoryClick('All')}
+        style={{ fontWeight: location.pathname === '/' ? 'bold' : 'normal' }}
+      >
+        All
+      </div>
+
+      <div
+        className="nav-item"
+        onClick={() => handleCategoryClick('Ceramics and Glass')}
+      >
+       Ceramics and Glass
+      </div>
+
+
+      <div
+        className="nav-item"
+        onClick={() => handleCategoryClick('Paper Crafts')}
+      >
+         Paper Crafts
+      </div>
+
+      <div
+        className="nav-item"
+        onClick={() => handleCategoryClick('Yarn and Fiber Crafts')}
+      >
+        Yarn and Fiber Crafts
+      </div>
+      <div
+        className="nav-item"
+        onClick={() => handleCategoryClick('Upcycling Crafts')}
+      >
+        Upcycling Crafts
+      </div>
+      <div
+        className="nav-item"
+        onClick={() => handleCategoryClick('Decorative Crafts')}
+      >
+        Decorative Crafts
+      </div>
+      <div
+        className="nav-item"
+        onClick={() => handleCategoryClick('Fashion Crafts')}
+      >
+        Fashion Crafts
+      </div>
+      <div
+        className="nav-item"
+        onClick={() => handleCategoryClick('Miscellaneous Crafts')}
+      >
+        Miscellaneous Crafts
+      </div>
+
+
+
+
+
       </nav>
       
 

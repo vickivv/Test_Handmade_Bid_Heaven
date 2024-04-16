@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 import Nav from './Components/Homepage/Homepage';
 import Homepage from './Components/Homepage/Homepage';
@@ -43,9 +44,9 @@ import AdminDashboard from "./Components/Admin/AdminDashboard.jsx";
 import AdminOverview from './Components/Admin/AdminOverview.jsx';
 import ManageReports from './Components/Admin/ManageReports.jsx';
 import Ceramics from './Components/Categories/Ceramics.jsx';
+import ProductDetails from './Components/Homepage/ProductDetail.jsx';
 function App() {
 
-  
     return (
      
 
@@ -53,6 +54,7 @@ function App() {
            <AuthProvider>
             <MessageProvider>
         <div>
+       
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/message" element={<Messages />} />
@@ -70,7 +72,7 @@ function App() {
             <Route path="overview" element={<AdminOverview />} />
             <Route path="report" element={<ManageReports />} />
             
-            {/* <Route path="/ceramics" element={<Ceramics />} /> */}
+           
 
 
             </Route>
@@ -82,11 +84,11 @@ function App() {
             <Route path="/payment/:orderId" element={<Payment />} />
             <Route path="/thankyou" element={<ThankYouPage />} />
             <Route path="/buyer/*" element={<BuyerDashboard />}>
-              <Route path="overview" element={<Overview />} />
-              <Route path="order" element={<Orders />} />
-              <Route path="order/:orderId" element={<OrderDetail />} />
-              <Route path="bid" element={<Bids />} />
-              <Route path="bid/:BiddingID" element={<BidDetail />} />
+            <Route path="overview" element={<Overview />} />
+            <Route path="order" element={<Orders />} />
+            <Route path="order/:orderId" element={<OrderDetail />} />
+            <Route path="bid" element={<Bids />} />
+            <Route path="bid/:BiddingID" element={<BidDetail />} />
             </Route>
             <Route path='/seller/*' element={<SellerLayout />} > 
               <Route path='overview' element={<SellerOverview />} />
@@ -100,6 +102,7 @@ function App() {
               <Route path="orderdetail/:orderId" element={<SellerOrderDetail/>} />
               <Route path="sell" element={<AddNewProduct />} />
             </Route>
+            <Route path="product/:productId" exact element={<ProductDetails />} />
           </Routes>
         </div>
         </MessageProvider>
