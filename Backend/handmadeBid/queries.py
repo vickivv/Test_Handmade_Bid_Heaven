@@ -367,21 +367,6 @@ def update_account_details(userID, username, phone):
         
 
 
-def get_product_bid_status( product_id):
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("""
-                SELECT b.Status
-                FROM bidding b
-                WHERE b.ProductID = %s
-                ORDER BY b.BiddingID DESC
-                LIMIT 1
-            """, [product_id])
-            row = cursor.fetchone()
-            bid_status = row[0] if row else None
-            return bid_status
 
-    except Exception as e:
-        print(e)
-        return None  
+
 

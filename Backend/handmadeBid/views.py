@@ -37,8 +37,7 @@ import logging
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
     get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid,\
-    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details,\
-    get_product_bid_status
+    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details
 
 logger = logging.getLogger(__name__)
 
@@ -660,6 +659,55 @@ def get_recent_bids(request, userId):
         
         data={'result': data_list}
         return JsonResponse(data,safe=False)
+    
+# get all products (from all seller )
+def get_all_products(request):
+    if request.method == 'GET':
+        product_status = request.GET.get('status')
+        products = Products.objects.filter(status=product_status)
+
+        bidnum = request.GET.get('bidnum')
+        if bidnum:
+            products_in_bids = Bidding.objects.values_list('productid', flat=True)
+            if bidnum == '0':
+                products = products.exclude(productid__in=products_in_bids)
+            elif bidnum == '-1':
+                products = products.filter(productid__in=products_in_bids)
+
+        category = request.GET.get('category')
+        if category:
+            category_id = int(category) + 1
+            if category_id != 0:
+                products = products.filter(categoryid=category_id)
+
+        begin_date = request.GET.get('begin_postdate')
+        end_date = request.GET.get('end_postdate')
+        if begin_date and end_date:
+            products = products.filter(postdate__range=(begin_date, end_date))
+
+        product_list = []
+        for p in products:
+            bidnum = Bidding.objects.filter(productid=p.productid).count()
+            picture = Pictures.objects.filter(pictureid=p.pictureid).first().picture
+            picture_path = json.dumps(str(picture))
+            p_item = {
+                'productid': p.productid,
+                'picture': picture_path,
+                'name': p.name,
+                'category': p.categoryid.cname,
+                'description': p.description,
+                'startPrice': p.startprice,
+                'inventory': p.inventory,
+                'bidnum': bidnum,
+                'postdate': p.postdate
+            }
+            product_list.append(p_item)
+
+        data = {
+            'result': product_list,
+            'total_count': len(product_list)
+        }
+        return JsonResponse(data, safe=False)
 
 def get_best_products(request, userId):
     if request.method=='GET':
@@ -952,6 +1000,10 @@ def add_bid(request):
 
         return HttpResponse('success')
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
 class ProductBidStatusAPIView(APIView):
 
     def get(self, request, product_id, format=None):
@@ -960,4 +1012,5 @@ class ProductBidStatusAPIView(APIView):
         if bid_status is not None:
             return Response({'product_id': product_id, 'bid_status': bid_status})
         else:
-            return Response({'product_id': product_id, 'bid_status': 'No bids found'}, status=status.HTTP_404_NOT_FOUND)
+
+            return Response({'product_id': product_id, 'bid_status': None}, status=status.HTTP_200_OK)
