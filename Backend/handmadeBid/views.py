@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from django.shortcuts import HttpResponse
-from .models import Products, Category, NormalUser, AdminUser, Pictures, Bidding, Orders, Payment, Shipment, Reviews,Messages
+from .models import Products, Category, NormalUser, AdminUser, Pictures, Bidding, Orders, Payment, Shipment, Reviews,Messages, BaseUser
 from datetime import date
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -757,6 +757,7 @@ def get_bids(request):
         for bid in bidding_list: 
             product = bid.productid
             bidder = NormalUser.objects.get(UserID=bid.bidderid.UserID)
+            base = bidder.base_user
             bidder_name=bidder.Username
             bidder_rate=bidder.Rate
             final_date=bid.biddate+timedelta(days=bid.activedays)
@@ -770,7 +771,8 @@ def get_bids(request):
                 "bidderName": bidder_name,
                 "bidderRate": bidder_rate,
                 "validDate": final_date,
-                'biddingstatus': bid.status
+                "biddingstatus": bid.status,
+                "bidderemail": base.Email
             }
             data_list.append(item)
         data={
