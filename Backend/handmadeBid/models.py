@@ -180,6 +180,7 @@ class Orders(models.Model):
     biddingid = models.ForeignKey(Bidding, models.DO_NOTHING, db_column='BiddingID')  # Field name made lowercase.
     orderdate = models.DateField(db_column='OrderDate', blank=True, null=True)  # Field name made lowercase.
     orderstatus = models.CharField(db_column='OrderStatus', max_length=10)  # Field name made lowercase.
+    manageid = models.ForeignKey(AdminUser, models.DO_NOTHING, db_column='ManageID')  # Field name made lowercase.
 
     class Meta:
         managed = False
