@@ -8,7 +8,7 @@ const { Content } = Layout;
 const { Title } = Typography;
 const { Meta } = Card;
 
-const ProductList = ({ selectedCategory }) => {
+const ProductList = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,9 +20,7 @@ const ProductList = ({ selectedCategory }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = selectedCategory
-        ? await fetch(`http://localhost:8000/getproducts?category=${selectedCategory.replace(/ /g, '+')}`)
-        : await fetch('http://localhost:8000/getproducts?userId=1&status=Active');
+        const response = await fetch('http://localhost:8000/getallproducts?status=Active');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -40,26 +38,13 @@ const ProductList = ({ selectedCategory }) => {
     fetchProducts();
   }, []);
 
-  const fetchBidStatus = async (productid) => {
-    try {
-      const response = await instance.get(`/products/${productid}/bid-status/`);
-      return response.data.bid_status;
-    } catch (error) {
-      console.error('Error fetching bid status:', error);
-      return null;
-    }
-  };
-
-
 
 
   const handleNavigateToAddbid = async (productid) => {
-    const bidStatus = await fetchBidStatus(productid);
-    if (bidStatus === 'pending' || bidStatus === null) {
+   
+
       navigate(`/bidding/${productid}`);
-    } else {
-      setShowModal(true);
-    }
+    
   };
 
 
@@ -67,9 +52,7 @@ const ProductList = ({ selectedCategory }) => {
     console.log('View Details clicked for product ID:', productid);
     navigate(`/product/${productid}`);
   };
-  const handleModalOk = () => {
-    setShowModal(false);
-  };
+ 
 
   return (
     <Layout>
@@ -119,14 +102,7 @@ const ProductList = ({ selectedCategory }) => {
             </List.Item>
           )}
         />
- <Modal
-          title="Bid not available"
-          visible={showModal}
-          onOk={handleModalOk}
-          onCancel={handleModalOk}
-        >
-          <p>Add Bid is not available!</p>
-        </Modal>
+ 
 
       </Content>
     </Layout>

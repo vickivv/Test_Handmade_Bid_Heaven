@@ -48,6 +48,7 @@ urlpatterns = [
     path('category', views.get_category, name='category'),
     path('uploadpicture', views.upload_picture),
     path('getproducts', views.get_products),
+    path('getallproducts',views.get_all_products),
     path('getstat/<int:userId>/', views.get_overview_stat),
     path('getrecentorders/<int:userId>/', views.get_recent_orders),
     path('getrecentbids/<int:userId>/', views.get_recent_bids),
