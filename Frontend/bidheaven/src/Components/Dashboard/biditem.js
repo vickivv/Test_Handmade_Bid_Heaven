@@ -47,7 +47,7 @@ const col20RightStyle = {
 const BidItem = ({ bids }) => {
   if (!bids || bids.length === 0) {
     // Render a placeholder or nothing if orders are not defined or empty
-      return <div>No orders found.</div>;
+      return <div>No bids found.</div>;
   }
 
   return (

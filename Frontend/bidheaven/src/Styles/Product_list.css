@@ -2,12 +2,12 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* To ensure content does not overflow */
+    overflow: hidden; 
   }
   
   .product-card .ant-card-cover {
     flex-shrink: 0;
-    height: 200px; /* Fixed height for image container */
+    height: 200px; 
   }
   
   .product-card-image {
@@ -33,6 +33,6 @@
   }
   
   .product-card .ant-card-meta {
-    flex-grow: 1; /* Allow meta to fill space, pushing actions to bottom */
+    flex-grow: 1; 
   }
   

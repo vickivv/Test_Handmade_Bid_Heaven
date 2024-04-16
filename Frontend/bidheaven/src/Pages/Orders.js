@@ -17,15 +17,29 @@ const Orders = () => {
 
   const [selectedStatus, setSelectedStatus] = useState('All Orders');
   const [orders, setOrders] = useState([]);
-
-  useEffect(() => {
+  const ip = 'http://localhost:8000/media/';
   const statusQuery = selectedStatus !== 'All Orders' ? `&status=${encodeURIComponent(selectedStatus)}` : '';
-  fetch(`http://127.0.0.1:8000/api/get_all_orders?userId=${userId}${statusQuery}`)
-    .then((response) => response.json())
-    .then((data) => {console.log(data); setOrders(data)})
-    .catch((error) => console.error('Error fetching data:', error));
-}, [selectedStatus]);
 
+useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/get_all_orders?userId=${userId}${statusQuery}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const cleanedData = data.map(order => ({
+          ...order,
+          Picture: `${ip}${order.Picture.replace(/\\/g, "").replace(/\"/g, '')}`
+        }));
+        setOrders(cleanedData);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchOrders();
+  }, [userId, selectedStatus]);
 
 
   return (

@@ -6,26 +6,26 @@ import traceback
 
 def get_all_orders(userID):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ordersview WHERE BuyerID = %s", [userID])
+        cursor.execute("SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ORDERSVIEW WHERE BuyerID = %s", [userID])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
 def get_orders_by_status(userID, status):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ordersview WHERE BuyerID = %s AND OrderStatus = %s", [userID, status])
+        cursor.execute("SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ORDERSVIEW WHERE BuyerID = %s AND OrderStatus = %s", [userID, status])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 def get_order_details(order_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT o.OrderID, o.SellerID , o.OrderDate, o.TotalAmount, o.OrderStatus, o.ProductName, "
-                       "o.ProductID, o.SellingPrice, o.Picture FROM ordersview o "
+                       "o.ProductID, o.SellingPrice, o.Picture FROM ORDERSVIEW o "
                        "WHERE o.OrderID = %s", [order_id])
         columns_order = [col[0] for col in cursor.description]
         order_details = [dict(zip(columns_order, row)) for row in cursor.fetchall()]
 
-        cursor.execute("SELECT s.TrackingNumber, s.Status FROM shipment s WHERE s.OrderID = %s", [order_id])
+        cursor.execute("SELECT s.TrackingNumber, s.Status FROM SHIPMENT s WHERE s.OrderID = %s", [order_id])
         columns_shipment = [col[0] for col in cursor.description]
         shipment_details = [dict(zip(columns_shipment, row)) for row in cursor.fetchall()]
 
@@ -64,14 +64,14 @@ def get_bid_details(order_id):
 
 def get_overview_pay(userID):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT OrderID, Picture FROM ordersview WHERE BuyerID = %s AND OrderStatus = %s", [userID, 'Pending'])
+        cursor.execute("SELECT OrderID, Picture FROM ORDERSVIEW WHERE BuyerID = %s AND OrderStatus = %s", [userID, 'Pending'])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 def get_overview_order(userID):
     with connection.cursor() as cursor:
         cursor.execute("SELECT o.OrderID, o.ProductName, o.OrderStatus, pi.Picture FROM PRODUCTS p "
-                       "JOIN ordersview o ON o.ProductID=p.ProductID "
+                       "JOIN ORDERSVIEW o ON o.ProductID=p.ProductID "
                        "JOIN PICTURES pi ON p.PictureID = pi.PictureID WHERE o.BuyerID = %s AND OrderStatus != %s ORDER BY o.OrderDate DESC LIMIT 4", [userID, 'Pending'])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
@@ -82,7 +82,7 @@ def get_overview_bid(userID):
         cursor.execute("SELECT p.Name, b.Status, b.BiddingID, pic.Picture "
                        "FROM BIDDING b JOIN PRODUCTS p ON b.ProductID=p.PRODUCTID "
                        "JOIN PICTURES pic ON p.PictureID = pic.PictureID "
-                       "WHERE b.BidderId = %s ORDER BY BidDate DESC LIMIT 4", [userID])
+                       "WHERE b.BidderId = %s ORDER BY BiddingID DESC LIMIT 4", [userID])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -122,7 +122,7 @@ def add_address(Fname, Lname, UserID, Street, StreetOptional, City, State, Zipco
 def get_payment_item(order_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT o.OrderID, o.SellerID , o.OrderDate, o.TotalAmount, o.OrderStatus, o.ProductName, "
-                       "o.ProductID, o.SellingPrice, o.Picture FROM ordersview o "
+                       "o.ProductID, o.SellingPrice, o.Picture FROM ORDERSVIEW o "
                        "WHERE o.OrderID = %s", [order_id])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
@@ -208,7 +208,7 @@ def cancel_bid(biddingID):
             return False
 
 # Message 
-def send_message(from_email, to_email, subject_type, product_info, order_info, content):
+def send_message(from_email, to_email, subject_type, content):
     with connection.cursor() as cursor:
         try:
             #get sender's type and base_user_id from email
@@ -245,25 +245,6 @@ def send_message(from_email, to_email, subject_type, product_info, order_info, c
 
             product_id = None
             order_id = None
-
-            if subject_type == 'Product':
-                if product_info:
-                    cursor.execute("SELECT ProductID FROM PRODUCTS WHERE Name=%s", [product_info])
-                    product_id_result = cursor.fetchone()
-                    if product_id_result:
-                        product_id = product_id_result[0]
-            elif subject_type == 'Order':
-                if order_info:
-                    cursor.execute("SELECT OrderID FROM ORDERS WHERE OrderID=%s", [order_info])
-                    order_id_result = cursor.fetchone()
-                    if order_id_result:
-                        order_id = order_id_result[0]
-                    else:
-                        order_id = None
-            else:
-                raise ValueError(f"Unknown subject type: {subject_type}")
-
-            # insert info
             cursor.execute("""
                 INSERT INTO MESSAGES (AdminSenderID, SenderID, AdminReceiverID, ReceiverID, Content, ProductID, OrderID, CreateDate, SubjectType)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -384,4 +365,8 @@ def update_account_details(userID, username, phone):
             print(e)
             return False
         
+
+
+
+
 

@@ -127,19 +127,12 @@ class MessageAPIView(APIView):
         from_email = request.data.get('from_email')
         to_email = request.data.get('to_email')
         subject_type = request.data.get('subject_type')
-        product_info = request.data.get('product_info')
-        order_info = request.data.get('order_info')
         content = request.data.get('content')
 
         if not all([from_email, to_email, subject_type, content]):
             return Response({'error': 'Missing required fields'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if subject_type == 'Product' and not product_info:
-            product_info=None
-        elif subject_type == 'Order' and not order_info:
-            order_info=None
-
-        success = send_message(from_email, to_email, subject_type, product_info, order_info, content)
+        success = send_message(from_email, to_email, subject_type, content)
 
         if success:
             return Response({'message': 'Message sent successfully'}, status=status.HTTP_200_OK)
@@ -496,6 +489,9 @@ def get_category(request):
             category_list.append(c_item)
             id+=1
         return JsonResponse(category_list, safe=False)
+    
+
+
 
 @csrf_exempt 
 def upload_picture(request):
@@ -663,6 +659,55 @@ def get_recent_bids(request, userId):
         
         data={'result': data_list}
         return JsonResponse(data,safe=False)
+    
+# get all products (from all seller )
+def get_all_products(request):
+    if request.method == 'GET':
+        product_status = request.GET.get('status')
+        products = Products.objects.filter(status=product_status)
+
+        bidnum = request.GET.get('bidnum')
+        if bidnum:
+            products_in_bids = Bidding.objects.values_list('productid', flat=True)
+            if bidnum == '0':
+                products = products.exclude(productid__in=products_in_bids)
+            elif bidnum == '-1':
+                products = products.filter(productid__in=products_in_bids)
+
+        category = request.GET.get('category')
+        if category:
+            category_id = int(category) + 1
+            if category_id != 0:
+                products = products.filter(categoryid=category_id)
+
+        begin_date = request.GET.get('begin_postdate')
+        end_date = request.GET.get('end_postdate')
+        if begin_date and end_date:
+            products = products.filter(postdate__range=(begin_date, end_date))
+
+        product_list = []
+        for p in products:
+            bidnum = Bidding.objects.filter(productid=p.productid).count()
+            picture = Pictures.objects.filter(pictureid=p.pictureid).first().picture
+            picture_path = json.dumps(str(picture))
+            p_item = {
+                'productid': p.productid,
+                'picture': picture_path,
+                'name': p.name,
+                'category': p.categoryid.cname,
+                'description': p.description,
+                'startPrice': p.startprice,
+                'inventory': p.inventory,
+                'bidnum': bidnum,
+                'postdate': p.postdate
+            }
+            product_list.append(p_item)
+
+        data = {
+            'result': product_list,
+            'total_count': len(product_list)
+        }
+        return JsonResponse(data, safe=False)
 
 def get_best_products(request, userId):
     if request.method=='GET':
@@ -955,3 +1000,17 @@ def add_bid(request):
 
         return HttpResponse('success')
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+class ProductBidStatusAPIView(APIView):
+
+    def get(self, request, product_id, format=None):
+        bid_status = get_product_bid_status(product_id)
+
+        if bid_status is not None:
+            return Response({'product_id': product_id, 'bid_status': bid_status})
+        else:
+
+            return Response({'product_id': product_id, 'bid_status': None}, status=status.HTTP_200_OK)

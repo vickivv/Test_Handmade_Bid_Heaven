@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Layout, List, Typography, Image, Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Card, Layout, List, Typography, Image, Button,Modal } from 'antd';
+import { useNavigate,useLocation } from 'react-router-dom';
 import '../../Styles/Product_list.css'
+import instance from '../../axios/axios.js';
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -10,12 +11,16 @@ const { Meta } = Card;
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showModal, setShowModal] = useState(false);
   const ip = 'http://localhost:8000/media/'; 
+  
+
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:8000/getproducts?userId=1&status=Active');
+        const response = await fetch('http://localhost:8000/getallproducts?status=Active');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -33,17 +38,21 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
-  const handleNavigateToAddbid = (productid) => {
-    navigate(`/bidding/${productid}`);
+
+
+  const handleNavigateToAddbid = async (productid) => {
+   
+
+      navigate(`/bidding/${productid}`);
+    
   };
 
-  const handleViewDetails = (product) => {
-    navigate(`/product/${product.productid}`);
+
+  const handleViewDetails = (productid) => {
+    console.log('View Details clicked for product ID:', productid);
+    navigate(`/product/${productid}`);
   };
-
-
-
-
+ 
 
   return (
     <Layout>
@@ -65,7 +74,7 @@ const ProductList = () => {
             xl: 4,
             xxl: 5,
           }}
-          dataSource={products}
+          dataSource={location.pathname === '/' ? products : products.filter(product => product.category === location.pathname.slice(1))}
           renderItem={(product) => (
             <List.Item>
               <Card
@@ -83,7 +92,7 @@ const ProductList = () => {
                  
                 }
                 actions={[
-                  <Button type="link" onClick={() => handleViewDetails(product)}>
+                  <Button type="link" onClick={() => handleViewDetails(product.productid)}>
                     View Details
                   </Button>,
                 ]}
@@ -93,6 +102,8 @@ const ProductList = () => {
             </List.Item>
           )}
         />
+ 
+
       </Content>
     </Layout>
   );

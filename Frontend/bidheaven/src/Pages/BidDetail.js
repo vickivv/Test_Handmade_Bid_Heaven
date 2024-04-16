@@ -47,6 +47,7 @@ const BidDetail = () => {
   const { BiddingID } = useParams(); // 从 URL 中获取 orderId
   const location = useLocation(); // 正确的 useLocation 调用位置
   const navigate = useNavigate();
+  const ip = 'http://localhost:8000/media/';
 
   const [bidDetails, setBidDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -152,7 +153,8 @@ const BidDetail = () => {
     <div style={col80Style}>
     <div style={{...cardStyle, margin: '0px', padding: '0px'}}>
         <div style={{...col20Style}}>
-        <img style={{maxWidth: '150px', maxHeight: '150px'}} alt={bidDetails.Name} src={bidDetails.Picture}/>
+        <img style={{maxWidth: '150px', maxHeight: '150px'}} alt={bidDetails.Name}
+        src={`${ip}${bidDetails.Picture.replace(/\\/g, "").replace(/\"/g, '')}`} />
         </div>
       <div style={{...col60Style, padding: '20px'}}>
         <p>{bidDetails.Name}</p>
