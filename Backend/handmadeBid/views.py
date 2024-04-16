@@ -722,9 +722,9 @@ def get_best_products(request, userId):
         seller_id=userId
         product_list=Products.objects.filter(sellerid=seller_id).exclude(status='Deleted')
         order_list = Bidding.objects.filter(productid__in=product_list, biddingid__in=Orders.objects.values_list('biddingid', flat=True))
-        product_quantities = order_list.values('productid').annotate(
+        product_quantities= order_list.values('productid').annotate(
             total_quantity=Sum('quantity')
-        ).order_by('-total_quantity')[:3]
+        ).filter(total_quantity__gt=3).order_by('-total_quantity')[:3]
         data_list = []
         for element in product_quantities:
             product_id = element['productid']
@@ -1013,6 +1013,18 @@ def add_bid(request):
         new_bid.save()
 
         return HttpResponse('success')
+
+def get_bestsale_category(request, userId):
+    order_bidding_ids = Orders.objects.values_list('biddingid', flat=True)
+    bidding_list = Bidding.objects.filter(biddingid__in=order_bidding_ids, productid__sellerid=userId).select_related('productid')
+    category_totals = bidding_list.values('productid__categoryid').annotate(total_quantity=Sum('quantity'))
+    bestsale_category = category_totals.order_by('-total_quantity')[:1]
+    category_id = bestsale_category[0]['productid__categoryid']
+    category_name = Category.objects.filter(categoryid=category_id).first().cname
+    data = {
+        'best_sell_category': category_name
+    }
+    return JsonResponse(data, safe=False)
 
 from rest_framework.views import APIView
 from rest_framework.response import Response

@@ -163,13 +163,20 @@ export const SellerOverview = () => {
       const response = await http.get(`/getusername/${userId}/`, {mode:'cors'});
         setUsername(response.data.result);
     };
+    const [bestCategory, setBestCategory] = useState();
+    const fetchCategory = async () => {
+      const response = await http.get(`/bestcategory/${userId}/`, {mode:'cors'});
+      setBestCategory(response.data.best_sell_category);
+    }
     useEffect(() => {
         fetchName();
+        fetchCategory();
     },[]);
     return(
       <>
       <Card>
         <h5>Seller: {username}</h5>
+        <h5>Your Best Sell Category: {bestCategory}</h5>
         </Card>
         <Divider />
         <h5>Your Statistics</h5>
