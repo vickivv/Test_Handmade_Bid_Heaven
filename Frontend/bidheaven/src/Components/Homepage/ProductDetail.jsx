@@ -14,6 +14,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const response = await fetch(`http://localhost:8000/getproduct/${productId}/`);
+        console.log("response for product detail:",response)
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -54,6 +55,8 @@ const ProductDetails = () => {
         <Image key={index} src={`${ip}${picture}`} alt={product.name || 'Product Image'} />
         </Col>
       ))}
+      <Paragraph>Seller: {product.seller_username || 'N/A'}</Paragraph>
+      <Paragraph>Seller Email: {product.seller_email || 'N/A'}</Paragraph>
      
     </Card>
   );
