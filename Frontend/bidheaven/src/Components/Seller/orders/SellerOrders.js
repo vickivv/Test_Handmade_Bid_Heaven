@@ -71,10 +71,6 @@ export const SellerOrders = () => {
       setIsShipModalOpen(false);
     };
 
-    // const contactManager = () => {
-    //   navigate('/new-message');
-    // }
-
     return (
       <List
         dataSource={orders}
@@ -127,7 +123,6 @@ export const SellerOrders = () => {
                         shape="circle"
                         icon={<CommentOutlined />}
                         style={{marginTop: '30px'}}
-                        // onClick={()=>contactManager()}
                       />
                       </Link>
                     </Tooltip>
