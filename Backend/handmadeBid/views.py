@@ -1026,17 +1026,4 @@ def get_bestsale_category(request, userId):
     }
     return JsonResponse(data, safe=False)
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
-class ProductBidStatusAPIView(APIView):
-
-    def get(self, request, product_id, format=None):
-        bid_status = get_product_bid_status(product_id)
-
-        if bid_status is not None:
-            return Response({'product_id': product_id, 'bid_status': bid_status})
-        else:
-
-            return Response({'product_id': product_id, 'bid_status': None}, status=status.HTTP_200_OK)

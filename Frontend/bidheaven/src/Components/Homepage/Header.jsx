@@ -2,17 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import logo1 from '../../Assets/logo1.png';
 import '../../Styles/Header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../Context/AuthContext.js';
 
 function Header() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
-    const [searchQuery, setSearchQuery] = useState('');
-    const handleSearchChange = (event) => {
-      setSearchQuery(event.target.value);
-    };
+   
     const initialState = user
     ? user.isStaff
       ? { showDropdown: false, showAdminDropdown: true, isAdminDropdownShown: true }
@@ -119,22 +115,7 @@ function Header() {
             <div className="logo-container">
                 <img src={logo1} alt="logo" className="logo" />
             </div>
-            <div className="search-bar input-group">
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search items"
-                    aria-label="Search items"
-                    aria-describedby="basic-addon2"
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                />
-                <div className="input-group-append">
-                    <button className="btn" id="basic-addon2" type="button">
-                        <i className="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
+       
             {user ? (
                 user.isStaff ? (
                     <div className="admin-dropdown">
@@ -189,7 +170,7 @@ function Header() {
                     </button>
                 </div>
             )}
-            {/* <FontAwesomeIcon icon={faCartShopping} className="cart-icon" /> */}
+     
         </div>
     );
 }
