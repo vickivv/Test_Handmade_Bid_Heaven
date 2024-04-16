@@ -208,7 +208,7 @@ def cancel_bid(biddingID):
             return False
 
 # Message 
-def send_message(from_email, to_email, subject_type, product_info, order_info, content):
+def send_message(from_email, to_email, subject_type, content):
     with connection.cursor() as cursor:
         try:
             #get sender's type and base_user_id from email
@@ -245,25 +245,6 @@ def send_message(from_email, to_email, subject_type, product_info, order_info, c
 
             product_id = None
             order_id = None
-
-            if subject_type == 'Product':
-                if product_info:
-                    cursor.execute("SELECT ProductID FROM PRODUCTS WHERE Name=%s", [product_info])
-                    product_id_result = cursor.fetchone()
-                    if product_id_result:
-                        product_id = product_id_result[0]
-            elif subject_type == 'Order':
-                if order_info:
-                    cursor.execute("SELECT OrderID FROM ORDERS WHERE OrderID=%s", [order_info])
-                    order_id_result = cursor.fetchone()
-                    if order_id_result:
-                        order_id = order_id_result[0]
-                    else:
-                        order_id = None
-            else:
-                raise ValueError(f"Unknown subject type: {subject_type}")
-
-            # insert info
             cursor.execute("""
                 INSERT INTO MESSAGES (AdminSenderID, SenderID, AdminReceiverID, ReceiverID, Content, ProductID, OrderID, CreateDate, SubjectType)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -384,4 +365,23 @@ def update_account_details(userID, username, phone):
             print(e)
             return False
         
+
+
+def get_product_bid_status( product_id):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT b.Status
+                FROM bidding b
+                WHERE b.ProductID = %s
+                ORDER BY b.BiddingID DESC
+                LIMIT 1
+            """, [product_id])
+            row = cursor.fetchone()
+            bid_status = row[0] if row else None
+            return bid_status
+
+    except Exception as e:
+        print(e)
+        return None  
 

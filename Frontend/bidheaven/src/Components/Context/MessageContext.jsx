@@ -65,25 +65,6 @@ export const MessageProvider = ({ children }) => {
 
 
 
-
-// Delete message by message id 
-    // const deleteSeletedMessages = async (messageId) => {
-    //   try {
-    //     await instance.delete(`/api/messages/delete/${messageId}/`);
-    //     setMessages(messages.filter((message) => message.id !== messageId));
-    //     setSelectedMessages(selectedMessages.filter((id) => id !== messageId));
-    //     setSelectedRowKeys(selectedRowKeys.filter((key) => key !== messageId));
-    //     setError(null);
-    //   } catch (error) {
-    //     console.error('Error deleting message:', error);
-    //     if (error.response) {
-    //       setError(`Error ${error.response.status}: ${error.response.data.error}`);
-    //     } else {
-    //       setError('Error deleting message: Network error');
-    //     }
-    //   }
-    // };
-
     const deleteSeletedMessages = async () => {
       try {
         await Promise.all(

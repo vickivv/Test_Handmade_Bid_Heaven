@@ -37,7 +37,8 @@ import logging
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
     get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid,\
-    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details
+    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details,\
+    get_product_bid_status
 
 logger = logging.getLogger(__name__)
 
@@ -127,19 +128,12 @@ class MessageAPIView(APIView):
         from_email = request.data.get('from_email')
         to_email = request.data.get('to_email')
         subject_type = request.data.get('subject_type')
-        product_info = request.data.get('product_info')
-        order_info = request.data.get('order_info')
         content = request.data.get('content')
 
         if not all([from_email, to_email, subject_type, content]):
             return Response({'error': 'Missing required fields'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if subject_type == 'Product' and not product_info:
-            product_info=None
-        elif subject_type == 'Order' and not order_info:
-            order_info=None
-
-        success = send_message(from_email, to_email, subject_type, product_info, order_info, content)
+        success = send_message(from_email, to_email, subject_type, content)
 
         if success:
             return Response({'message': 'Message sent successfully'}, status=status.HTTP_200_OK)
@@ -496,6 +490,9 @@ def get_category(request):
             category_list.append(c_item)
             id+=1
         return JsonResponse(category_list, safe=False)
+    
+
+
 
 @csrf_exempt 
 def upload_picture(request):
@@ -955,3 +952,12 @@ def add_bid(request):
 
         return HttpResponse('success')
 
+class ProductBidStatusAPIView(APIView):
+
+    def get(self, request, product_id, format=None):
+        bid_status = get_product_bid_status(product_id)
+
+        if bid_status is not None:
+            return Response({'product_id': product_id, 'bid_status': bid_status})
+        else:
+            return Response({'product_id': product_id, 'bid_status': 'No bids found'}, status=status.HTTP_404_NOT_FOUND)
