@@ -16,7 +16,7 @@ function NewMessageForm() {
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
   const [subjectType, setSubjectType] = useState('');
-  const [extraInfo, setExtraInfo] = useState('');
+ 
   
   const navigate = useNavigate();
   const { message, updateMessage } = useContext(MessageContext);
@@ -25,13 +25,10 @@ function NewMessageForm() {
  
  
 
-
   useEffect(() => {
-
     if (user?.email) {
       updateMessage({ from_email: user.email });
     } else {
-      
       const storedEmail = localStorage.getItem('email');
       if (storedEmail) {
         updateMessage({ from_email: storedEmail });
@@ -39,13 +36,22 @@ function NewMessageForm() {
         console.log('No email in context or localStorage');
       }
     }
-  }, [user]); 
-  
+  }, [user]);
+
+  useEffect(() => {
+    if (bidderemail) {
+      setTo(bidderemail);
+    }
+  }, [bidderemail]);
   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const recipients = to.split(',').map(email => email.trim());
+    if (recipients.length === 0 && bidderemail) {
+      recipients = [bidderemail];
+      setTo(bidderemail);
+    }
     console.log('From:', message.from_email);
     console.log('To:', recipients);
     console.log('Subject:', subject);
