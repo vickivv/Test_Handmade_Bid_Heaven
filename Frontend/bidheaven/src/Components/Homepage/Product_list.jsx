@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Layout, List, Typography, Image, Button,Modal } from 'antd';
+import { Card, Layout, List, Typography, Image, Button,Input } from 'antd';
 import { useNavigate,useLocation } from 'react-router-dom';
 import '../../Styles/Product_list.css'
-import instance from '../../axios/axios.js';
+import { SearchOutlined } from '@ant-design/icons';
+
 
 const { Content } = Layout;
 const { Title } = Typography;
 const { Meta } = Card;
+const { Search } = Input;
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -15,6 +17,36 @@ const ProductList = () => {
   const [showModal, setShowModal] = useState(false);
   const ip = 'http://localhost:8000/media/'; 
   
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (value) => {
+    setSearchQuery(value);
+  };
+
+const highlightSearchQuery = (text) => {
+  if (searchQuery.trim() === '') {
+    return text;
+  }
+  const regex = new RegExp(`(${searchQuery})`, 'gi');
+  return text.split(regex).map((part, index) =>
+    regex.test(part) ? (
+      <span key={index} style={{ backgroundColor: 'yellow' }}>
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+};
+
+
+
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
 
 
   useEffect(() => {
@@ -64,6 +96,13 @@ const ProductList = () => {
         }}
       >
         <Title level={2}>Products</Title>
+        <Search
+          placeholder="Search items"
+          onSearch={handleSearch}
+          style={{ marginBottom: '1rem', width: 300 }}
+        />
+
+
         <List
           grid={{
             gutter: [24, 24],
@@ -97,8 +136,10 @@ const ProductList = () => {
                   </Button>,
                 ]}
               >
-                <Card.Meta title={product.name} description={product.category} />
+                <Card.Meta title={highlightSearchQuery(product.name)} description={product.category} />
               </Card>
+
+           
             </List.Item>
           )}
         />
