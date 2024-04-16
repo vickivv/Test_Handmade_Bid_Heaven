@@ -32,7 +32,7 @@ function Footer() {
                     <div className="info-text"> 
                         <p>Contact Us</p>
                         <p>313-123-4567</p>
-                        <p>admin1@handmadebid.com</p>
+                        <p>admin1@handmade.com</p>
                     </div>
                     <div className="contact-bottom">
                     
