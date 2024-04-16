@@ -870,7 +870,8 @@ def add_order(request, bidding_id):
     new_order = Orders(
         biddingid=bidding,
         orderdate=today,
-        orderstatus=status
+        orderstatus=status,
+        manageid=AdminUser.objects.filter(UserID = 1).first()
     )
     new_order.save()
     product = bidding.productid
