@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 function NewMessageForm() {
 
   const location = useLocation();
-  const { bidderemail } = location.state || {}; 
+  const { bidderemail } = location.state || {};
   console.log("bidderemail", bidderemail);
 
   const [to, setTo] = useState('');

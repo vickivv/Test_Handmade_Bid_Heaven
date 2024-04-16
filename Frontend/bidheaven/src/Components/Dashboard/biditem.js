@@ -65,7 +65,7 @@ const BidItem = ({ bids }) => {
             </div>
             <div style={col20RightStyle}>
               <Link to={`/buyer/bid/${bid.BiddingID}`} style={{ color: '#50123c' }}>View Bid Details</Link>
-              <Link to={`/message`} style={{ color: '#50123c' }}>Contact Seller</Link>
+              <Link to={`/new-message`} state={{bidderemail: bid.Email}} style={{ color: '#50123c' }}>Contact Seller</Link>
             </div>
           </div>
         ))}

@@ -48,6 +48,7 @@ const Items = () => {
   const [error, setError] = useState(null);
   const { confirm } = Modal;
   const navigate = useNavigate();
+  const ip = 'http://localhost:8000/media/';
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -58,7 +59,11 @@ const Items = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setOrderDetails(data[0]);
+        const cleanedData = data.map(order => ({
+          ...order,
+          Picture: `${ip}${order.Picture.replace(/\\/g, "").replace(/\"/g, '')}`
+        }));
+        setOrderDetails(cleanedData[0]);
       } catch (error) {
         setError(error.message);
       } finally {

@@ -6,7 +6,8 @@ import traceback
 
 def get_all_orders(userID):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ORDERSVIEW WHERE BuyerID = %s", [userID])
+        cursor.execute("SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture, bu.Email FROM ORDERSVIEW JOIN NORMALUSER n ON n.UserID = %s "
+                       "JOIN BASEUSER bu ON bu.UserID = n.base_user_id WHERE BuyerID = %s", [userID, userID])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -37,9 +38,11 @@ def get_order_details(order_id):
 
 def get_all_bids(userID):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT p.Name, b.Status, b.BidPrice, p.SellerID, b.BiddingID, pic.Picture "
+        cursor.execute("SELECT p.Name, b.Status, b.BidPrice, p.SellerID, b.BiddingID, pic.Picture, bu.Email "
                        "FROM BIDDING b JOIN PRODUCTS p ON b.ProductID = p.ProductID "
-                       "JOIN PICTURES pic ON p.PictureID = pic.PictureID WHERE b.BidderId = %s", [userID])
+                       "JOIN PICTURES pic ON p.PictureID = pic.PictureID "
+                       "JOIN NORMALUSER n ON n.UserID = p.SellerID "
+                       "JOIN BASEUSER bu ON bu.UserID = n.base_user_id WHERE b.BidderId = %s", [userID])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 

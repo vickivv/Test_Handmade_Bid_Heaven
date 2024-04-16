@@ -7,6 +7,7 @@ const { Meta } = Card;
 
 const WaitingPayment: React.FC = () => {
   const [data, setData] = useState([]);
+  const ip = 'http://localhost:8000/media/';
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -18,7 +19,11 @@ const WaitingPayment: React.FC = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setData(data); // 后端返回的data
+        const cleanedData = data.map(order => ({
+          ...order,
+          Picture: `${ip}${order.Picture.replace(/\\/g, "").replace(/\"/g, '')}`
+        }));
+        setData(cleanedData); // 后端返回的data
       } catch (error) {
         console.error("There was a problem with fetching data: ", error);
       }
@@ -76,7 +81,7 @@ const Order: React.FC = () => {
           ...order,
           Picture: `${ip}${order.Picture.replace(/\\/g, "").replace(/\"/g, '')}`
         }));
-        setData(data); // 后端返回的data
+        setData(cleanedData); // 后端返回的data
       } catch (error) {
         console.error("There was a problem with fetching data: ", error);
       }
