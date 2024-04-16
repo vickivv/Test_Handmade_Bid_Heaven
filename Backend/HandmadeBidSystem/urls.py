@@ -66,5 +66,6 @@ urlpatterns = [
     path('addshipment', views.add_shipment),
     path('getusername/<int:userId>/', views.get_username),
     path('addbid', views.add_bid),
+    path('bestcategory/<int:userId>/', views.get_bestsale_category),
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 
