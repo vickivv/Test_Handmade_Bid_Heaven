@@ -515,6 +515,12 @@ def get_product(request, product_id):
             picture_path=json.dumps(str(p.picture))
             picture_list.append(picture_path.replace('"', ''))
             picture_keys.append(p.pictureid)
+
+
+            # get seller info
+            seller=product.sellerid
+            seller_username= seller.Username
+            seller_email = seller.base_user.Email
         data={
             'name': product.name,
             'category': product.categoryid.cname,
@@ -523,7 +529,9 @@ def get_product(request, product_id):
             'pictures': picture_list,
             "cover": cover_path.replace('"', ''),
             'description': product.description,
-            "pictureKeys":picture_keys
+            "pictureKeys":picture_keys,
+            "seller_username": seller_username,
+            "seller_email": seller_email
         }
         return JsonResponse(data, safe=False)
 
