@@ -1041,11 +1041,16 @@ def get_bestsale_category(request, userId):
     bidding_list = Bidding.objects.filter(biddingid__in=order_bidding_ids, productid__sellerid=userId).select_related('productid')
     category_totals = bidding_list.values('productid__categoryid').annotate(total_quantity=Sum('quantity'))
     bestsale_category = category_totals.order_by('-total_quantity')[:1]
-    category_id = bestsale_category[0]['productid__categoryid']
-    category_name = Category.objects.filter(categoryid=category_id).first().cname
-    data = {
-        'best_sell_category': category_name
-    }
+    if len(bestsale_category) > 0:
+        category_id = bestsale_category[0]['productid__categoryid']
+        category_name = Category.objects.filter(categoryid=category_id).first().cname
+        data = {
+            'best_sell_category': category_name
+        }
+    else:
+        data = {
+            'best_sell_category': "No Sale"
+        }
     return JsonResponse(data, safe=False)
 
 
