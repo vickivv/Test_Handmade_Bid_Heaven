@@ -42,7 +42,8 @@ import Sent from './Components/Messages/Pages/Sent';
 import Inbox from './Components/Messages/Pages/Inbox';
 import AdminDashboard from "./Components/Admin/AdminDashboard.jsx";
 import AdminOverview from './Components/Admin/AdminOverview.jsx';
-import ManageReports from './Components/Admin/ManageReports.jsx';
+import ManagedReports from './Components/Admin/ManagedReports.jsx';
+import ManageUsers from './Components/Admin/ManageUsers.jsx';
 import Ceramics from './Components/Categories/Ceramics.jsx';
 import ProductDetails from './Components/Homepage/ProductDetail.jsx';
 function App() {
@@ -70,7 +71,8 @@ function App() {
 
             <Route path="/admin-dashboard/*" element={<AdminDashboard />}>
             <Route path="overview" element={<AdminOverview />} />
-            <Route path="report" element={<ManageReports />} />
+            <Route path="ManageUsers" element={<ManageUsers />} />
+            <Route path="report" element={<ManagedReports />} />
             
            
 

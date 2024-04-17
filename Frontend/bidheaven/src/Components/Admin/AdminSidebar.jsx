@@ -29,7 +29,11 @@ function AdminSidebar({ onMenuSelect }) {
       >
         {/* 移除了Link组件 */}
         <Menu.Item key="overview">
-          <FaChartLine /> <span>Overview</span>
+          <FaChartLine /> <span>Order Overview</span>
+        </Menu.Item>
+
+        <Menu.Item key="ManageUsers">
+          <FaUser /> <span>Manage Users</span>
         </Menu.Item>
 
         <Menu.Item key="report">

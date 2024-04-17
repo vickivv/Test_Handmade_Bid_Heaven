@@ -1,7 +1,8 @@
 from django.db import connection
 from django.utils import timezone
 import traceback
-
+import logging
+logger = logging.getLogger(__name__)
 
 
 def get_all_orders(userID):
@@ -14,9 +15,11 @@ def get_all_orders(userID):
 
 def get_orders_by_status(userID, status):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ORDERSVIEW WHERE BuyerID = %s AND OrderStatus = %s", [userID, status])
+        cursor.execute("SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture FROM ORDERSVIEW WHERE BuyerID = %s AND OrderStatus = %s", [
+                       userID, status])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
 
 def get_order_details(order_id):
     with connection.cursor() as cursor:
@@ -24,11 +27,14 @@ def get_order_details(order_id):
                        "o.ProductID, o.SellingPrice, o.Picture FROM ORDERSVIEW o "
                        "WHERE o.OrderID = %s", [order_id])
         columns_order = [col[0] for col in cursor.description]
-        order_details = [dict(zip(columns_order, row)) for row in cursor.fetchall()]
+        order_details = [dict(zip(columns_order, row))
+                         for row in cursor.fetchall()]
 
-        cursor.execute("SELECT s.TrackingNumber, s.Status FROM SHIPMENT s WHERE s.OrderID = %s", [order_id])
+        cursor.execute(
+            "SELECT s.TrackingNumber, s.Status FROM SHIPMENT s WHERE s.OrderID = %s", [order_id])
         columns_shipment = [col[0] for col in cursor.description]
-        shipment_details = [dict(zip(columns_shipment, row)) for row in cursor.fetchall()]
+        shipment_details = [dict(zip(columns_shipment, row))
+                            for row in cursor.fetchall()]
 
         return {
             'order_details': order_details,
@@ -67,9 +73,11 @@ def get_bid_details(order_id):
 
 def get_overview_pay(userID):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT OrderID, Picture FROM ORDERSVIEW WHERE BuyerID = %s AND OrderStatus = %s", [userID, 'Pending'])
+        cursor.execute("SELECT OrderID, Picture FROM ORDERSVIEW WHERE BuyerID = %s AND OrderStatus = %s", [
+                       userID, 'Pending'])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
 
 def get_overview_order(userID):
     with connection.cursor() as cursor:
@@ -95,8 +103,8 @@ def add_review(userID, sellerID, content, ProductID, OrderID, Rate):
     with connection.cursor() as cursor:
         try:
             cursor.execute("INSERT INTO REVIEWS "
-                       "(ReviewerID, ReviewerType, RevieweeID, Content, ReviewDate, ProductID, OrderID, Rate) "
-                       "VALUES (%s, 'Buyer', %s, %s, %s, %s, %s, %s)", [userID, sellerID, content, date, ProductID, OrderID, Rate])
+                           "(ReviewerID, ReviewerType, RevieweeID, Content, ReviewDate, ProductID, OrderID, Rate) "
+                           "VALUES (%s, 'Buyer', %s, %s, %s, %s, %s, %s)", [userID, sellerID, content, date, ProductID, OrderID, Rate])
             return True
         except Exception as e:
             print(e)
@@ -122,6 +130,7 @@ def add_address(Fname, Lname, UserID, Street, StreetOptional, City, State, Zipco
             print(e)
             return False
 
+
 def get_payment_item(order_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT o.OrderID, o.SellerID , o.OrderDate, o.TotalAmount, o.OrderStatus, o.ProductName, "
@@ -129,6 +138,7 @@ def get_payment_item(order_id):
                        "WHERE o.OrderID = %s", [order_id])
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
 
 def get_default_delivery(userID):
     with connection.cursor() as cursor:
@@ -138,10 +148,12 @@ def get_default_delivery(userID):
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
+
 def set_default_delivery(userID, AddressID):
     with connection.cursor() as cursor:
         try:
-            cursor.execute("UPDATE NORMALUSER SET DefaultAddressID = %s WHERE UserID = %s", [AddressID, userID])
+            cursor.execute("UPDATE NORMALUSER SET DefaultAddressID = %s WHERE UserID = %s", [
+                           AddressID, userID])
             return True
         except Exception as e:
             print(e)
@@ -160,7 +172,8 @@ def get_all_addresses(userID):
 def cancel_order(orderID):
     with connection.cursor() as cursor:
         try:
-            cursor.execute("UPDATE ORDERS SET OrderStatus = %s WHERE OrderID = %s", ['Canceled', orderID])
+            cursor.execute("UPDATE ORDERS SET OrderStatus = %s WHERE OrderID = %s", [
+                           'Canceled', orderID])
             return True
         except Exception as e:
             print(e)
@@ -210,39 +223,47 @@ def cancel_bid(biddingID):
             print(e)
             return False
 
-# Message 
+# Message
+
+
 def send_message(from_email, to_email, subject_type, content):
     with connection.cursor() as cursor:
         try:
-            #get sender's type and base_user_id from email
-            cursor.execute("SELECT UserID, is_staff FROM BASEUSER WHERE Email=%s", [from_email])
+            # get sender's type and base_user_id from email
+            cursor.execute(
+                "SELECT UserID, is_staff FROM BASEUSER WHERE Email=%s", [from_email])
             sender_base_user_id, sender_is_staff = cursor.fetchone()
             sender_type = 'Admin' if sender_is_staff else 'Normal'
 
-            ##get receiver's type and base_user_id from email
-            cursor.execute("SELECT UserID, is_staff FROM BASEUSER WHERE Email=%s", [to_email])
-            print("Backend to email:",to_email)
+            # get receiver's type and base_user_id from email
+            cursor.execute(
+                "SELECT UserID, is_staff FROM BASEUSER WHERE Email=%s", [to_email])
+            print("Backend to email:", to_email)
             receiver_base_user_id, receiver_is_staff = cursor.fetchone()
-            print("receiver_base_user_id at backend :",receiver_base_user_id)
+            print("receiver_base_user_id at backend :", receiver_base_user_id)
             receiver_type = 'Admin' if receiver_is_staff else 'Normal'
 
             # get sender_id from base_user_id
             if sender_type == 'Normal':
-                cursor.execute("SELECT UserID FROM NORMALUSER WHERE base_user_id =%s", [sender_base_user_id])
+                cursor.execute("SELECT UserID FROM NORMALUSER WHERE base_user_id =%s", [
+                               sender_base_user_id])
                 sender_user_id = cursor.fetchone()[0]
                 admin_sender_id = None
             else:
-                cursor.execute("SELECT UserID FROM ADMINUSER WHERE base_user_id=%s", [sender_base_user_id])
+                cursor.execute("SELECT UserID FROM ADMINUSER WHERE base_user_id=%s", [
+                               sender_base_user_id])
                 admin_sender_id = cursor.fetchone()[0]
                 sender_user_id = None
 
            # get receiver_id from base_user_id
             if receiver_type == 'Normal':
-                cursor.execute("SELECT UserID FROM NORMALUSER WHERE base_user_id=%s", [receiver_base_user_id])
+                cursor.execute("SELECT UserID FROM NORMALUSER WHERE base_user_id=%s", [
+                               receiver_base_user_id])
                 receiver_user_id = cursor.fetchone()[0]
                 admin_receiver_id = None
             else:
-                cursor.execute("SELECT UserID FROM ADMINUSER WHERE base_user_id=%s", [receiver_base_user_id])
+                cursor.execute("SELECT UserID FROM ADMINUSER WHERE base_user_id=%s", [
+                               receiver_base_user_id])
                 admin_receiver_id = cursor.fetchone()[0]
                 receiver_user_id = None
 
@@ -253,13 +274,13 @@ def send_message(from_email, to_email, subject_type, content):
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, [admin_sender_id, sender_user_id, admin_receiver_id, receiver_user_id, content, product_id, order_id, timezone.now(), subject_type])
 
-
             connection.commit()
             return True
         except Exception as e:
             print(traceback.format_exc())
             return False
-        
+
+
 def get_messages_by_user_id(user_id):
     with connection.cursor() as cursor:
         try:
@@ -287,13 +308,14 @@ def get_messages_by_user_id(user_id):
                 WHERE s_normal.UserID = %s OR s_admin.UserID = %s OR r_normal.UserID = %s OR r_admin.UserID = %s
             """, [user_id, user_id, user_id, user_id])
             results = cursor.fetchall()
-            print(f"Query executed successfully for User ID: {user_id}, results obtained: {len(results)}")
+            print(
+                f"Query executed successfully for User ID: {user_id}, results obtained: {len(results)}")
             messages = []
             for result in results:
                 # Ensure that either sender or receiver is not NULL
                 if result[1] is not None and result[2] is not None:
                     message = {
-                        'messageId':result[0],
+                        'messageId': result[0],
                         'sender_email': result[1],
                         'receiver_email': result[2],
                         'content': result[3],
@@ -301,7 +323,7 @@ def get_messages_by_user_id(user_id):
                         'product_info': result[5],
                         'order_info': result[6],
                         'subject_type': result[7]
-                    
+
                     }
                     messages.append(message)
             return messages
@@ -310,18 +332,13 @@ def get_messages_by_user_id(user_id):
             return []
 
 
-
-
-
-
 def delete_message_by_id(message_id):
     with connection.cursor() as cursor:
         try:
             cursor.execute(""" 
     DELETE FROM MESSAGES WHERE MESSAGEID = %s
 
-    """
-        ,[message_id])
+    """, [message_id])
             connection.commit()
             return True
         except Exception as e:
@@ -345,12 +362,15 @@ def get_account_details(userID):
                 'baseuser_details': []
             }
 
-        user_details = [dict(zip(columns_order, row)) for row in user_details_result]
+        user_details = [dict(zip(columns_order, row))
+                        for row in user_details_result]
         base_user_id = user_details[0].get('base_user_id')
 
-        cursor.execute("SELECT Email, Fname, Lname FROM BASEUSER WHERE UserID = %s", [base_user_id])
+        cursor.execute(
+            "SELECT Email, Fname, Lname FROM BASEUSER WHERE UserID = %s", [base_user_id])
         columns_shipment = [col[0] for col in cursor.description]
-        baseuser_details = [dict(zip(columns_shipment, row)) for row in cursor.fetchall()]
+        baseuser_details = [dict(zip(columns_shipment, row))
+                            for row in cursor.fetchall()]
 
         return {
             'user_details': user_details,
@@ -361,15 +381,78 @@ def get_account_details(userID):
 def update_account_details(userID, username, phone):
     with connection.cursor() as cursor:
         try:
-            cursor.execute("UPDATE NORMALUSER SET Username = %s, Phone = %s WHERE UserID = %s", [username, phone, userID])
+            cursor.execute("UPDATE NORMALUSER SET Username = %s, Phone = %s WHERE UserID = %s", [
+                           username, phone, userID])
             connection.commit()
             return True
         except Exception as e:
             print(e)
             return False
-        
 
 
+def admin_get_all_orders():
+    with connection.cursor() as cursor:
+        # 执行查询，获取所有订单的详细信息
+        cursor.execute("""
+            SELECT ProductID, OrderID, ProductName, OrderStatus, SellingPrice, SellerID, OrderID, Picture, Email
+            FROM ORDERSVIEW
+            JOIN NORMALUSER n ON n.UserID = ORDERSVIEW.BuyerID
+            JOIN BASEUSER bu ON bu.UserID = n.base_user_id
+        """)
+        columns = [col[0] for col in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
+def admin_get_all_users():
+    with connection.cursor() as cursor:
+        # Execute the query to fetch all users with their order counts
+        cursor.execute("""
+            SELECT 
+                bu.UserID,
+                bu.Fname,
+                bu.Lname,
+                COUNT(o.OrderID) AS OrderCount
+            FROM 
+                BASEUSER bu
+            JOIN 
+                NORMALUSER nu ON bu.UserID = nu.base_user_id
+            LEFT JOIN 
+                ORDERSVIEW o ON nu.UserID = o.BuyerID
+            GROUP BY 
+                bu.UserID, bu.Fname, bu.Lname
+            ORDER BY 
+                bu.UserID;
+        """)
+        # Retrieve column names from the cursor description
+        columns = [col[0] for col in cursor.description]
+        # Return results as a list of dictionaries
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+    
 
+def delete_user(user_id):
+    with connection.cursor() as cursor:
+        cursor.execute("BEGIN;")
+        try:
+            # 首先获取基础用户ID，假设 NORMALUSER 表中有 base_user_id 关联到 BASEUSER
+            cursor.execute("SELECT base_user_id FROM NORMALUSER WHERE UserID = %s", [user_id])
+            base_user_id = cursor.fetchone()
+            
+            if base_user_id:
+                # 删除认证令牌
+                cursor.execute("DELETE FROM authtoken_token WHERE user_id = %s", [base_user_id[0]])
+                logger.info(f"Auth tokens deleted for base user {base_user_id[0]}.")
+
+                # 删除基础用户记录
+                cursor.execute("DELETE FROM BASEUSER WHERE UserID = %s", [base_user_id[0]])
+                logger.info(f"Base user record deleted for user {base_user_id[0]}.")
+
+            # 删除普通用户记录
+            cursor.execute("DELETE FROM NORMALUSER WHERE UserID = %s", [user_id])
+            logger.info(f"Normal user record deleted for user {user_id}.")
+
+            cursor.execute("COMMIT;")
+            logger.info(f"User {user_id} deleted successfully along with all associated records.")
+        except Exception as e:
+            cursor.execute("ROLLBACK;")
+            logger.error(f"Failed to delete user {user_id}: {e}")
+            raise e

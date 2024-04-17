@@ -37,7 +37,7 @@ import logging
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
     get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid,\
-    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details
+    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details, admin_get_all_orders, admin_get_all_users, delete_user
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +67,14 @@ def signup(request):
         }, status=status.HTTP_201_CREATED)
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+def delete_user_view(request, user_id):
+    try:
+        delete_user(user_id)
+        return Response({"message": "User deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class LoginView(APIView):
@@ -225,7 +233,21 @@ class GetAllOrdersAPIView(APIView):
             return Response(data)
         data = get_all_orders(userID=user_id)
         return Response(data)
+    
+class AdminGetAllOrdersAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        # 调用函数获取所有订单的详细信息
+        data = admin_get_all_orders()
+        # 返回所有订单的数据
+        return Response(data)
+    
 
+class AdminGetAllUsersAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        # 调用函数获取所有订单的详细信息
+        data = admin_get_all_users()
+        # 返回所有订单的数据
+        return Response(data)
 
 class GetOrderDetailAPIView(APIView):
     def get(self, request, *args, **kwargs):
