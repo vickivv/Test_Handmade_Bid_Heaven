@@ -456,3 +456,5 @@ def delete_user(user_id):
             cursor.execute("ROLLBACK;")
             logger.error(f"Failed to delete user {user_id}: {e}")
             raise e
+
+

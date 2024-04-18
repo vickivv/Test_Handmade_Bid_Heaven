@@ -37,7 +37,7 @@ import logging
 from .queries import get_all_orders, get_orders_by_status, get_order_details, get_all_bids, get_bids_by_status, \
     get_bid_details, get_overview_pay, get_overview_order, get_overview_bid, add_review, add_address, get_payment_item, \
     get_default_delivery, get_all_addresses, set_default_delivery, cancel_order, set_order, cancel_bid,\
-    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details, admin_get_all_orders, admin_get_all_users, delete_user
+    delete_message_by_id,get_messages_by_user_id,send_message, get_account_details, update_account_details, admin_get_all_orders, admin_get_all_users, delete_user, get_all_orders
 
 logger = logging.getLogger(__name__)
 
@@ -1054,3 +1054,25 @@ def get_bestsale_category(request, userId):
     return JsonResponse(data, safe=False)
 
 
+
+
+@require_http_methods(["GET"])  # 明确允许的HTTP方法
+def all_orders_view(request):
+    orders = Orders.objects.all().select_related('biddingid__productid__pictureid')
+    data_list = []
+    for order in orders:
+        bid = order.biddingid
+        product = bid.productid
+        picture = product.pictureid.picture  # 假设有直接关系
+        data_list.append({
+            "orderid": order.orderid,
+            "buyerid": bid.bidderid.UserID,
+            "picture": picture,
+            "productid": product.productid,
+            "productName": product.name,
+            "orderStatus": order.orderstatus,
+            "orderDate": order.orderdate,
+            "amount": bid.quantity * bid.bidprice,
+            "buyeremail": bid.bidderid.base_user.Email
+        })
+    return JsonResponse({'orders': data_list}, safe=False)
